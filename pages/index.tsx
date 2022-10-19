@@ -16,6 +16,7 @@ client.on("connect", () => {
 });
 
 const emit = (body: "0" | "1") => {
+  console.log("Mode:", body);
   client.publish(topic, body);
 };
 

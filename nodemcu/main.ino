@@ -1,12 +1,17 @@
-#include <ESP8266WiFi.h>
+#include <WiFi.h>
+#include <WiFiClient.h>
+#include <BlynkSimpleEsp32.h>
 #include <PubSubClient.h>
 
-const char* ssid = "";      // change this to your wifi account
-const char* password = "";  // change this to your wifi password
-const char* myTopic = "";   // change this to whatever your like
-const char* mqtt_server = "test.mosquitto.org";
+#define WIFI_SSID "Unidentified Network"             //Enter Wifi Name
+#define WIFI_PASS "D3C3n@F4M!Ly"         //Enter wifi Password
+#define myTopic  "test"   // change this to whatever your like
+#define mqtt_server  "test.mosquitto.org"
 
-const int RELAY_PIN = 5;  // D1
+#define RELAY_PIN  5  // D1
+
+
+
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -14,12 +19,13 @@ PubSubClient client(espClient);
 char msg[MSG_BUFFER_SIZE];
 
 void handler(char* topic, byte* payload, unsigned int length) {
+
   if ((char)payload[0] == '1') {
     Serial.println("on");
-    digitalWrite(RELAY_PIN, LOW);  // on
-  } else {
+    digitalWrite(RELAY_PIN, HIGH);  // on
+  } if ((char)payload[0] == '0') {
     Serial.println("off");
-    digitalWrite(RELAY_PIN, HIGH);  // off
+    digitalWrite(RELAY_PIN, LOW);  // off
   }
 }
 
@@ -27,10 +33,10 @@ void setup_wifi() {
   delay(10);
   Serial.println();
   Serial.print("Connecting to ");
-  Serial.println(ssid);
+  Serial.println(WIFI_SSID);
 
   WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -48,11 +54,11 @@ void setup_wifi() {
 void reconnect() {
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
-    String clientId = "ESP8266Client-";
+    String clientId = "ESP32Client-";
     clientId += String(random(0xffff), HEX);
     if (client.connect(clientId.c_str())) {
       Serial.println("connected");
-      client.publish(myTopic, "esp8266 connected");
+      client.publish(myTopic, "esp connected");
       client.subscribe(myTopic);
     } else {
       Serial.print("failed, rc=");
