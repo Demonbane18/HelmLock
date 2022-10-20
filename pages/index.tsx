@@ -14,17 +14,23 @@ client.on("connect", () => {
     }
   });
 });
+function handleOn() {
+  console.log('on');
+}
+
+function handleOff() {
+  console.log('off');
+}
 
 const emit = (body: "0" | "1") => {
-  console.log("Mode:", body);
   client.publish(topic, body);
 };
 
 const Home: NextPage = () => {
   return (
     <>
-      <button onClick={() => emit("1")}>on</button>
-      <button onClick={() => emit("0")}>off</button>
+      <button onClick={() => {emit("1"),handleOn()}}>on</button>
+      <button onClick={() => {emit("0"),handleOff()}}>off</button>
     </>
   );
 };
