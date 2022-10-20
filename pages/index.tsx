@@ -2,7 +2,7 @@ import mqtt from "mqtt";
 import type { NextPage } from "next";
 
 const client = mqtt.connect("wss://test.mosquitto.org:8081");
-const topic = "test"; // change this to whatever your want
+const topic = "test1"; // change this to whatever your want
 
 client.on("connect", () => {
   console.log("connected to mqtt broker.");
