@@ -23,7 +23,7 @@ void handler(char* topic, byte* payload, unsigned int length) {
   if ((char)payload[0] == '1') {
     Serial.println("on");
     digitalWrite(RELAY_PIN, HIGH);  // on
-  } if ((char)payload[0] == '0') {
+  } else
     Serial.println("off");
     digitalWrite(RELAY_PIN, LOW);  // off
   }
