@@ -1,4 +1,3 @@
-import Layout from './components/Layout';
 import {
   Grid,
   Card,
@@ -9,6 +8,8 @@ import {
   Button,
   Typography,
 } from '@mui/material';
+import NextLink from 'next/link';
+import Layout from '../components/Layout';
 import data from '../utils/data';
 
 export default function Home() {
@@ -20,16 +21,18 @@ export default function Home() {
           {data.lockers.map((locker) => (
             <Grid item md={4} key={locker.name}>
               <Card>
-                <CardActionArea>
-                  <CardMedia
-                    component="img"
-                    image={locker.image}
-                    title={locker.name}
-                  ></CardMedia>
-                  <CardContent>
-                    <Typography>{locker.name}</Typography>
-                  </CardContent>
-                </CardActionArea>
+                <NextLink href={`/locker/${locker.slug}`} passHref>
+                  <CardActionArea>
+                    <CardMedia
+                      component="img"
+                      image={locker.image}
+                      title={locker.name}
+                    ></CardMedia>
+                    <CardContent>
+                      <Typography>{locker.name}</Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </NextLink>
                 <CardActions>
                   <Typography>{locker.status}</Typography>
                   <Button size="small" color="primary">
