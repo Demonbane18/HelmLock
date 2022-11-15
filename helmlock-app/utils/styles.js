@@ -7,15 +7,8 @@ const useStyles = makeStyles({
       marginLeft: 10,
     },
   },
-  root: {
-    border: '1px solid',
-    padding: '2px',
-    boxShadow: '5px 10px gray',
-  },
-
   brand: {
-    fontWeight: 'bold',
-    fontSize: '1.5rem',
+    fontSize: '1.8 rem',
   },
   grow: {
     flexGrow: 1,

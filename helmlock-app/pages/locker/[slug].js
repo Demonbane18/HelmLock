@@ -57,7 +57,7 @@ export default function ProductScreen() {
             </ListItem>
           </List>
           <Grid item md={3} xs={12}>
-            <Card sx={{ minWidth: 275 }} className={classes.root}>
+            <Card sx={{ minWidth: 275 }} variant="outlined">
               <CardContent>
                 <List>
                   <ListItem>
