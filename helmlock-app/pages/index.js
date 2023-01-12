@@ -10,15 +10,17 @@ import {
 } from '@mui/material';
 import NextLink from 'next/link';
 import Layout from '../components/Layout';
-import data from '../utils/data';
+import db from '../utils/db';
+import Locker from '../models/Locker'
 
-export default function Home() {
+export default function Home(props) {
+  const {lockers} = props;
   return (
     <Layout>
       <div>
         <h1>Lockers</h1>
         <Grid container spacing={3}>
-          {data.lockers.map((locker) => (
+          {lockers.map((locker) => (
             <Grid item md={4} key={locker.name}>
               <Card>
                 <NextLink href={`/locker/${locker.slug}`} passHref>
@@ -46,4 +48,15 @@ export default function Home() {
       </div>
     </Layout>
   );
+}
+
+export async function getServerSideProps() {
+  await db.connect();
+  const lockers = await Locker.find({}).lean();
+  await db.disconnect();
+  return {
+    props: {
+      lockers: lockers.map(db.convertDocToObj),
+    },
+  };
 }

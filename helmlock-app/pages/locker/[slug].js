@@ -11,18 +11,16 @@ import {
   CardContent,
   Button,
 } from '@mui/material';
-import { useRouter } from 'next/router';
-import data from '../../utils/data';
 import Layout from '../../components/Layout';
 import useStyles from '../../utils/styles';
-
-export default function ProductScreen() {
+import Locker from '../../models/Locker';
+import db from '../../utils/db';
+export default function LockerScreen(props) {
+  const {locker} = props;
   const classes = useStyles();
-  const router = useRouter();
-  const { slug } = router.query;
-  const locker = data.lockers.find((a) => a.slug === slug);
+
   if (!locker) {
-    return <div>Product not Found!</div>;
+    return <div>Locker not Found!</div>;
   }
   return (
     <Layout title={locker.name}>
@@ -99,4 +97,17 @@ export default function ProductScreen() {
       </Grid>
     </Layout>
   );
+}
+
+export async function getServerSideProps(context) {
+  const { params } = context;
+  const { slug } = params;
+  await db.connect();
+  const locker = await Locker.findOne({ slug }).lean();
+  await db.disconnect();
+  return {
+    props: {
+      locker: db.convertDocToObj(locker),
+    },
+  };
 }
