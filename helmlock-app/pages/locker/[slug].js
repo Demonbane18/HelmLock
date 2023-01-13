@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import NextLink from 'next/link';
 import Image from 'next/image';
 import {
@@ -15,12 +15,25 @@ import Layout from '../../components/Layout';
 import useStyles from '../../utils/styles';
 import Locker from '../../models/Locker';
 import db from '../../utils/db';
+import axios from 'axios';
+import  { Store } from '../../utils/Store';
+import { useRouter } from 'next/router';
 export default function LockerScreen(props) {
+  const router = useRouter();
+  const {dispatch} = useContext(Store);
   const {locker} = props;
   const classes = useStyles();
-
   if (!locker) {
     return <div>Locker not Found!</div>;
+  }
+  const addToCarthandler = async () => {
+    const {data} = await axios.get(`/api/lockers/${locker._id}`);
+    if(data.status === 'occupied') {
+      window.alert('Sorry, locker is already occupied!');
+      return;
+    }
+    dispatch({ type: 'CART_ADD_ITEM', payload: {...locker, time_elapsed:5}})
+    router.push('/cart');
   }
   return (
     <Layout title={locker.name}>
@@ -50,7 +63,7 @@ export default function LockerScreen(props) {
             </ListItem>
             <ListItem>
               <Typography>
-                {locker.time > 0 ? `Time left: ${locker.time}` : ''}
+                {locker.time_elapsed > 0 ? `Time elapsed: ${locker.time_elapsed}` : ''}
               </Typography>
             </ListItem>
           </List>
@@ -82,7 +95,7 @@ export default function LockerScreen(props) {
                   </ListItem>
                   <ListItem>
                     {locker.status === 'vacant' ? (
-                      <Button fullWidth variant="contained" color="primary">
+                      <Button fullWidth variant="contained" color="primary" onClick={addToCarthandler}>
                         Rent
                       </Button>
                     ) : (
