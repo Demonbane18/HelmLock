@@ -3,6 +3,7 @@ import Layout from '../components/Layout';
 import { Store } from '../utils/Store';
 import NextLink from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import {
   Grid,
   TableContainer,
@@ -19,13 +20,17 @@ import {
   Card,
   List,
   ListItem,
-} from '@material-ui/core';
+} from '@mui/material';
 
 export default function CartScreen() {
+  const router = useRouter();
   const { state } = useContext(Store);
   const {
     cart: { cartItems },
   } = state;
+  const checkoutHandler = () => {
+    router.push('/checkout');
+  };
 
   return (
     <Layout title="Shopping Cart">
@@ -102,7 +107,12 @@ export default function CartScreen() {
                   </Typography>
                 </ListItem>
                 <ListItem>
-                  <Button variant="contained" color="primary" fullWidth>
+                  <Button
+                    onClick={checkoutHandler}
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                  >
                     Check Out
                   </Button>
                 </ListItem>
