@@ -9,3 +9,9 @@
 ## Build Rental Wallet
 1. Users will top up the wallet using cards/gcash
 2. Coins is not transferrable
+
+## Reed switch
+1. x as the output (1, 0)
+2. if (0 && occupied){
+    send sms message
+}

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const productSchema = new mongoose.Schema(
+const lockerSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
@@ -15,6 +15,6 @@ const productSchema = new mongoose.Schema(
   }
 );
 
-const Product =
-  mongoose.models.Product || mongoose.model('Product', productSchema);
-export default Product;
+const Locker =
+  mongoose.models.Locker || mongoose.model('Locker', lockerSchema);
+export default Locker;
