@@ -2,7 +2,7 @@ import mqtt from "mqtt";
 import type { NextPage } from "next";
 
 const client = mqtt.connect("wss://test.mosquitto.org:8081");
-const topic = "test1"; // change this to whatever your want
+const topic = "servo"; // change this to whatever your want
 
 client.on("connect", () => {
   console.log("connected to mqtt broker.");
@@ -14,13 +14,6 @@ client.on("connect", () => {
     }
   });
 });
-function handleOn() {
-  console.log('on');
-}
-
-function handleOff() {
-  console.log('off');
-}
 
 const emit = (body: "0" | "1") => {
   client.publish(topic, body);
@@ -29,8 +22,8 @@ const emit = (body: "0" | "1") => {
 const Home: NextPage = () => {
   return (
     <>
-      <button onClick={() => {emit("1"),handleOn()}}>on</button>
-      <button onClick={() => {emit("0"),handleOff()}}>off</button>
+      <button onClick={() => emit("1")}>on</button>
+      <button onClick={() => emit("0")}>off</button>
     </>
   );
 };

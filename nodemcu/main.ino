@@ -1,17 +1,21 @@
+#include <Servo_ESP32.h>
 #include <WiFi.h>
-#include <WiFiClient.h>
-#include <BlynkSimpleEsp32.h>
+#include <Servo_ESP32.h>
 #include <PubSubClient.h>
 
-#define WIFI_SSID "Unidentified Network"             //Enter Wifi Name
-#define WIFI_PASS "D3C3n@F4M!Ly"         //Enter wifi Password
-#define myTopic  "test"   // change this to whatever your like
-#define mqtt_server  "test.mosquitto.org"
+const char* ssid = "Lakers";      // change this to your wifi account
+const char* password = "March0200$$$";  // change this to your wifi password
+const char* myTopic = "servo";   // change this to whatever your like
+const char* mqtt_server = "test.mosquitto.org";
+static const int servopin = 15; //printed G14 on the board
 
-#define RELAY_PIN  5  // D1
+Servo_ESP32 servo1;
 
+int angle =0;
+int angleStep = 5;
 
-
+int angleMin =0;
+int angleMax = 180;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -19,13 +23,20 @@ PubSubClient client(espClient);
 char msg[MSG_BUFFER_SIZE];
 
 void handler(char* topic, byte* payload, unsigned int length) {
-
   if ((char)payload[0] == '1') {
     Serial.println("on");
-    digitalWrite(RELAY_PIN, HIGH);  // on
-  } else
+      for(int angle = 0; angle <= angleMax; angle +=angleStep) {
+        servo1.write(angle);
+        Serial.println(angle);
+        delay(20);
+    }
+  } else {
     Serial.println("off");
-    digitalWrite(RELAY_PIN, LOW);  // off
+     for(int angle = 180; angle >= angleMin; angle -=angleStep) {
+        servo1.write(angle);
+        Serial.println(angle);
+        delay(20);
+    }
   }
 }
 
@@ -33,10 +44,10 @@ void setup_wifi() {
   delay(10);
   Serial.println();
   Serial.print("Connecting to ");
-  Serial.println(WIFI_SSID);
+  Serial.println(ssid);
 
   WiFi.mode(WIFI_STA);
-  WiFi.begin(WIFI_SSID, WIFI_PASS);
+  WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -44,6 +55,7 @@ void setup_wifi() {
   }
 
   randomSeed(micros());
+
 
   Serial.println("");
   Serial.println("WiFi connected");
@@ -58,7 +70,7 @@ void reconnect() {
     clientId += String(random(0xffff), HEX);
     if (client.connect(clientId.c_str())) {
       Serial.println("connected");
-      client.publish(myTopic, "esp connected");
+      client.publish(myTopic, "ESP32 connected");
       client.subscribe(myTopic);
     } else {
       Serial.print("failed, rc=");
@@ -70,8 +82,8 @@ void reconnect() {
 }
 
 void setup() {
-  pinMode(RELAY_PIN, OUTPUT);
   Serial.begin(115200);
+  servo1.attach(servopin);
   setup_wifi();
   client.setServer(mqtt_server, 1883);
   client.setCallback(handler);
