@@ -25,7 +25,7 @@ import { useRouter } from 'next/router';
 export default function Layout({ title, children }) {
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
-  const { darkMode, cart, userInfo } = state;
+  const { darkMode, userInfo } = state;
   const theme = createTheme({
     typography: {
       h1: {
@@ -69,7 +69,6 @@ export default function Layout({ title, children }) {
     setAnchorEl(null);
     dispatch({ type: 'USER_LOGOUT' });
     Cookies.remove('userInfo');
-    Cookies.remove('cartItems');
     router.push('/');
   };
   return (
@@ -93,20 +92,7 @@ export default function Layout({ title, children }) {
                 checked={darkMode}
                 onChange={darkModeChangeHandler}
               ></Switch>
-              <NextLink href="/cart" passHref>
-                <Link>
-                  {cart.cartItems.length > 0 ? (
-                    <Badge
-                      color="secondary"
-                      badgeContent={cart.cartItems.length}
-                    >
-                      Cart
-                    </Badge>
-                  ) : (
-                    'Cart'
-                  )}
-                </Link>
-              </NextLink>
+              
               {userInfo ? (
                 <>
                   <Button

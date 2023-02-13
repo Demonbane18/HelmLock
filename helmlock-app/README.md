@@ -9,6 +9,7 @@
 ## Build Rental Wallet
 1. Users will top up the wallet using cards/gcash
 2. Coins is not transferrable
+3. add moment js to count time
 
 ## Reed switch
 1. x as the output (1, 0)
