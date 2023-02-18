@@ -15,15 +15,23 @@ client.on("connect", () => {
   });
 });
 
-const emit = (body: "0" | "1") => {
+const emit = (body: "0" | "1" | "2" | "3") => {
   client.publish(topic, body);
 };
 
 const Home: NextPage = () => {
   return (
     <>
-      <button onClick={() => emit("1")}>on</button>
-      <button onClick={() => emit("0")}>off</button>
+      <div>
+        <h2>Servo 1</h2>
+        <button onClick={() => emit("1")}>on</button>
+        <button onClick={() => emit("0")}>off</button>
+      </div>
+      <div>
+        <h2>Servo 2</h2>
+        <button onClick={() => emit("3")}>on</button>
+        <button onClick={() => emit("2")}>off</button>
+      </div>
     </>
   );
 };

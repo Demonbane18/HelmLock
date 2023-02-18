@@ -1,7 +1,18 @@
 #include <Servo_ESP32.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
+#include <Grandeur.h>
 
+/*for grandeur credentials*/
+const char* apiKey = " grandeurle9radca01lc0jnhg4v96ox6";
+const char* deviceID = "devicele9rrw4i01lh0jnhejd94683";
+const char* token = "ba0381edf50711a398d13655d0439bc73cfde08411fac090b216350f1257e6fd";  
+
+
+/* Create variable to hold project and device */
+Grandeur::Project project;
+Grandeur::Project::Device device;
+  
 
 const char* ssid = "Lakers";      // change this to your wifi account
 const char* password = "March0200$$$";  // change this to your wifi password
@@ -32,18 +43,38 @@ void handler(char* topic, byte* payload, unsigned int length) {
     Serial.println("on");
       for(int angle = 0; angle <= angleMax; angle +=angleStep) {
         servo1.write(angle);
-        servo2.write(angle);
         delay(20);
     }
-  } else {
+  } else if((char)payload[0] == '0') {
     Serial.println("off");
      for(int angle = 180; angle >= angleMin; angle -=angleStep) {
         servo1.write(angle);
+        Serial.println(angle);
+        delay(20);
+    }
+  }
+
+   else if ((char)payload[0] == '3') {
+    Serial.println("on");
+      for(int angle = 0; angle <= angleMax; angle +=angleStep) {
+        servo2.write(angle);
+        delay(20);
+    }
+  } else if((char)payload[0] == '2') {
+    Serial.println("off");
+     for(int angle = 180; angle >= angleMin; angle -=angleStep) {
         servo2.write(angle);
         Serial.println(angle);
         delay(20);
     }
   }
+}
+
+
+void reedStatus (const char* code,int state) {   // You can write any type int/double/bool/const char* in place of int and it'll cast status to that type.
+  // This method prints "state" value after it is updated on Grandeur.
+  Serial.print("State: ");
+  Serial.println (state); 
 }
 
 void setup_wifi() {
@@ -94,15 +125,14 @@ void setup() {
   setup_wifi();
   client.setServer(mqtt_server, 1883);
   client.setCallback(handler);
+   project = grandeur.init(apiKey, token);
+   device = project.device(deviceID);
+
 }
 
 void loop() {
-  if (!client.connected()) {
-    reconnect();
-  }
-
-  client.loop();
-
+    if (project.isConnected()) 
+    {
   doorState = digitalRead(DOOR_SENSOR_PIN); // read state
  
   if (doorState == HIGH) {                         
@@ -111,5 +141,15 @@ void loop() {
   } else {
     Serial.println("The door is closed");
     delay(1000);
-  } 
-} 
+  }
+       device.data().set("state",doorState,reedStatus);    // This requests to set the "state" variable on every loop and calls reedStatus() function when the
+  // variable is actually updated on Grandeur. 
+    project.loop();  
+ }
+  
+  if (!client.connected()) {
+    reconnect();
+  }
+
+  client.loop();
+}
