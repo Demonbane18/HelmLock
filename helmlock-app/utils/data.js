@@ -42,6 +42,30 @@ const data = {
       price: 10,
       image: '/images/unlocked.jpg',
     },
+    {
+      name: 'Locker 4',
+      slug: 'locker-4',
+      time_elapsed: '',
+      status: 'vacant',
+      price: 10,
+      image: '/images/unlocked.jpg',
+    },
+    {
+      name: 'Locker 5',
+      slug: 'locker-5',
+      time_elapsed: '',
+      status: 'vacant',
+      price: 10,
+      image: '/images/unlocked.jpg',
+    },
+    {
+      name: 'Locker 6',
+      slug: 'locker-6',
+      time_elapsed: '',
+      status: 'vacant',
+      price: 10,
+      image: '/images/unlocked.jpg',
+    },
   ],
 };
 

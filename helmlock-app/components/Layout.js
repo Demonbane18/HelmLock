@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
+import Image from 'next/image'
 import {
   AppBar,
   Toolbar,
@@ -82,10 +83,13 @@ export default function Layout({ title, children }) {
         <AppBar position="static" className={classes.navbar}>
           <Toolbar>
             <NextLink href="/" passHref>
-              <Typography className={classes.brand} sx={{ fontWeight: 'bold' }}>
-                Helmlock
-              </Typography>
-            </NextLink>
+              <Image 
+                src="/images/logo-horizontal.png"
+                alt="Logo"
+                width={165}
+                height={40}
+              />
+              </NextLink>
             <div className={classes.grow}></div>
             <div>
               <Switch

@@ -12,13 +12,18 @@ import NextLink from 'next/link';
 import Layout from '../components/Layout';
 import db from '../utils/db';
 import Locker from '../models/Locker'
+import Head from 'next/head';
 
 export default function Home(props) {
   const {lockers} = props;
   return (
+    
     <Layout>
+      <Head>
+        <title>Helmlock - Locker Dashboard</title>
+      </Head>
       <div>
-        <h1>Lockers</h1>
+        <h1>Locker Dashboard</h1>
         <Grid container spacing={3}>
           {lockers.map((locker) => (
             <Grid item md={4} key={locker.name}>

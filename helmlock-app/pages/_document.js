@@ -7,10 +7,16 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
+
           <link
             rel="stylesheet"
             href="https://font.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
+        <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+        <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="images/android-chrome-192x192.png"/>
+        <link rel="icon" type="image/png" sizes="512x512" href="images/android-chrome-512x512.png"/>
         </Head>
         <body>
           <Main />
