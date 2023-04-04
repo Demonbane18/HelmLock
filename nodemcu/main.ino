@@ -1,5 +1,5 @@
-#include <Servo_ESP32.h>
-#include <WiFi.h>
+#include <Servo.h>
+#include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
 
@@ -7,15 +7,21 @@ const char* ssid = "Lakers";      // change this to your wifi account
 const char* password = "March0200$$$";  // change this to your wifi password
 const char* myTopic = "servo";   // change this to whatever your like
 const char* mqtt_server = "test.mosquitto.org";
-static const int servopin1 = 15; //Pin for servo 1
-static const int servopin2 = 16; // Pin for servo 2
-static const int DOOR_SENSOR_PIN = 2; //Pin for Reed switch
+static const int servopin1 = D0; //Pin for servo 1
+static const int servopin2 = D1; // Pin for servo 2
+static const int servopin3 = D2; //Pin for servo 3
+static const int servopin4 = D6; //Pin for servo 4
+static const int servopin5 = D7; // Pin for servo 5
+static const int servopin6 = D8; //Pin for servo 6
 
 
-Servo_ESP32 servo1;
-Servo_ESP32 servo2;
+Servo servo1;
+Servo servo2;
+Servo servo3;
+Servo servo4;
+Servo servo5;
+Servo servo6;
 
-int doorState=0;
 int angle =0;
 int angleStep = 5;
 
@@ -32,14 +38,87 @@ void handler(char* topic, byte* payload, unsigned int length) {
     Serial.println("on");
       for(int angle = 0; angle <= angleMax; angle +=angleStep) {
         servo1.write(angle);
-        servo2.write(angle);
         delay(20);
     }
-  } else {
+  } else if((char)payload[0] == '0') {
     Serial.println("off");
      for(int angle = 180; angle >= angleMin; angle -=angleStep) {
         servo1.write(angle);
+        Serial.println(angle);
+        delay(20);
+    }
+  }
+
+   else if ((char)payload[0] == '3') {
+    Serial.println("on");
+      for(int angle = 0; angle <= angleMax; angle +=angleStep) {
         servo2.write(angle);
+        delay(20);
+    }
+  } else if((char)payload[0] == '2') {
+    Serial.println("off");
+     for(int angle = 180; angle >= angleMin; angle -=angleStep) {
+        servo2.write(angle);
+        Serial.println(angle);
+        delay(20);
+    }
+  }
+
+  else if ((char)payload[0] == '5') {
+    Serial.println("on");
+      for(int angle = 0; angle <= angleMax; angle +=angleStep) {
+        servo3.write(angle);
+        delay(20);
+    }
+  } else if((char)payload[0] == '4') {
+    Serial.println("off");
+     for(int angle = 180; angle >= angleMin; angle -=angleStep) {
+        servo3.write(angle);
+        Serial.println(angle);
+        delay(20);
+    }
+  }
+
+  else if ((char)payload[0] == 'b') {
+    Serial.println("on");
+      for(int angle = 0; angle <= angleMax; angle +=angleStep) {
+        servo4.write(angle);
+        delay(20);
+    }
+  } else if((char)payload[0] == 'a') {
+    Serial.println("off");
+     for(int angle = 180; angle >= angleMin; angle -=angleStep) {
+        servo4.write(angle);
+        Serial.println(angle);
+        delay(20);
+    }
+  }
+
+  else if ((char)payload[0] == '9') {
+    Serial.println("on");
+      for(int angle = 0; angle <= angleMax; angle +=angleStep) {
+        servo5.write(angle);
+        delay(20);
+    }
+  } else if((char)payload[0] == '8') {
+    Serial.println("off");
+     for(int angle = 180; angle >= angleMin; angle -=angleStep) {
+        servo5.write(angle);
+        Serial.println(angle);
+        delay(20);
+    }
+  }
+
+  else if ((char)payload[0] == '11') {
+    Serial.println("on");
+      for(int angle = 0; angle <= angleMax; angle +=angleStep) {
+        servo6.write(angle);
+        delay(20);
+    }
+  } else if((char)payload[0] == '10') {
+    Serial.println("off");
+     for(int angle = 180; angle >= angleMin; angle -=angleStep) {
+        servo6.write(angle);
         Serial.println(angle);
         delay(20);
     }
@@ -88,9 +167,12 @@ void reconnect() {
 
 void setup() {
   Serial.begin(115200);
-  pinMode(DOOR_SENSOR_PIN, INPUT_PULLUP);
   servo1.attach(servopin1);
   servo2.attach(servopin2);
+  servo3.attach(servopin3);
+  servo4.attach(servopin4);
+  servo5.attach(servopin5);
+  servo6.attach(servopin6);
   setup_wifi();
   client.setServer(mqtt_server, 1883);
   client.setCallback(handler);
@@ -102,14 +184,4 @@ void loop() {
   }
 
   client.loop();
-
-  doorState = digitalRead(DOOR_SENSOR_PIN); // read state
- 
-  if (doorState == HIGH) {                         
-    Serial.println("The door is open");
-    delay(1000);
-  } else {
-    Serial.println("The door is closed");
-    delay(1000);
-  } 
 } 
