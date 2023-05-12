@@ -46,10 +46,16 @@ export default function Layout({ title, children }) {
     palette: {
       mode: darkMode ? 'dark' : 'light',
       primary: {
-        main: '#f0c000',
+        main: '#f44336',
+        contrastText: '#fff',
       },
       secondary: {
         main: '#208080',
+        contrastText: '#fff',
+      },
+      neutral: {
+        main: '#ffffff',
+        contrastText: '#fff',
       },
     },
   });
@@ -94,6 +100,7 @@ export default function Layout({ title, children }) {
             <div>
               <Switch
                 checked={darkMode}
+                defaultChecked color="default"
                 onChange={darkModeChangeHandler}
               ></Switch>
               
@@ -102,6 +109,7 @@ export default function Layout({ title, children }) {
                   <Button
                     aria-controls="simple-menu"
                     aria-haspopup="true"
+                    color="neutral"
                     onClick={loginClickHandler}
                     className={classes.navbarButton}
                   >
