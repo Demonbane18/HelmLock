@@ -33,3 +33,7 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+#webpack
+.webpack .pack
+.pack.old
