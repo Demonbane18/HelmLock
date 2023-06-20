@@ -1,0 +1,2 @@
+- payment page
+-individual locker button open/close page once rented with ongoing timer
