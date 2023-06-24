@@ -1,6 +1,6 @@
 import Layout from './components/Layout';
 import LockerItem from './components/Lockeritem';
-import data from './utils/data';
+import data from '../utils/data';
 
 export default function Home() {
   return (

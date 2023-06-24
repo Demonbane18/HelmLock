@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import Layout from '../../components/Layout';
-import data from '../../utils/data';
+import data from '../../../utils/data';
 
 export default function LockerScreen({ params }) {
   const { slug } = params;

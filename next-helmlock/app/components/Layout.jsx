@@ -1,8 +1,13 @@
+'use client';
+import { useSession } from 'next-auth/react';
 import Head from 'next/head';
 import Link from 'next/link';
 import React from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Layout({ title, children }) {
+  const { data: session, status } = useSession();
   return (
     <>
       <Head>
@@ -10,6 +15,7 @@ export default function Layout({ title, children }) {
         <meta name="description" content="Locker rental app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <ToastContainer position="bottom-center" limit={1} />
 
       <div className="flex min-h-screen flex-col justify-between ">
         <header>
@@ -18,9 +24,15 @@ export default function Layout({ title, children }) {
               helmlock
             </Link>
             <div>
-              <Link id="link" href="/login" className="p-2">
-                Login
-              </Link>
+              {status === 'loading' ? (
+                'Loading'
+              ) : session?.user ? (
+                session.user.name
+              ) : (
+                <Link href="/signin" className="p-2">
+                  Sign In
+                </Link>
+              )}
             </div>
           </nav>
         </header>
