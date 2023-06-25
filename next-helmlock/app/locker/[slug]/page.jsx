@@ -27,15 +27,13 @@ export default function LockerScreen({ params }) {
             layout="responsive"
           ></Image>
         </div>
-        <div>
-          <ul>
-            <li>
-              <h1 className="text-lg">{locker.name}</h1>
-            </li>
-          </ul>
-        </div>
+        <div></div>
         <div>
           <div className="card p-5">
+            <div className="mb-2 flex justify-between">
+              <h1 className="text-lg font-bold">{locker.name}</h1>
+            </div>
+
             <div className="mb-2 flex justify-between">
               <div>Price</div>
               <div>${locker.price}</div>
