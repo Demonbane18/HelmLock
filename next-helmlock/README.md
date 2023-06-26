@@ -21,4 +21,4 @@ add verify email and password
 
 connect pubsub to open/close buttons
 connect reed switch to FirebaseFCM
-connect FirebaseFCM to novo to send notification
+connect FirebaseFCM to novo to send notification and email notification
