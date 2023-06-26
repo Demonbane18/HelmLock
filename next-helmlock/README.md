@@ -1,11 +1,11 @@
 ## Client Side
 
-1. Adjust image size and price on locker slug page
-2. ✔change color scheme green
-3. create payment method screen
-4. create duration screen with automatic opening and closing conditions
-5. create renting logic
-6. place order screen with alert message for penalty
+✔Adjust image size and price on locker slug page
+✔change color scheme green
+✔create payment method screen
+create duration logic with automatic opening and closing conditions
+create renting logic
+place order screen with alert message for penalty
 
 ## Admin Side
 

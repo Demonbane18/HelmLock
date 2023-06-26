@@ -9,10 +9,18 @@ import { Menu } from '@headlessui/react';
 import 'react-toastify/dist/ReactToastify.css';
 import { Store } from '../../utils/Store';
 import DropdownLink from './DropdownLink';
+import { useRouter } from 'next/navigation';
+import SearchIcon from '@heroicons/react/24/outline/MagnifyingGlassIcon';
 
 export default function Layout({ title, children }) {
   const { data: session, status } = useSession();
   const { state, dispatch } = useContext(Store);
+  const { cart } = state;
+  const [cartItemsCount, setCartItemsCount] = useState(0);
+  useEffect(() => {
+    setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
+  }, [cart.cartItems]);
+
   const logoutClickHandler = () => {
     Cookies.remove('cart');
     dispatch({ type: 'CART_RESET' });
@@ -33,7 +41,15 @@ export default function Layout({ title, children }) {
             <Link id="link" href="/" className="text-lg font-bold">
               helmlock
             </Link>
-            <div>
+            <div className="flex items-center z-10">
+              <Link href="/cart" className="p-2">
+                Cart
+                {cartItemsCount > 0 && (
+                  <span className="ml-1 rounded-full bg-red-600 px-2 py-1 text-xs font-bold text-white">
+                    {cartItemsCount}
+                  </span>
+                )}
+              </Link>
               {status === 'loading' ? (
                 'Loading'
               ) : session?.user ? (

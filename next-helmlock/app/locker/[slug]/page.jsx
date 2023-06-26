@@ -1,17 +1,33 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import { useRouter } from 'next/navigation';
+import React, { useContext } from 'react';
 import Layout from '../../components/Layout';
 import data from '../../../utils/data';
+import { Store } from '../../../utils/Store';
 
 export default function LockerScreen({ params }) {
+  const { state, dispatch } = useContext(Store);
   const { slug } = params;
+  const router = useRouter();
   const locker = data.lockers.find((x) => x.slug === slug);
   console.log(locker);
   if (!locker) {
     return <div>Locker Not Found</div>;
   }
+  const addToCartHandler = () => {
+    const existItem = state.cart.cartItems.find((x) => x.slug === locker.slug);
+    const quantity = existItem ? existItem.quantity : 1;
+
+    if (locker.status === 'occupied') {
+      alert('Sorry. Locker is already occupied.');
+      return;
+    }
+
+    dispatch({ type: 'CART_ADD_ITEM', payload: { ...locker, quantity } });
+    router.push('/cart');
+  };
   return (
     <Layout title={locker.name}>
       <div className="py-2">
@@ -24,7 +40,6 @@ export default function LockerScreen({ params }) {
             alt={locker.name}
             width={640}
             height={640}
-            layout="responsive"
           ></Image>
         </div>
         <div></div>
@@ -42,7 +57,12 @@ export default function LockerScreen({ params }) {
               <div>Status</div>
               <div>{locker.status}</div>
             </div>
-            <button className="primary-button w-full">Rent</button>
+            <button
+              className="primary-button w-full"
+              onClick={addToCartHandler}
+            >
+              Rent
+            </button>
           </div>
         </div>
       </div>
