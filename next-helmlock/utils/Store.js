@@ -37,17 +37,17 @@ function reducer(state, action) {
         ...state,
         cart: {
           cartItems: [],
-          shippingAddress: { location: {} },
+          lockerDuration: { Duration: {} },
           paymentMethod: '',
         },
       };
-    case 'SAVE_SHIPPING_ADDRESS':
+    case 'SAVE_LOCKER_DURATION':
       return {
         ...state,
         cart: {
           ...state.cart,
-          shippingAddress: {
-            ...state.cart.shippingAddress,
+          lockerDuration: {
+            ...state.cart.lockerDuration,
             ...action.payload,
           },
         },

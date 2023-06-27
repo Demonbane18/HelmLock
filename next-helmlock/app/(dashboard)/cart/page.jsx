@@ -7,6 +7,7 @@ import Layout from '../../components/Layout';
 import { Store } from '../../../utils/Store';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import { opening } from '../../../utils/opening';
 
 function CartScreen() {
   const router = useRouter();
@@ -17,10 +18,14 @@ function CartScreen() {
   const removeItemHandler = (item) => {
     dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
   };
-  const updateCartHandler = (item, qty) => {
-    const quantity = Number(qty);
-    dispatch({ type: 'CART_ADD_ITEM', payload: { ...item, quantity } });
+  const updateCartHandler = (item, dur) => {
+    const duration = Number(dur);
+    dispatch({
+      type: 'CART_ADD_ITEM',
+      payload: { ...item, duration },
+    });
   };
+
   return (
     <Layout title="Shopping Cart">
       <h1 className="mb-4 text-xl">Pending Locker/s</h1>
@@ -34,7 +39,10 @@ function CartScreen() {
             <table className="min-w-full ">
               <thead className="border-b">
                 <tr>
-                  <th className="p-5 text-left">Item</th>
+                  <th className="p-5 text-left">Locker Number</th>
+                  <th className="p-5 text-right" hidden>
+                    Duration
+                  </th>
                   <th className="p-5 text-right">Duration</th>
                   <th className="p-5 text-right">Price</th>
                   <th className="p-5">Action</th>
@@ -63,12 +71,12 @@ function CartScreen() {
                     </td>
                     <td className="p-5 text-right">
                       <select
-                        value={item.quantity}
+                        value={item.duration ? item.duration : 1}
                         onChange={(e) =>
                           updateCartHandler(item, e.target.value)
                         }
                       >
-                        {[...Array(item.countInStock).keys()].map((x) => (
+                        {[...Array(opening()).keys()].map((x) => (
                           <option key={x + 1} value={x + 1}>
                             {x + 1}
                           </option>
@@ -90,13 +98,20 @@ function CartScreen() {
             <ul>
               <li>
                 <div className="pb-3 text-xl">
-                  Subtotal ({cartItems.reduce((a, c) => a + c.quantity, 0)}) : $
-                  {cartItems.reduce((a, c) => a + c.quantity * c.price, 0)}
+                  Subtotal ({cartItems.reduce((a, c) => a + c.duration, 0)}) : ₱
+                  {cartItems.reduce((a, c) => a + c.duration * c.price, 0)}
                 </div>
               </li>
               <li>
                 <button
-                  onClick={() => router.push('login?redirect=/shipping')}
+                  onClick={(e) => {
+                    e.preventDefault;
+                    router.push('/locker_duration');
+                    // if (session?.user) {
+                    // router.push('/locker_duration');
+                    // }
+                    // router.push('/signin');
+                  }}
                   className="primary-button w-full"
                 >
                   Check Out

@@ -9,12 +9,10 @@ import { Store } from '../../../utils/Store';
 
 export default function PaymentScreen() {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
-
   const { state, dispatch } = useContext(Store);
   const { cart } = state;
   const { lockerDuration, paymentMethod } = cart;
   const router = useRouter();
-
   const submitHandler = (e) => {
     e.preventDefault();
     if (!selectedPaymentMethod) {
@@ -32,12 +30,13 @@ export default function PaymentScreen() {
     router.push('/placeorder');
   };
   useEffect(() => {
-    if (!lockerDuration.duration) {
-      return router.push('/locker_duration');
-    }
+    // if (!lockerDuration.duration) {
+    //   return router.push('/locker_duration');
+    // }
     setSelectedPaymentMethod(paymentMethod || '');
   }, [paymentMethod, router, lockerDuration.duration]);
 
+  console.log(Cookies.get('cart'));
   return (
     <Layout title="Payment Method">
       <CheckoutWizard activeStep={2} />

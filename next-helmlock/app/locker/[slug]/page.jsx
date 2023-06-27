@@ -24,6 +24,10 @@ export default function LockerScreen({ params }) {
       alert('Sorry. Locker is already occupied.');
       return;
     }
+    if (state.cart.cartItems.length === 1) {
+      alert("You've already chosen a locker. Please check your cart");
+      return;
+    }
 
     dispatch({ type: 'CART_ADD_ITEM', payload: { ...locker, quantity } });
     router.push('/cart');

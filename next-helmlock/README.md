@@ -3,9 +3,10 @@
 ✔Adjust image size and price on locker slug page
 ✔change color scheme green
 ✔create payment method screen
-create duration logic with automatic opening and closing conditions
+create duration logic with automatic opening and closing conditions 50 percent
 create renting logic
 place order screen with alert message for penalty
+fix form for locker duration screen fix cart duration and updatedTime
 
 ## Admin Side
 
