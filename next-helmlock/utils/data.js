@@ -21,8 +21,7 @@ const data = {
     {
       name: 'Locker 1',
       slug: 'locker-1',
-      time_elapsed: 5,
-
+      duration: 5,
       status: 'occupied',
       price: 10,
       image: '/images/locked.jpg',
@@ -30,7 +29,7 @@ const data = {
     {
       name: 'Locker 2',
       slug: 'locker-2',
-      time_elapsed: '',
+      duration: '',
       status: 'vacant',
       price: 10,
       image: '/images/unlocked.jpg',
@@ -38,7 +37,7 @@ const data = {
     {
       name: 'Locker 3',
       slug: 'locker-3',
-      time_elapsed: '',
+      duration: '',
       status: 'vacant',
       price: 10,
       image: '/images/unlocked.jpg',
@@ -46,7 +45,7 @@ const data = {
     {
       name: 'Locker 4',
       slug: 'locker-4',
-      time_elapsed: '',
+      duration: '',
       status: 'vacant',
       price: 10,
       image: '/images/unlocked.jpg',
@@ -54,7 +53,7 @@ const data = {
     {
       name: 'Locker 5',
       slug: 'locker-5',
-      time_elapsed: '',
+      duration: '',
       status: 'vacant',
       price: 10,
       image: '/images/unlocked.jpg',
@@ -62,7 +61,7 @@ const data = {
     {
       name: 'Locker 6',
       slug: 'locker-6',
-      time_elapsed: '',
+      duration: '',
       status: 'vacant',
       price: 10,
       image: '/images/unlocked.jpg',
