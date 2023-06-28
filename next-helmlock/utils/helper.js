@@ -107,6 +107,18 @@ export const currentTime = () => {
   return curTime;
 };
 
+export const rDuration = (e) => {
+  var [duration, setDuration] = useState();
+
+  useEffect(() => {
+    var timer = setInterval(() => setDuration(e), 1000);
+    return function cleanup() {
+      clearInterval(timer);
+    };
+  });
+  return duration;
+};
+
 export const updatedTime = (duration) => {
   var [date, setDate] = useState(new Date());
   var currentDate = new Date();

@@ -10,29 +10,40 @@ import { Store } from '../../../utils/Store';
 import { useRouter } from 'next/navigation';
 import React, { useContext, useEffect, useState } from 'react';
 // import { prisma } from '../../../server/db/client';
-import { currentTime, updatedTime } from '../../../utils/helper';
+import { currentTime, updatedTime, rDuration } from '../../../utils/helper';
 
 export default function DurationScreen() {
   const { state, dispatch } = useContext(Store);
   const { cart } = state;
-  const { lockerDuration } = cart;
-  const { cartDuration } = cart.cartItems[0].duration;
+  const { lockerDuration, cartItems } = cart;
+  const duration = cartItems[0].duration;
   const router = useRouter();
-  const { handleSubmit, register, setValue, reset } = useForm();
+  let StartTime = currentTime();
+  let EndTime = updatedTime(duration);
+  let LockerDuration = rDuration(duration);
+  const defaultValues = {
+    duration: LockerDuration,
+    startTime: StartTime,
+    endTime: EndTime,
+  };
+  const { handleSubmit, register, setValue, reset } = useForm({
+    defaultValues,
+  });
+
   useEffect(() => {
     setValue('duration', lockerDuration.duration);
     setValue('startTime', lockerDuration.startTime);
     setValue('endTime', lockerDuration.endTime);
   }, [setValue, lockerDuration]);
-  var StartTime = currentTime();
-  var EndTime = updatedTime(cartDuration);
-  console.log(cartDuration);
+
+  console.log(duration);
 
   const submitHandler = ({ duration, startTime, endTime }) => {
     dispatch({
       type: 'SAVE_LOCKER_DURATION',
       payload: { duration, startTime, endTime },
     });
+    Cookies.remove('cart');
     Cookies.set(
       'cart',
       JSON.stringify({
@@ -61,8 +72,8 @@ export default function DurationScreen() {
           <input
             className="w-full"
             id="duration"
-            value={cartDuration}
-            disabled
+            autoFocus
+            value={LockerDuration}
             {...register('duration', { required: true })}
           />
         </div>
@@ -73,7 +84,6 @@ export default function DurationScreen() {
             className="w-full"
             id="startTime"
             autoFocus
-            disabled
             value={StartTime}
             {...register('startTime', { required: true })}
           />
@@ -85,8 +95,7 @@ export default function DurationScreen() {
             id="endTime"
             type="text"
             autoFocus
-            disabled
-            value={EndTime}
+            value={updatedTime(duration)}
             {...register('endTime', { required: true })}
           />
         </div>
@@ -96,7 +105,7 @@ export default function DurationScreen() {
             onClick={() => {
               reset((formValues) => ({
                 ...formValues,
-                duration: cartDuration,
+                duration: duration,
                 startTime: StartTime,
                 endTime: EndTime,
               }));

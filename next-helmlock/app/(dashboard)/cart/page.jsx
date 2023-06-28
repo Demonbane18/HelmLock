@@ -83,7 +83,7 @@ function CartScreen() {
                         ))}
                       </select>
                     </td>
-                    <td className="p-5 text-right">${item.price}</td>
+                    <td className="p-5 text-right">₱{item.price}</td>
                     <td className="p-5 text-center">
                       <button onClick={() => removeItemHandler(item)}>
                         <XCircleIcon className="h-5 w-5"></XCircleIcon>
@@ -98,8 +98,14 @@ function CartScreen() {
             <ul>
               <li>
                 <div className="pb-3 text-xl">
-                  Subtotal ({cartItems.reduce((a, c) => a + c.duration, 0)}) : ₱
-                  {cartItems.reduce((a, c) => a + c.duration * c.price, 0)}
+                  Subtotal (
+                  {cartItems.reduce((a, c) => a + c.duration, 0)
+                    ? cartItems.reduce((a, c) => a + c.duration, 0)
+                    : 10}
+                  ) : ₱
+                  {cartItems.reduce((a, c) => a + c.duration * c.price, 0)
+                    ? cartItems.reduce((a, c) => a + c.duration * c.price, 0)
+                    : 10}
                 </div>
               </li>
               <li>
