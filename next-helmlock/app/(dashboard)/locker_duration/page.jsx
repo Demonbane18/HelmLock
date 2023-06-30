@@ -36,7 +36,7 @@ export default function DurationScreen() {
     setValue('endTime', lockerDuration.endTime);
   }, [setValue, lockerDuration]);
 
-  console.log(duration);
+  // console.log(duration);
 
   const submitHandler = ({ duration, startTime, endTime }) => {
     dispatch({

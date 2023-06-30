@@ -12,7 +12,6 @@ const StoreContext = ({ lockers }) => {
     const existItem = cart.cartItems.find((x) => x.slug === locker.slug);
     const quantity = existItem ? existItem.quantity : 1;
     const { data } = await axios.get(`/api/lockers/${locker._id}`);
-    console.log('data value:' + data);
     if (data.locker?.status === 'occupied') {
       return toast.error('Sorry. Locker is occupied');
     }

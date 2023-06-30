@@ -4,8 +4,9 @@
 ✔change color scheme green
 ✔create payment method screen
 ✔fix form for locker duration screen fix cart duration and updatedTime
-Place Order screen
-payment screen
+✔Place Order screen
+✔payment screen
+fix axios api
 create renting logic
 create duration logic with automatic opening and closing conditions 50 percent
 

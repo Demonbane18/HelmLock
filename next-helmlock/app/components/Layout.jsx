@@ -39,7 +39,11 @@ export default function Layout({ title, children }) {
       <div className="flex min-h-screen flex-col justify-between ">
         <header>
           <nav className="flex h-12 items-center px-4 justify-between shadow-md">
-            <Link id="link" href="/" className="text-lg font-bold">
+            <Link
+              id="link"
+              href="/"
+              className="text-lg font-bold cursor-pointer"
+            >
               helmlock
             </Link>
             <div className="flex items-center z-10">
@@ -55,18 +59,21 @@ export default function Layout({ title, children }) {
                 'Loading'
               ) : session?.user ? (
                 <Menu as="div" className="relative inline-block">
-                  <Menu.Button className="text-blue-600">
+                  <Menu.Button className="text-blue-600 cursor-pointer">
                     {session.user.name}
                   </Menu.Button>
                   <Menu.Items className="absolute right-0 w-56 origin-top-right bg-white  shadow-lg ">
                     <Menu.Item>
-                      <DropdownLink className="dropdown-link" href="/profile">
+                      <DropdownLink
+                        className="dropdown-link cursor-pointer"
+                        href="/profile"
+                      >
                         Profile
                       </DropdownLink>
                     </Menu.Item>
                     <Menu.Item>
                       <DropdownLink
-                        className="dropdown-link"
+                        className="dropdown-link cursor-pointer"
                         href="/order-history"
                       >
                         Order History
@@ -74,7 +81,7 @@ export default function Layout({ title, children }) {
                     </Menu.Item>
                     <Menu.Item>
                       <a
-                        className="dropdown-link"
+                        className="dropdown-link cursor-pointer"
                         href="#"
                         onClick={logoutClickHandler}
                       >
@@ -84,7 +91,7 @@ export default function Layout({ title, children }) {
                   </Menu.Items>
                 </Menu>
               ) : (
-                <Link href="/signin" className="p-2">
+                <Link href="/signin" className="p-2 cursor-pointer">
                   Sign In
                 </Link>
               )}

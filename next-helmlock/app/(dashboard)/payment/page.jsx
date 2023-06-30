@@ -36,7 +36,7 @@ export default function PaymentScreen() {
     setSelectedPaymentMethod(paymentMethod || '');
   }, [paymentMethod, router, lockerDuration.duration]);
 
-  console.log(Cookies.get('cart'));
+  // console.log(Cookies.get('cart'));
   return (
     <Layout title="Payment Method">
       <CheckoutWizard activeStep={2} />
@@ -72,3 +72,4 @@ export default function PaymentScreen() {
     </Layout>
   );
 }
+PaymentScreen.auth = true;
