@@ -14,5 +14,6 @@ const lockerSchema = new mongoose.Schema(
   }
 );
 
-const Locker = mongoose.models.Locker || mongoose.model('Locker', lockerSchema);
+const Locker =
+  mongoose.models?.Locker || mongoose.model('Locker', lockerSchema);
 export default Locker;

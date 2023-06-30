@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import React from 'react';
 
-export default function lockerItem({ locker }) {
+export default function lockerItem({ locker, addToCartHandler }) {
   return (
     <div className="card">
       <Link id="link" href={`/locker/${locker.slug}`}>
@@ -22,7 +22,11 @@ export default function lockerItem({ locker }) {
           {locker.status}
         </p>
         <p>${locker.price}</p>
-        <button className="primary-button" type="button">
+        <button
+          className="primary-button"
+          type="button"
+          onClick={() => addToCartHandler(locker)}
+        >
           Rent
         </button>
       </div>

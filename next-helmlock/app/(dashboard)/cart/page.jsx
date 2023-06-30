@@ -7,6 +7,8 @@ import Layout from '../../components/Layout';
 import { Store } from '../../../utils/Store';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 import { opening } from '../../../utils/opening';
 
 function CartScreen() {
@@ -18,12 +20,17 @@ function CartScreen() {
   const removeItemHandler = (item) => {
     dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
   };
-  const updateCartHandler = (item, dur) => {
+  const updateCartHandler = async (item, dur) => {
     const duration = Number(dur);
+    const { data } = await axios.get(`/api/lockers/${item._id}`);
+    if (data.locker?.status === 'occupied') {
+      return toast.error('Sorry. Locker is already occupied');
+    }
     dispatch({
       type: 'CART_ADD_ITEM',
       payload: { ...item, duration },
     });
+    toast.success('Locker duration updated in the cart');
   };
 
   return (
@@ -43,7 +50,7 @@ function CartScreen() {
                   <th className="p-5 text-right" hidden>
                     Duration
                   </th>
-                  <th className="p-5 text-right">Duration</th>
+                  <th className="p-5 text-right">Duration &#40;hr/s&#41;</th>
                   <th className="p-5 text-right">Price</th>
                   <th className="p-5">Action</th>
                 </tr>
