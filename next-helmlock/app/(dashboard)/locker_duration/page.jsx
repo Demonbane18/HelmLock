@@ -11,7 +11,11 @@ import { useRouter } from 'next/navigation';
 import React, { useContext, useEffect, useState } from 'react';
 // import { prisma } from '../../../server/db/client';
 import { currentTime, updatedTime, rDuration } from '../../../utils/helper';
-
+export function generateMetadata() {
+  return {
+    title: 'Locker Duration',
+  };
+}
 export default function DurationScreen() {
   const { state, dispatch } = useContext(Store);
   const { cart } = state;

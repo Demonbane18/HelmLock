@@ -6,7 +6,13 @@ import Cookies from 'js-cookie';
 import CheckoutWizard from '../../components/CheckoutWizard';
 import Layout from '../../components/Layout';
 import { Store } from '../../../utils/Store';
+import { Metadata } from 'next';
 
+export function generateMetadata() {
+  return {
+    title: 'Payment',
+  };
+}
 export default function PaymentScreen() {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
   const { state, dispatch } = useContext(Store);

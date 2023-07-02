@@ -11,7 +11,7 @@ const orderSchema = new mongoose.Schema(
         price: { type: Number, required: true },
       },
     ],
-    lockerDuration: {
+    orderDuration: {
       duration: { type: Number, required: true },
       startTime: { type: String, required: true },
       endTime: { type: String, required: true },
@@ -31,5 +31,9 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
-const Order = mongoose.models?.Order || mongoose.model('Order', orderSchema);
+const Order =
+  mongoose.models && 'Order' in mongoose.models
+    ? mongoose.models.Order
+    : mongoose.model('Order', orderSchema);
+
 export default Order;

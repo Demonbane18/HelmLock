@@ -4,15 +4,20 @@ import { Store } from '../../utils/Store';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import LockerItem from './Lockeritem';
+import getLockerById from '../actions/getLockerById';
 
 const StoreContext = ({ lockers }) => {
   const { state, dispatch } = useContext(Store);
   const { cart } = state;
   const addToCartHandler = async (locker) => {
+    console.log('lockerid');
+    console.log(locker._id);
     const existItem = cart.cartItems.find((x) => x.slug === locker.slug);
     const quantity = existItem ? existItem.quantity : 1;
-    const { data } = await axios.get(`/api/lockers/${locker._id}`);
-    if (data.locker?.status === 'occupied') {
+    const data = JSON.parse(JSON.stringify(await getLockerById(locker._id)));
+    console.log('locker data');
+    console.log(data.status);
+    if (data.status === 'occupied') {
       return toast.error('Sorry. Locker is occupied');
     }
     dispatch({ type: 'CART_ADD_ITEM', payload: { ...locker, quantity } });

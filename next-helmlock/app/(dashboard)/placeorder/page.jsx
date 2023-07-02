@@ -12,6 +12,13 @@ import { getError } from '../../../utils/error';
 import { Store } from '../../../utils/Store';
 import { currentTime, updatedTime } from '../../../utils/helper';
 
+import { Metadata } from 'next';
+
+export function generateMetadata() {
+  return {
+    title: 'Place Order',
+  };
+}
 export default function PlaceOrderScreen() {
   const { state, dispatch } = useContext(Store);
   const { cart } = state;

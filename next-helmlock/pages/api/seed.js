@@ -1,7 +1,7 @@
 import Locker from '../../models/Locker';
 import User from '../../models/User';
 import data from '../../utils/data';
-import db from '../../utils/db';
+import db from '../../utils/api/db';
 
 const handler = async (req, res) => {
   await db.connect();

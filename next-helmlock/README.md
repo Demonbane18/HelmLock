@@ -7,6 +7,7 @@
 ✔Place Order screen
 ✔payment screen
 fix axios api
+allow checking of start Time and end Time on place order screen
 create renting logic
 create duration logic with automatic opening and closing conditions 50 percent
 

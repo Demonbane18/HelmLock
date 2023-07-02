@@ -10,7 +10,13 @@ import dynamic from 'next/dynamic';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { opening } from '../../../utils/opening';
+import { Metadata } from 'next';
 
+export function generateMetadata() {
+  return {
+    title: 'Cart',
+  };
+}
 function CartScreen() {
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
