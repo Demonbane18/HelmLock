@@ -7,8 +7,13 @@ import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
+  metadataBase: new URL(process.env.NEXTAUTH_URL),
   title: 'Helmlock',
-  description: 'Helmet rental locker web app',
+  description: 'A Helmet locker rental web app',
+  openGraph: {
+    title: 'Helmlock',
+    description: 'A Helmet locker rental web app',
+  },
 };
 
 export default function RootLayout({ children }) {

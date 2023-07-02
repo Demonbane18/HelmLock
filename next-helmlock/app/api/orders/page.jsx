@@ -1,5 +1,5 @@
 import { getSession } from 'next-auth/next';
-import { authOptions } from '../auth/[...nextauth]';
+import { authOptions } from '../auth/[...nextauth]/route';
 import Order from '../../../models/Order';
 import db from '../../../utils/api/db';
 

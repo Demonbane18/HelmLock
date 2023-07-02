@@ -11,7 +11,7 @@ import Layout from '../../components/Layout';
 import { getError } from '../../../utils/error';
 import { Store } from '../../../utils/Store';
 import { currentTime, updatedTime } from '../../../utils/helper';
-
+import useRedirectAfterSomeSeconds from '../../../utils/redirect';
 import { Metadata } from 'next';
 
 export function generateMetadata() {
@@ -33,12 +33,27 @@ export default function PlaceOrderScreen() {
 
   const router = useRouter();
   useEffect(() => {
+    const customId = 'custom-id-yes';
+    toast.warning(
+      'You will be redirected back to home page in a minute. Please place your order',
+      {
+        toastId: customId,
+      },
+      { autoClose: 15000 }
+    );
     if (!paymentMethod) {
       router.push('/payment');
     }
   }, [paymentMethod, router]);
 
   const [loading, setLoading] = useState(false);
+  const [cartIsEmpty, setCartIsEmpty] = useState('empty');
+
+  if (cartItems.length !== 0) {
+    useEffect(() => setCartIsEmpty('not empty'), []);
+  }
+
+  useRedirectAfterSomeSeconds('/', 60);
 
   const placeOrderHandler = async () => {
     try {
@@ -72,7 +87,7 @@ export default function PlaceOrderScreen() {
     <Layout title="Place Order">
       <CheckoutWizard activeStep={3} />
       <h1 className="mb-4 text-xl">Place Order</h1>
-      {cartItems.length === 0 ? (
+      {cartIsEmpty === 'empty' ? (
         <div>
           Cart is empty.{' '}
           <Link href="/" id="link">

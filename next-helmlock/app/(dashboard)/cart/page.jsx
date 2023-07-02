@@ -11,6 +11,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { opening } from '../../../utils/opening';
 import { Metadata } from 'next';
+import getLockerById from '../../actions/getLockerById';
 
 export function generateMetadata() {
   return {
@@ -28,8 +29,9 @@ function CartScreen() {
   };
   const updateCartHandler = async (item, dur) => {
     const duration = Number(dur);
-    const { data } = await axios.get(`/api/lockers/${item._id}`);
-    if (data.locker?.status === 'occupied') {
+    const data = JSON.parse(JSON.stringify(await getLockerById(item._id)));
+    if (data.status === 'occupied') {
+      dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
       return toast.error('Sorry. Locker is already occupied');
     }
     dispatch({
