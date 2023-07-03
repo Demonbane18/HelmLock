@@ -22,7 +22,7 @@ export default function DurationScreen() {
   let EndTime = updatedTime(duration);
   let LockerDuration = rDuration(duration);
   const defaultValues = {
-    duration: LockerDuration,
+    duration: '1',
     startTime: StartTime,
     endTime: EndTime,
   };

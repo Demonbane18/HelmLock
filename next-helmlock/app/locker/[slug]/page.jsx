@@ -1,6 +1,6 @@
 import Layout from '../../components/Layout';
 import Locker from '../../../models/Locker';
-import db from '../../../utils/api/db';
+import db from '../../lib/db';
 import LockerContext from '../../components/LockerContext';
 
 export async function generateMetadata({ params }) {

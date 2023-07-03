@@ -2,7 +2,7 @@ import bcryptjs from 'bcryptjs';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import User from '../../../../models/User';
-import db from '../../../../utils/api/db';
+import db from '../../../lib/db';
 
 export const authOptions = {
   session: {

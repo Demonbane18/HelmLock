@@ -11,7 +11,7 @@ const orderSchema = new mongoose.Schema(
         price: { type: Number, required: true },
       },
     ],
-    orderDuration: {
+    lockerDuration: {
       duration: { type: Number, required: true },
       startTime: { type: String, required: true },
       endTime: { type: String, required: true },

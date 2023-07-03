@@ -25,6 +25,8 @@ export default function PlaceOrderScreen() {
   const { cartItems, lockerDuration, paymentMethod } = cart;
   const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100;
 
+  const [loading, setLoading] = useState(false);
+  const [cartIsEmpty, setCartIsEmpty] = useState('empty');
   const itemsPrice = round2(
     cartItems.reduce((a, c) => a + c.duration * c.price, 0)
   ); // 123.4567 => 123.46
@@ -41,31 +43,55 @@ export default function PlaceOrderScreen() {
       },
       { autoClose: 15000 }
     );
+
     if (!paymentMethod) {
       router.push('/payment');
     }
   }, [paymentMethod, router]);
 
-  const [loading, setLoading] = useState(false);
-  const [cartIsEmpty, setCartIsEmpty] = useState('empty');
+  useEffect(() => {
+    if (cartItems.length !== 0) {
+      setCartIsEmpty('not empty');
+    }
+  }, []);
 
-  if (cartItems.length !== 0) {
-    useEffect(() => setCartIsEmpty('not empty'), []);
-  }
-
-  useRedirectAfterSomeSeconds('/', 60);
+  // const { secondsRemaining } = useRedirectAfterSomeSeconds('/', 60);
 
   const placeOrderHandler = async () => {
     try {
       setLoading(true);
+      // const res = await fetch('api/orders', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     orderItems: cartItems,
+      //     lockerDuration,
+      //     paymentMethod,
+      //     totalPrice,
+      //   }),
+      // });
+
+      // const { msg, success} = await res.json();
+      // const data = awair
+      // const idata = JSON.parse(JSON.stringify(data));
       const { data } = await axios.post('/api/orders', {
         orderItems: cartItems,
         lockerDuration,
         paymentMethod,
         totalPrice,
       });
+
+      // const { msg, success} = await res.json();
+      // setError(msg);
+      // setSuccess(success);
       console.log('placeorder');
+      // console.log(success);
+      // console.log(msg);
       console.log(data);
+
+      // if (success) {
       setLoading(false);
       dispatch({ type: 'CART_CLEAR_ITEMS' });
       Cookies.set(
@@ -76,7 +102,9 @@ export default function PlaceOrderScreen() {
           lockerDuration,
         })
       );
+      router.refresh();
       router.push(`/order/${data._id}`);
+      // }
     } catch (err) {
       setLoading(false);
       toast.error(getError(err));
@@ -100,7 +128,10 @@ export default function PlaceOrderScreen() {
             <div className="card  p-5">
               <h2 className="mb-2 text-lg">Locker Duration</h2>
               <div>
-                <p>Duration: {lockerDuration.duration} hours</p>
+                <p>
+                  Duration: {lockerDuration.duration} hour
+                  {lockerDuration.duration !== 1 ? 's' : null}
+                </p>
                 <p>Start Time: {lockerDuration.startTime}</p>
                 <p>End Time {lockerDuration.endTime}</p>
               </div>

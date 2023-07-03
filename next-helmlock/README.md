@@ -6,8 +6,8 @@
 ✔fix form for locker duration screen fix cart duration and updatedTime
 ✔Place Order screen
 ✔payment screen
-fix axios api
-allow checking of start Time and end Time on place order screen
+setup order id screen
+fix 1 hour duration error invalid end time
 create renting logic
 create duration logic with automatic opening and closing conditions 50 percent
 

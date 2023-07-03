@@ -1,6 +1,6 @@
 'use server';
 import Locker from '../../models/Locker';
-import db from '../../utils/api/db';
+import db from '../lib/db';
 const getLockerById = async (lockerId) => {
   // const lockers = await Locker.find().lean();
   // const dlockers = lockers.map(db.convertDocToObj);

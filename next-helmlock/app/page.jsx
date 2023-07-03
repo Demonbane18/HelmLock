@@ -1,7 +1,7 @@
 //server side
 import Layout from './components/Layout';
 import Locker from '../models/Locker';
-import db from '../utils/api/db';
+import db from './lib/db';
 import StoreContext from './components/StoreContext';
 
 export default async function Home() {
