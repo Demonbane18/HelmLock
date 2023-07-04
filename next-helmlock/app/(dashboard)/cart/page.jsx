@@ -86,7 +86,7 @@ function CartScreen() {
                     </td>
                     <td className="p-5 text-right">
                       <select
-                        value={item.duration ? item.duration : 1}
+                        value={(item.duration = 1)}
                         onChange={(e) =>
                           updateCartHandler(item, e.target.value)
                         }

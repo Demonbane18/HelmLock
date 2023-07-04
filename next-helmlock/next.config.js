@@ -1,9 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    appDir: true,
     serverComponentsExternalPackages: ['mongoose'],
     serverActions: true,
+    enableUndici: true,
   },
   webpack(config) {
     config.experiments = { ...config.experiments, topLevelAwait: true };

@@ -19,8 +19,8 @@ export default function DurationScreen() {
   const duration = cartItems[0].duration;
   const router = useRouter();
   let StartTime = currentTime();
-  let EndTime = updatedTime(duration);
-  let LockerDuration = rDuration(duration);
+  let EndTime = updatedTime(duration ? duration : 1);
+  let LockerDuration = rDuration(duration ? duration : 1);
   const defaultValues = {
     duration: '1',
     startTime: StartTime,
@@ -95,7 +95,7 @@ export default function DurationScreen() {
             id="endTime"
             type="text"
             readOnly
-            value={updatedTime(duration)}
+            value={EndTime}
             {...register('endTime', { required: true })}
           />
         </div>
@@ -105,7 +105,7 @@ export default function DurationScreen() {
             onClick={() => {
               reset((formValues) => ({
                 ...formValues,
-                duration: duration,
+                duration: LockerDuration,
                 startTime: StartTime,
                 endTime: EndTime,
               }));

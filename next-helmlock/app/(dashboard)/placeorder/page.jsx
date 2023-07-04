@@ -60,22 +60,6 @@ export default function PlaceOrderScreen() {
   const placeOrderHandler = async () => {
     try {
       setLoading(true);
-      // const res = await fetch('api/orders', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     orderItems: cartItems,
-      //     lockerDuration,
-      //     paymentMethod,
-      //     totalPrice,
-      //   }),
-      // });
-
-      // const { msg, success} = await res.json();
-      // const data = awair
-      // const idata = JSON.parse(JSON.stringify(data));
       const { data } = await axios.post('/api/orders', {
         orderItems: cartItems,
         lockerDuration,
@@ -83,15 +67,9 @@ export default function PlaceOrderScreen() {
         totalPrice,
       });
 
-      // const { msg, success} = await res.json();
-      // setError(msg);
-      // setSuccess(success);
       console.log('placeorder');
-      // console.log(success);
-      // console.log(msg);
-      console.log(data);
 
-      // if (success) {
+      console.log(data);
       setLoading(false);
       dispatch({ type: 'CART_CLEAR_ITEMS' });
       Cookies.set(
@@ -104,7 +82,6 @@ export default function PlaceOrderScreen() {
       );
       router.refresh();
       router.push(`/order/${data._id}`);
-      // }
     } catch (err) {
       setLoading(false);
       toast.error(getError(err));
