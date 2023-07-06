@@ -31,7 +31,7 @@ export default function lockerItem({ locker, addToCartHandler }) {
         >
           {locker.status}
         </p>
-        <p>${locker.price}</p>
+        <p>₱{locker.price}</p>
         <button
           className="primary-button cursor-pointer"
           type="button"

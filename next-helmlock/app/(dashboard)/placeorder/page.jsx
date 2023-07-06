@@ -72,6 +72,7 @@ export default function PlaceOrderScreen() {
       console.log(data);
       setLoading(false);
       dispatch({ type: 'CART_CLEAR_ITEMS' });
+      Cookies.set('orderPending', true, { expires: 1 });
       Cookies.set(
         'cart',
         JSON.stringify({

@@ -7,6 +7,7 @@ import Layout from '../../components/Layout';
 import { Store } from '../../../utils/Store';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import Cookies from 'js-cookie';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { opening } from '../../../utils/opening';
@@ -36,6 +37,8 @@ export function generateMetadata() {
 //   }
 // };
 function CartScreen() {
+  const orderPending = Cookies.get('orderPending');
+  console.log(orderPending);
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
   const {
@@ -62,9 +65,14 @@ function CartScreen() {
   return (
     <Layout title="Shopping Cart">
       <h1 className="mb-4 text-xl">Pending Locker/s</h1>
-      {cartItems.length === 0 ? (
+      {cartItems.length === 0 && !orderPending ? (
         <div>
           Cart is empty. <Link href="/">Pick a Locker</Link>
+        </div>
+      ) : orderPending ? (
+        <div>
+          You already have a rented locker.{' '}
+          <Link href="/locker">Go to Locker</Link>
         </div>
       ) : (
         <div className="grid md:grid-cols-4 md:gap-5">

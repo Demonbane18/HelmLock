@@ -6,8 +6,9 @@
 ✔fix form for locker duration screen fix cart duration and updatedTime
 ✔Place Order screen
 ✔payment screen
-setup order id screen
-fix 1 hour duration error invalid end time
+✔setup order id screen
+✔fix 1 hour duration error invalid end time
+finish order history screen for user
 create renting logic
 create duration logic with automatic opening and closing conditions 50 percent
 

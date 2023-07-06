@@ -71,7 +71,7 @@ const LockerContext = ({ locker }) => {
 
             <div className="mb-2 flex justify-between">
               <div>Price</div>
-              <div>${locker.price}</div>
+              <div>₱{locker.price}</div>
             </div>
             <div className="mb-2 flex justify-between">
               <div>Status</div>

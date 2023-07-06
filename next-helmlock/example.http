@@ -1,11 +1,6 @@
-PUT http://localhost:3000/api/orders/64a68e17bfa6f14e10d371b7/pay HTTP/1.1
-content-type: application/json
 
-{
-    "name": "Decena",
-    "email": "decena@gmail.com",
-    "password": "lG$53qs1"
-}
+
+GET http://localhost:3000/api/orders/history/649c4bfdc6fd55a0de62088d 
 
 GET http://localhost:3000/api/keys/paypal
 
