@@ -44,7 +44,7 @@ export async function POST(req, res) {
       { status: 401 }
     );
   }
-  const { user } = session;
+  const userid = session.user._id;
   const { orderItems, lockerDuration, paymentMethod, totalPrice } =
     await req.json();
   try {
@@ -54,7 +54,7 @@ export async function POST(req, res) {
       lockerDuration,
       paymentMethod,
       totalPrice,
-      user: user._id,
+      user: userid,
     });
     const order = await newOrder.save();
     return NextResponse.json(order);

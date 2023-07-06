@@ -17,6 +17,7 @@ const orderSchema = new mongoose.Schema(
       endTime: { type: String, required: true },
     },
     paymentMethod: { type: String, required: true },
+    paymentResult: { id: String, status: String, email_address: String },
     totalPrice: { type: Number, required: true },
     isPaid: { type: Boolean, required: true, default: false },
     isEnded: { type: Boolean, required: true, default: false },

@@ -19,18 +19,6 @@ export async function handler(req, res) {
   });
 }
 export async function GET(req, { params }) {
-  // const session = await getServerSession(
-  //   req,
-  //   {
-  //     ...res,
-  //     getHeader: (name) => res.headers?.get(name),
-  //     setHeader: (name, value) => res.headers?.set(name, value),
-  //   },
-  //   authOptions
-  // );
-  // if (!session) {
-  //   return NextResponse.status(401).send('signin required');
-  // }
   const orderid = params.id;
   await db.connect();
   // const order = await Order.findById(orderid);
@@ -38,4 +26,39 @@ export async function GET(req, { params }) {
   await db.disconnect();
   // return new Response(`Welcome to my Next application, order: ${order}`);
   return NextResponse.json({ order }, { status: 200 });
+}
+
+export async function PUT(req, { params }) {
+  const orderid = params.id;
+  await db.connect();
+  const order = await Order.findById(orderid);
+  if (order) {
+    if (order.isPaid) {
+      return NextResponse.json(
+        { message: 'Error: order is already paid' },
+        { status: 400 }
+      );
+    }
+    order.isPaid = true;
+    order.paidAt = Date.now();
+    const data = await req.json();
+    const { id, status, email_address } = data;
+    order.paymentResult = {
+      id: id,
+      status: status,
+      email_address: email_address,
+    };
+    const paidOrder = await order.save();
+    await db.disconnect();
+    return NextResponse.json(
+      { message: 'order paid successfully', order: paidOrder },
+      { status: 200 }
+    );
+  } else {
+    await db.disconnect();
+    return NextResponse.json(
+      { message: 'Error: order not found' },
+      { status: 404 }
+    );
+  }
 }

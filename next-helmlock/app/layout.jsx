@@ -1,9 +1,9 @@
 import Provider from '../app/components/Provider';
 import { StoreProvider } from '../utils/Store';
+import PaypalProvider from './components/PaypalProvider';
 import './globals.css';
 import '../styles/Calendar.css';
 import { Inter } from 'next/font/google';
-
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
@@ -25,7 +25,9 @@ export default function RootLayout({ children }) {
       <body className="flex h-full flex-col">
         <Provider>
           <StoreProvider>
-            <main className="grow">{children}</main>
+            <PaypalProvider>
+              <main className="grow">{children}</main>
+            </PaypalProvider>
           </StoreProvider>
         </Provider>
       </body>
