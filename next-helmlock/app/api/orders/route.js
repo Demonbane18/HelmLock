@@ -39,7 +39,10 @@ export async function POST(req, res) {
     authOptions
   );
   if (!session) {
-    return NextResponse.status(401).send('signin required');
+    return NextResponse.json(
+      { message: 'You must be logged in.' },
+      { status: 401 }
+    );
   }
   const { user } = session;
   const { orderItems, lockerDuration, paymentMethod, totalPrice } =

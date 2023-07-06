@@ -10,11 +10,11 @@ export async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions);
 
   if (!session) {
-    res.status(401).json({ message: 'You must be logged in.' });
+    NextResponse.json({ message: 'You must be logged in.' }, { status: 401 });
     return;
   }
 
-  return res.json({
+  return NextResponse.json({
     message: 'Success',
   });
 }

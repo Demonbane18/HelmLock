@@ -1,3 +1,13 @@
+POST http://localhost:3000/api/auth/signup HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Decena",
+    "email": "decena@gmail.com",
+    "password": "lG$53qs1"
+}
+
+
 GET http://localhost:3000/api/orders/64a554b3b210fdf702d6dde4
 
 GET http://localhost:3000/api/lockers/123
