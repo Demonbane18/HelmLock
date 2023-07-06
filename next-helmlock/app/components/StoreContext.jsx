@@ -5,6 +5,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import LockerItem from './Lockeritem';
 import getLockerById from '@/app/_actions/getLockerById';
+import Cookies from 'js-cookie';
 
 // async function getLockerById(id) {
 //   try {
@@ -28,6 +29,8 @@ import getLockerById from '@/app/_actions/getLockerById';
 // }
 
 const StoreContext = ({ lockers }) => {
+  const orderPending = Cookies.get('orderPending');
+  console.log(orderPending);
   const { state, dispatch } = useContext(Store);
   const { cart } = state;
   const addToCartHandler = async (locker) => {
@@ -40,6 +43,9 @@ const StoreContext = ({ lockers }) => {
     // );
     // const { data } = getLockerById(locker._id);
     const data = JSON.parse(JSON.stringify(await getLockerById(locker._id)));
+    if (orderPending) {
+      return toast.error('You already have a rented locker!');
+    }
     if (data.status === 'occupied') {
       return toast.error('Sorry. Locker is occupied');
     }

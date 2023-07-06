@@ -7,8 +7,11 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { Store } from '../../utils/Store';
 import getLockerById from '@/app/_actions/getLockerById';
+import Cookies from 'js-cookie';
 
 const LockerContext = ({ locker }) => {
+  const orderPending = Cookies.get('orderPending');
+  console.log(orderPending);
   const { state, dispatch } = useContext(Store);
   const router = useRouter();
   if (!locker) {
@@ -35,6 +38,9 @@ const LockerContext = ({ locker }) => {
     const quantity = existItem ? existItem.quantity : 1;
     // const { data } = getLockerById(locker._id);
     const data = JSON.parse(JSON.stringify(await getLockerById(locker._id)));
+    if (orderPending) {
+      return toast.error('You already have a rented locker!');
+    }
     if (data?.status === 'occupied') {
       return toast.error('Sorry. Locker is occupied');
     }

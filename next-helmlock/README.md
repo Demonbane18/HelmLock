@@ -11,7 +11,7 @@
 finish order history screen for user
 create renting logic
 create duration logic with automatic opening and closing conditions 50 percent
-
+remove cookie orderPending when you ended the locker duration
 place order screen with alert message for penalty
 
 ## Admin Side
