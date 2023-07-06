@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { Store } from '../../utils/Store';
-import getLockerById from '../actions/getLockerById';
+import getLockerById from '@/app/_actions/getLockerById';
 
 const LockerContext = ({ locker }) => {
   const { state, dispatch } = useContext(Store);
@@ -14,11 +14,28 @@ const LockerContext = ({ locker }) => {
   if (!locker) {
     return <div title="Locker Not Found">Locker Not Found</div>;
   }
+
+  // async function getLockerById(id) {
+  //   try {
+  //     const res = await fetch(`http://localhost:3000/api/lockers/${id}`, {
+  //       cache: 'no-store',
+  //     });
+
+  //     if (!res.ok) {
+  //       throw new Error('Failed to fetch locker');
+  //     }
+
+  //     return res.json();
+  //   } catch (error) {
+  //     console.log('Error loading locker: ', error);
+  //   }
+  // }
   const addToCartHandler = async () => {
     const existItem = state.cart.cartItems.find((x) => x.slug === locker.slug);
     const quantity = existItem ? existItem.quantity : 1;
+    // const { data } = getLockerById(locker._id);
     const data = JSON.parse(JSON.stringify(await getLockerById(locker._id)));
-    if (data.status === 'occupied') {
+    if (data?.status === 'occupied') {
       return toast.error('Sorry. Locker is occupied');
     }
 

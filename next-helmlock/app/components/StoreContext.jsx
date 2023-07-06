@@ -4,7 +4,28 @@ import { Store } from '../../utils/Store';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import LockerItem from './Lockeritem';
-import getLockerById from '../actions/getLockerById';
+import getLockerById from '@/app/_actions/getLockerById';
+
+// async function getLockerById(id) {
+//   try {
+//     // const res = await axios.get(`http://localhost:3000/api/lockers/${id}`);
+//     const res = await fetch(`http://localhost:3000/api/lockers/${id}`, {
+//       cache: 'no-store',
+//       // method: 'GET',
+//       // headers: {
+//       //   'Content-type': 'application/json',
+//       // },
+//     });
+
+//     if (!res.ok) {
+//       throw new Error('Failed to fetch locker');
+//     }
+
+//     return res.json();
+//   } catch (error) {
+//     console.log('Error loading locker: ', error);
+//   }
+// }
 
 const StoreContext = ({ lockers }) => {
   const { state, dispatch } = useContext(Store);
@@ -14,7 +35,10 @@ const StoreContext = ({ lockers }) => {
     console.log(locker._id);
     const existItem = cart.cartItems.find((x) => x.slug === locker.slug);
     const quantity = existItem ? existItem.quantity : 1;
-
+    // const { data } = await axios.get(
+    //   `http://localhost:3000/api/lockers/${locker._id}`
+    // );
+    // const { data } = getLockerById(locker._id);
     const data = JSON.parse(JSON.stringify(await getLockerById(locker._id)));
     if (data.status === 'occupied') {
       return toast.error('Sorry. Locker is occupied');

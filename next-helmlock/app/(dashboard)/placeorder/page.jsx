@@ -55,7 +55,7 @@ export default function PlaceOrderScreen() {
     }
   }, []);
 
-  // const { secondsRemaining } = useRedirectAfterSomeSeconds('/', 60);
+  const { secondsRemaining } = useRedirectAfterSomeSeconds('/', 60);
 
   const placeOrderHandler = async () => {
     try {

@@ -7,8 +7,8 @@ import Link from 'next/link';
 import { useEffect, useReducer } from 'react';
 import Layout from '../../../components/Layout';
 import { getError } from '../../../../utils/error';
-// import getOrderById from '../../../actions/getOrderById';
-import getOrderById from '../../../../utils/getOrdersById';
+import { getOrderById } from '@/app/_actions/getOrderById';
+// import getOrderById from '../../../../utils/getOrdersById';
 export async function generateMetadata({ params }) {
   return { title: params.orderid };
 }
@@ -25,24 +25,29 @@ function reducer(state, action) {
   }
 }
 
-const getOrder = async (orderid) => {
-  try {
-    // const res = await axios.get(`/api/orders/${orderid}`);
-    const res = await fetch(`/api/orders/${orderid}`);
-    if (!res.ok) {
-      throw new Error('Failed to fetch order');
-    }
+// const getOrder = async (id) => {
+//   const data = await getOrderById(id);
+//   return data;
+// };
+// const getOrder = async (id) => {
+//   try {
+//     const res = await fetch(`http://localhost:3000/api/orders/${id}`, {
+//       cache: 'no-store',
+//     });
 
-    let result = await res.json();
-    return result;
-  } catch (error) {
-    console.log('Error loading order: ', error);
-  }
-};
+//     if (!res.ok) {
+//       throw new Error('Failed to fetch order');
+//     }
+
+//     return res.json();
+//   } catch (error) {
+//     console.log('Error loading order: ', error);
+//   }
+// };
 
 function OrderScreen({ params }) {
   const orderId = params.orderid;
-  console.log(orderId);
+  // console.log(orderId);
   const [{ loading, error, order }, dispatch] = useReducer(reducer, {
     loading: true,
     order: {},
@@ -53,10 +58,15 @@ function OrderScreen({ params }) {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         // const data = JSON.parse(JSON.stringify(await getOrderById(orderId)));
-        // const { data } = await getOrder(orderId);
-        const { data } = await axios.get(`/api/orders/${orderId}`);
-        // const data = await JSON.parse(JSON.stringify(getOrder(orderId)));
-        dispatch({ type: 'FETCH_SUCCESS', payload: data });
+        // const data = getOrder(orderId);
+        // const data = params;
+        const { data } = await axios.get(
+          `http://localhost:3000/api/orders/${orderId}`
+        );
+        const { order } = data;
+        // const data = await JSON.parse(JSON.stringify(data1));
+        console.log(order);
+        dispatch({ type: 'FETCH_SUCCESS', payload: order });
       } catch (err) {
         dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
       }
@@ -67,6 +77,7 @@ function OrderScreen({ params }) {
   }, [order, orderId]);
   const {
     lockerDuration,
+    orderItems,
     paymentMethod,
     totalPrice,
     isPaid,
@@ -74,6 +85,8 @@ function OrderScreen({ params }) {
     paidAt,
     endedAt,
   } = order;
+  console.log(order);
+  console.log(lockerDuration);
 
   return (
     <Layout title={`Order ${orderId}`}>

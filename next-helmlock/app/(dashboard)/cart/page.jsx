@@ -11,13 +11,30 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { opening } from '../../../utils/opening';
 import { Metadata } from 'next';
-import getLockerById from '../../actions/getLockerById';
+import getLockerById from '@/app/_actions/getLockerById';
 
 export function generateMetadata() {
   return {
     title: 'Cart',
   };
 }
+
+// const getLockerById = async (id) => {
+//   try {
+//     const res = await axios.get(`http://localhost:3000/api/lockers/${id}`);
+//     // const res = await fetch(`http://localhost:3000/api/lockers/${id}`, {
+//     //   cache: 'no-store',
+//     // });
+
+//     if (!res.ok) {
+//       throw new Error('Failed to fetch locker');
+//     }
+
+//     return res.json();
+//   } catch (error) {
+//     console.log('Error loading locker: ', error);
+//   }
+// };
 function CartScreen() {
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
@@ -29,8 +46,9 @@ function CartScreen() {
   };
   const updateCartHandler = async (item, dur) => {
     const duration = Number(dur);
+    // const { data } = getLockerById(item._id);
     const data = JSON.parse(JSON.stringify(await getLockerById(item._id)));
-    if (data.status === 'occupied') {
+    if (data?.status === 'occupied') {
       dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
       return toast.error('Sorry. Locker is already occupied');
     }

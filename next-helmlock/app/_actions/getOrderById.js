@@ -1,7 +1,7 @@
 'use server';
 import Order from '../../models/Order';
 import db from '../lib/db';
-const getOrderById = async (orderId) => {
+export async function getOrderById(orderId) {
   try {
     await db.connect();
     const order = await Order.findById(orderId);
@@ -11,6 +11,4 @@ const getOrderById = async (orderId) => {
   } catch (error) {
     console.log(error, 'SERVER_ERROR');
   }
-};
-
-export default getOrderById;
+}

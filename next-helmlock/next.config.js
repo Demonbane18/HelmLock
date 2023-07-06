@@ -3,7 +3,7 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['mongoose'],
     serverActions: true,
-    enableUndici: true,
+    // enableUndici: true,
   },
   webpack(config) {
     config.experiments = { ...config.experiments, topLevelAwait: true };
