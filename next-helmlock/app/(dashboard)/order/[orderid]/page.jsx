@@ -10,7 +10,8 @@ import { toast } from 'react-toastify';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
-
+import Cookies from 'js-cookie';
+import useRedirectAfterSomeSeconds from '@/utils/redirect';
 export async function generateMetadata({ params }) {
   return { title: params.orderid };
 }
@@ -125,6 +126,20 @@ function OrderScreen({ params }) {
         const { data } = await axios.put(`/api/orders/${order._id}`, details);
         dispatch({ type: 'PAY_SUCCESS', payload: data });
         toast.success('Order is paid successfully');
+        Cookies.set('orderPending', order._id, { expires: 1 });
+        const { secondsRemaining } = useRedirectAfterSomeSeconds(
+          `/rented-locker/${order._id}`,
+          5
+        );
+        const customId = 'custom-id-yes';
+        toast.warning(
+          `You will be redirected to your locker in ${secondsRemaining} seconds. Please place your order`,
+          {
+            toastId: customId,
+          },
+          { delay: 2000 },
+          { autoClose: 5000 }
+        );
       } catch (err) {
         dispatch({ type: 'PAY_FAIL', payload: getError(err) });
         toast.error(getError(err));

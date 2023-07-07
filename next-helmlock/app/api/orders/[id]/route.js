@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../auth/[...nextauth]/route';
 import Order from '../../../../models/Order';
+import Locker from '@/models/Locker';
 import db from '../../../lib/db';
 
 export async function handler(req, res) {
@@ -32,6 +33,8 @@ export async function PUT(req, { params }) {
   const orderid = params.id;
   await db.connect();
   const order = await Order.findById(orderid);
+  const { orderitems } = order;
+  const lockerid = orderitems[0]._id;
   if (order) {
     if (order.isPaid) {
       return NextResponse.json(
@@ -48,6 +51,9 @@ export async function PUT(req, { params }) {
       status: status,
       email_address: email_address,
     };
+    const locker = await Locker.findById(lockerid);
+    locker.status = 'occupied';
+    const updatedLocker = await locker.save();
     const paidOrder = await order.save();
     await db.disconnect();
     return NextResponse.json(

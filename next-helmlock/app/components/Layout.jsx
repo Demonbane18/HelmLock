@@ -17,10 +17,16 @@ export default function Layout({ title, children }) {
   const { state, dispatch } = useContext(Store);
   const { cart } = state;
   const [cartItemsCount, setCartItemsCount] = useState(0);
+  const [rentedLocker, setRentedLocker] = useState(null);
 
   useEffect(() => {
     setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
   }, [cart.cartItems]);
+
+  useEffect(() => {
+    const orderPending = Cookies.get('orderPending');
+    setRentedLocker(orderPending);
+  }, []);
 
   const logoutClickHandler = () => {
     Cookies.remove('cart');
@@ -47,14 +53,23 @@ export default function Layout({ title, children }) {
               helmlock
             </Link>
             <div className="flex items-center z-10">
-              <Link href="/cart" className="p-2">
-                Cart
-                {cartItemsCount > 0 && (
-                  <span className="ml-1 rounded-full bg-red-600 px-2 py-1 text-xs font-bold text-white">
-                    {cartItemsCount}
-                  </span>
-                )}
-              </Link>
+              {rentedLocker ? (
+                <Link
+                  href={`/rented-locker/${rentedLocker ? rentedLocker : ''}`}
+                  className="p-2"
+                >
+                  Locker
+                </Link>
+              ) : (
+                <Link href="/cart" className="p-2">
+                  Cart
+                  {cartItemsCount > 0 && (
+                    <span className="ml-1 rounded-full bg-red-600 px-2 py-1 text-xs font-bold text-white">
+                      {cartItemsCount}
+                    </span>
+                  )}
+                </Link>
+              )}
               {status === 'loading' ? (
                 'Loading'
               ) : session?.user ? (

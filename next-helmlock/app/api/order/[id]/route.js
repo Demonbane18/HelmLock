@@ -1,4 +1,4 @@
-// // /api/orders/history/:id
+// /api/locker/:id
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
