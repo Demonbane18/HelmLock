@@ -5,7 +5,6 @@ import React from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import Cookies from 'js-cookie';
 import { useSession } from 'next-auth/react';
 
 const LockerControl = ({ locker, orderuser, orderid }) => {
@@ -15,6 +14,7 @@ const LockerControl = ({ locker, orderuser, orderid }) => {
       redirect(`/signin?callbackUrl=/locker/${orderid}`);
     },
   });
+
   const userid = session?.user?._id;
   const lockerHandler = async () => {
     return;
