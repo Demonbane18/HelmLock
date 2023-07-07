@@ -19,21 +19,28 @@ export async function generateMetadata({ params }) {
 }
 export default async function LockerScreen({ params }) {
   const orderid = params.id;
+
   await db.connect();
   const order = await Order.findOne({ _id: orderid }).lean();
-  const { orderItems } = order;
+  const { orderItems, isEnded, user, isPaid } = order;
   const lockerid = orderItems[0]._id;
   const locker = await Locker.findOne({ _id: lockerid });
-  const dlocker = locker ? db.convertDocToObj(locker) : null;
-  console.log(dlocker);
+  const dlocker = locker ? JSON.parse(JSON.stringify(locker)) : null;
   await db.disconnect();
   return (
     <Layout title={dlocker.name}>
-      {dlocker ? (
-        <LockerControl locker={dlocker} />
+      {!isEnded && isPaid ? (
+        dlocker ? (
+          <LockerControl locker={dlocker} orderuser={user} orderid={orderid} />
+        ) : (
+          <div>
+            Haven't rented a locker yet. <Link href="/">Rent a Locker</Link>
+          </div>
+        )
       ) : (
         <div>
-          Haven't rented a locker yet. <Link href="/">Rent a Locker</Link>
+          Invalid Locker. Locker already ended or unpaid.{' '}
+          <Link href="/">Rent a Locker</Link>
         </div>
       )}
     </Layout>
