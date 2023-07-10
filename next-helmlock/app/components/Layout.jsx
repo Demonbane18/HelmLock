@@ -81,7 +81,7 @@ export default function Layout({ title, children }) {
                     <Menu.Item>
                       <DropdownLink
                         className="dropdown-link cursor-pointer"
-                        href="/profile"
+                        href="/account"
                       >
                         Profile
                       </DropdownLink>
@@ -94,6 +94,13 @@ export default function Layout({ title, children }) {
                         Order History
                       </DropdownLink>
                     </Menu.Item>
+                    {session.user.isAdmin && (
+                      <Menu.Item>
+                        <DropdownLink className="dropdown-link" href="/admin">
+                          Admin Dashboard
+                        </DropdownLink>
+                      </Menu.Item>
+                    )}
                     <Menu.Item>
                       <a
                         className="dropdown-link cursor-pointer"

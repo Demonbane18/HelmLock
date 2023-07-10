@@ -27,11 +27,28 @@ export default async function LockerScreen({ params }) {
   const locker = await Locker.findOne({ _id: lockerid });
   const dlocker = locker ? JSON.parse(JSON.stringify(locker)) : null;
   await db.disconnect();
+  const simpleId = user.toString();
+  const simpleOrderId = orderid.toString();
+  // const lockerData = await locker.toArray();
+  // const simpleLockerArray = lockerData.map((data) => ({
+  //   _id: data._id.toString(), // convert ObjectId to string
+  //   name: data.name,
+  //   slug: data.slug,
+  //   duration: data.duration,
+  //   status: data.status,
+  //   image: data.image,
+  //   price: data.price,
+  // }));
+
   return (
     <Layout title={dlocker.name}>
       {!isEnded && isPaid ? (
         dlocker ? (
-          <LockerControl locker={dlocker} orderuser={user} orderid={orderid} />
+          <LockerControl
+            locker={dlocker}
+            orderuser={simpleId}
+            orderid={simpleOrderId}
+          />
         ) : (
           <div>
             Haven't rented a locker yet. <Link href="/">Rent a Locker</Link>

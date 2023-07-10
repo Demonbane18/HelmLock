@@ -8,7 +8,9 @@
 ✔payment screen
 ✔setup order id screen
 ✔fix 1 hour duration error invalid end time
-finish order history screen for user
+✔finish order history screen for user
+change deliver order to manual open locker
+
 create renting logic
 create duration logic with automatic opening and closing conditions 50 percent
 remove cookie orderPending when you ended the locker duration
