@@ -4,6 +4,8 @@ import PaypalProvider from './components/PaypalProvider';
 import './globals.css';
 import '../styles/Calendar.css';
 import { Inter } from 'next/font/google';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
@@ -16,7 +18,25 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+// function Auth({ children, adminOnly }) {
+//   const router = useRouter();
+//   const { status, data: session } = useSession({
+//     required: true,
+//     onUnauthenticated() {
+//       router.push('/unauthorized?message=login required');
+//     },
+//   });
+//   if (status === 'loading') {
+//     return <div>Loading...</div>;
+//   }
+//   if (adminOnly && !session.user.isAdmin) {
+//     router.push('/unauthorized?message=admin login required');
+//   }
+
+//   return children;
+// }
+
+export default function RootLayout({ Component, children }) {
   return (
     <html
       lang="en"
@@ -26,7 +46,13 @@ export default function RootLayout({ children }) {
         <Provider>
           <StoreProvider>
             <PaypalProvider>
+              {/* {Component.auth ? (
+                <Auth adminOnly={Component.auth.adminOnly}>
+                  <main className="grow">{children}</main>
+                </Auth>
+              ) : ( */}
               <main className="grow">{children}</main>
+              {/* )} */}
             </PaypalProvider>
           </StoreProvider>
         </Provider>

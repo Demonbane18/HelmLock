@@ -8,7 +8,7 @@ import axios from 'axios';
 import Layout from '@/app/components/Layout';
 
 export default function ProfileScreen() {
-  const { data: session } = useSession({
+  const { data: session, update } = useSession({
     required: true,
     onUnauthenticated() {
       redirect(`/signin?callbackUrl=/account`);
@@ -43,6 +43,7 @@ export default function ProfileScreen() {
         email,
         password,
       });
+      update({ name: name, email: email });
       toast.success('Profile updated successfully');
       if (result.error) {
         toast.error(result.error);
