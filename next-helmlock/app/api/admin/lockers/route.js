@@ -9,3 +9,21 @@ export async function GET(req, res) {
   await db.disconnect();
   return NextResponse.json({ lockers }, { status: 200 });
 }
+
+export async function POST(req, res) {
+  await db.connect();
+  const newLocker = new Locker({
+    name: 'sample name',
+    slug: 'sample-name-' + Math.random(),
+    duration: 2,
+    status: 'vacant',
+    image: '/images/shirt1.jpg',
+    price: 10,
+  });
+  const locker = await newLocker.save();
+  await db.disconnect();
+  return NextResponse.json(
+    { message: 'Locker created successfully' },
+    { status: 200 }
+  );
+}

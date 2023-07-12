@@ -1,28 +1,22 @@
 'use client';
-
 import axios from 'axios';
 import Link from 'next/link';
 import React, { useEffect, useReducer } from 'react';
+import { toast } from 'react-toastify';
 import Layout from '@/app/components/Layout';
 import { getError } from '@/utils/error';
 import { useSession } from 'next-auth/react';
-import { redirect, useRouter } from 'next/navigation';
-import { toast } from 'react-toastify';
+import { redirect } from 'next/navigation';
 
 function reducer(state, action) {
   switch (action.type) {
     case 'FETCH_REQUEST':
       return { ...state, loading: true, error: '' };
     case 'FETCH_SUCCESS':
-      return { ...state, loading: false, lockers: action.payload, error: '' };
+      return { ...state, loading: false, users: action.payload, error: '' };
     case 'FETCH_FAIL':
       return { ...state, loading: false, error: action.payload };
-    case 'CREATE_REQUEST':
-      return { ...state, loadingCreate: true };
-    case 'CREATE_SUCCESS':
-      return { ...state, loadingCreate: false };
-    case 'CREATE_FAIL':
-      return { ...state, loadingCreate: false };
+
     case 'DELETE_REQUEST':
       return { ...state, loadingDelete: true };
     case 'DELETE_SUCCESS':
@@ -32,59 +26,40 @@ function reducer(state, action) {
     case 'DELETE_RESET':
       return { ...state, loadingDelete: false, successDelete: false };
     default:
-      state;
+      return state;
   }
 }
-export default function AdminLockersScreen() {
-  const router = useRouter();
 
-  const [
-    { loading, error, lockers, loadingCreate, successDelete, loadingDelete },
-    dispatch,
-  ] = useReducer(reducer, {
-    loading: true,
-    lockers: [],
-    error: '',
-  });
-
+function AdminUsersScreen() {
+  const [{ loading, error, users, successDelete, loadingDelete }, dispatch] =
+    useReducer(reducer, {
+      loading: true,
+      users: [],
+      error: '',
+    });
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
-      redirect(`/signin?callbackUrl=admin/lockers`);
+      redirect(`/signin?callbackUrl=admin/orders`);
     },
   });
 
   if (!session || (session && !session.user.isAdmin)) {
-    redirect(`/signin?callbackUrl=admin/lockers`);
+    redirect(`/signin?callbackUrl=admin/orders`);
   }
 
-  const createHandler = async () => {
-    if (!window.confirm('Are you sure?')) {
-      return;
-    }
-    try {
-      dispatch({ type: 'CREATE_REQUEST' });
-      const { data } = await axios.post(`/api/admin/lockers`);
-      dispatch({ type: 'CREATE_SUCCESS' });
-      toast.success('Locker created successfully');
-      router.push(`/admin/locker/${data.locker._id}`);
-    } catch (err) {
-      dispatch({ type: 'CREATE_FAIL' });
-      toast.error(getError(err));
-    }
-  };
   useEffect(() => {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`/api/admin/lockers`);
-        const { lockers } = await data;
-        dispatch({ type: 'FETCH_SUCCESS', payload: lockers });
+        const { data } = await axios.get(`/api/admin/users`);
+        const { users } = data;
+        console.log(users);
+        dispatch({ type: 'FETCH_SUCCESS', payload: users });
       } catch (err) {
         dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
       }
     };
-
     if (successDelete) {
       dispatch({ type: 'DELETE_RESET' });
     } else {
@@ -92,53 +67,45 @@ export default function AdminLockersScreen() {
     }
   }, [successDelete]);
 
-  const deleteHandler = async (lockerId) => {
+  const deleteHandler = async (userId) => {
     if (!window.confirm('Are you sure?')) {
       return;
     }
     try {
       dispatch({ type: 'DELETE_REQUEST' });
-      await axios.delete(`/api/admin/lockers/${lockerId}`);
+      await axios.delete(`/api/admin/users/${userId}`);
       dispatch({ type: 'DELETE_SUCCESS' });
-      toast.success('Locker deleted successfully');
+      toast.success('User deleted successfully');
     } catch (err) {
       dispatch({ type: 'DELETE_FAIL' });
       toast.error(getError(err));
     }
   };
+
   return (
-    <Layout title="Admin Lockers">
+    <Layout title="Users">
       <div className="grid md:grid-cols-4 md:gap-5">
         <div>
           <ul>
             <li>
-              <Link href="/admin">Dashboard</Link>
+              <Link href="/admin/dashboard">Dashboard</Link>
             </li>
             <li>
               <Link href="/admin/orders">Orders</Link>
             </li>
             <li>
-              <Link href="/admin/lockers" className="font-bold">
-                Lockers
-              </Link>
+              <Link href="/admin/lockers">Lockers</Link>
             </li>
             <li>
-              <Link href="/admin/users">Users</Link>
+              <Link href="/admin/users" className="font-bold">
+                Users
+              </Link>
             </li>
           </ul>
         </div>
         <div className="overflow-x-auto md:col-span-3">
-          <div className="flex justify-between">
-            <h1 className="mb-4 text-xl">Lockers</h1>
-            {loadingDelete && <div>Deleting item...</div>}
-            <button
-              disabled={loadingCreate}
-              onClick={createHandler}
-              className="primary-button"
-            >
-              {loadingCreate ? 'Loading' : 'Create'}
-            </button>
-          </div>
+          <h1 className="mb-4 text-xl">Users</h1>
+          {loadingDelete && <div>Deleting...</div>}
           {loading ? (
             <div>Loading...</div>
           ) : error ? (
@@ -150,31 +117,31 @@ export default function AdminLockersScreen() {
                   <tr>
                     <th className="px-5 text-left">ID</th>
                     <th className="p-5 text-left">NAME</th>
-                    <th className="p-5 text-left">PRICE (/hr)</th>
-                    <th className="p-5 text-left">STATUS</th>
+                    <th className="p-5 text-left">EMAIL</th>
+                    <th className="p-5 text-left">ADMIN</th>
                     <th className="p-5 text-left">ACTIONS</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {lockers.map((locker) => (
-                    <tr key={locker._id} className="border-b">
-                      <td className=" p-5 ">{locker._id.substring(20, 24)}</td>
-                      <td className=" p-5 ">{locker.name}</td>
-                      <td className=" p-5 ">₱{locker.price}</td>
-                      <td className=" p-5 ">{locker.status}</td>
+                  {users.map((user) => (
+                    <tr key={user._id} className="border-b">
+                      <td className=" p-5 ">{user._id.substring(20, 24)}</td>
+                      <td className=" p-5 ">{user.name}</td>
+                      <td className=" p-5 ">{user.email}</td>
+                      <td className=" p-5 ">{user.isAdmin ? 'YES' : 'NO'}</td>
                       <td className=" p-5 ">
-                        <Link
-                          href={`/admin/locker/${locker._id}`}
-                          type="button"
+                        {/* <Link
+                          href={`/admin/user/${user._id}`}
+                          passHreftype="button"
                           className="default-button"
                         >
                           Edit
-                        </Link>
+                        </Link> */}
                         &nbsp;
                         <button
-                          onClick={() => deleteHandler(locker._id)}
-                          className="default-button"
                           type="button"
+                          className="default-button"
+                          onClick={() => deleteHandler(user._id)}
                         >
                           Delete
                         </button>
@@ -191,7 +158,5 @@ export default function AdminLockersScreen() {
   );
 }
 
-AdminLockersScreen.auth = {
-  isAdmin: true,
-  unauthorized: '/', // redirect to this url
-};
+AdminUsersScreen.auth = { adminOnly: true };
+export default AdminUsersScreen;

@@ -31,3 +31,20 @@ export async function PUT(req, { params }) {
     return NextResponse.json({ message: 'Locker not found' }, { status: 404 });
   }
 }
+
+export async function DELETE(req, { params }) {
+  const lockerid = params.id;
+  await db.connect();
+  const locker = await Locker.findById(lockerid);
+  if (locker) {
+    await locker.deleteOne();
+    await db.disconnect();
+    return NextResponse.json(
+      { message: 'Locker deleted successfully' },
+      { status: 200 }
+    );
+  } else {
+    await db.disconnect();
+    return NextResponse.json({ message: 'Locker not found' }, { status: 404 });
+  }
+}
