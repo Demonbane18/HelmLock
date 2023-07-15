@@ -14,7 +14,7 @@ import axios from 'axios';
 import { now } from '@/constants/config';
 import { capitalize, classNames, weekdayIndexToName } from '@/utils/helper';
 import Layout from '@/app/components/Layout';
-import getClosedDays from '@/app/_actions/getClosedDays';
+// import getClosedDays from '@/app/_actions/getClosedDays';
 import data from '@/utils/data';
 import Link from 'next/link';
 
@@ -41,6 +41,7 @@ function reducer(state, action) {
 }
 
 export default function OpeningHourScreen() {
+  const date = new Date();
   const [{ loading, error, loadingUpdate, days }, dispatch] = useReducer(
     reducer,
     {
@@ -50,7 +51,7 @@ export default function OpeningHourScreen() {
     }
   );
   const [enabled, setEnabled] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(date);
 
   const { data: session } = useSession({
     required: true,
@@ -68,7 +69,6 @@ export default function OpeningHourScreen() {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(`/api/admin/opening`);
         const { days } = data;
-        console.log(days);
         dispatch({ type: 'FETCH_SUCCESS', payload: days });
       } catch (err) {
         dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
@@ -170,10 +170,12 @@ export default function OpeningHourScreen() {
   // const { data: closedDays, refetch } = trpc.opening.getClosedDays.useQuery()
   const closedDays = data.closedDays;
   const dayIsClosed =
-    selectedDate && closedDays?.includes(formatISO(selectedDate));
+    selectedDate &&
+    closedDays?.some((closedDay) => closedDay.date === formatISO(selectedDate));
 
+  console.log(dayIsClosed);
   // Curried for easier usage
-
+  console.log(formatISO(selectedDate));
   function _changeTime(day) {
     return function (time, type) {
       const index = openingHrs.findIndex(
@@ -310,7 +312,9 @@ export default function OpeningHourScreen() {
                 view="month"
                 onClickDay={(date) => setSelectedDate(date)}
                 tileClassName={({ date }) => {
-                  return closedDays?.includes(formatISO(date))
+                  return closedDays?.some(
+                    (closedDay) => closedDay.date === formatISO(date)
+                  )
                     ? 'closed-day'
                     : null;
                 }}

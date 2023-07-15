@@ -45,3 +45,18 @@ textarea {
 .alert-success {
   @apply my-3 rounded-lg bg-green-100 p-3 text-green-700;
 }
+
+.closed-day {
+  background-color: #550000;
+  color: white;
+}
+
+.closed-day:hover {
+  background-color: #6d0000 !important;
+  color: white !important;
+}
+
+.closed-day:enabled:focus {
+  background-color: #8a0000 !important;
+  color: white;
+}
