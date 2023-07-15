@@ -9,6 +9,7 @@
 ✔setup order id screen
 ✔fix 1 hour duration error invalid end time
 ✔finish order history screen for user
+add locker number in locker model
 change deliver order to manual open locker
 
 create renting logic

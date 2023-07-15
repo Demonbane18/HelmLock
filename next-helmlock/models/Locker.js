@@ -4,6 +4,7 @@ const lockerSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
+    lockerNumber: { type: Number, required: true },
     duration: { type: Number, required: false },
     status: { type: String, required: true },
     image: { type: String, required: true },

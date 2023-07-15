@@ -12,12 +12,13 @@ export async function GET(req, { params }) {
 
 export async function PUT(req, { params }) {
   const data = await req.json();
-  const { name, slug, price, image } = data;
+  const { name, slug, price, image, lockerNumber } = data;
   await db.connect();
   const locker = await Locker.findById(params.id);
   if (locker) {
     locker.name = name;
     locker.slug = slug;
+    locker.lockerNumber = lockerNumber;
     locker.price = price;
     locker.image = image;
     await locker.save();

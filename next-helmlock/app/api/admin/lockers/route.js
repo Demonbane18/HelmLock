@@ -15,9 +15,10 @@ export async function POST(req, res) {
   const newLocker = new Locker({
     name: 'sample name',
     slug: 'sample-name-' + Math.random(),
+    lockerNumber: Math.random(),
     duration: 2,
     status: 'vacant',
-    image: '/images/shirt1.jpg',
+    image: '/images/unlocked.jpg',
     price: 10,
   });
   const locker = await newLocker.save();

@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import Layout from '@/app/components/Layout';
 import { getError } from '@/utils/error';
 import { redirect } from 'next/navigation';
+export const revalidate = 60;
 
 function reducer(state, action) {
   switch (action.type) {
@@ -64,6 +65,7 @@ export default function AdminOrderScreen() {
             <li>
               <Link href="/admin">Dashboard</Link>
             </li>
+            <Link href="/admin/opening">Opening Hours</Link>
             <li>
               <Link href="/admin/orders" className="font-bold">
                 Orders

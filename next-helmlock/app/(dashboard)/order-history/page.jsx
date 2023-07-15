@@ -6,6 +6,7 @@ import Layout from '@/app/components/Layout';
 import { getError } from '@/utils/error';
 import { useSession } from 'next-auth/react';
 // import getOrders from '@/app/_actions/getOrders';
+export const revalidate = 60;
 
 function reducer(state, action) {
   switch (action.type) {

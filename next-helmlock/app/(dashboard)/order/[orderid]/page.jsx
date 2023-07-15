@@ -12,6 +12,8 @@ import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import Cookies from 'js-cookie';
 import useRedirectAfterSomeSeconds from '@/utils/redirect';
+export const revalidate = 60;
+
 export async function generateMetadata({ params }) {
   return { title: params.orderid };
 }

@@ -12,7 +12,11 @@ export default function lockerItem({ locker, addToCartHandler }) {
         href={`/locker/${locker.slug}`}
         className="cursor-pointer"
       >
-        <img src={locker.image} alt={locker.name} className="rounded shadow" />
+        <img
+          src={locker.image}
+          alt={locker.name}
+          className="rounded shadow object-cover h-64 w-full"
+        />
       </Link>
       <div className="flex flex-col items-center justify-center p-5">
         <Link

@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import Layout from '@/app/components/Layout';
 import { getError } from '@/utils/error';
+export const revalidate = 60;
 
 function reducer(state, action) {
   switch (action.type) {
@@ -62,7 +63,7 @@ export default function AdminLockerEditScreen({ params }) {
         dispatch({ type: 'FETCH_SUCCESS' });
         setValue('name', locker.name);
         setValue('slug', locker.slug);
-        setValue('price', locker.price);
+        setValue('lockernumber', locker.lockernumber);
         setValue('image', locker.image);
       } catch (err) {
         dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
@@ -97,14 +98,15 @@ export default function AdminLockerEditScreen({ params }) {
       toast.error(getError(err));
     }
   };
-  const submitHandler = async ({ name, slug, price, image }) => {
+  const submitHandler = async ({ name, slug, lockernumber, image }) => {
     try {
       dispatch({ type: 'UPDATE_REQUEST' });
       await axios.put(`/api/admin/lockers/${lockerId}`, {
         name,
         slug,
-        price,
+        lockernumber,
         image,
+        lockerNumber,
       });
       dispatch({ type: 'UPDATE_SUCCESS' });
       toast.success('Locker updated successfully');
@@ -177,9 +179,25 @@ export default function AdminLockerEditScreen({ params }) {
                 )}
               </div>
               <div className="mb-4">
-                <label htmlFor="price">Price</label>
+                <label htmlFor="lockerNumber">Locker Number</label>
                 <input
                   type="text"
+                  className="w-full"
+                  id="lockerNumber"
+                  {...register('lockerNumber', {
+                    required: 'Please enter locker number',
+                  })}
+                />
+                {errors.lockerNumber && (
+                  <div className="text-red-500">
+                    {errors.lockerNumber.message}
+                  </div>
+                )}
+              </div>
+              <div className="mb-4">
+                <label htmlFor="price">Price</label>
+                <input
+                  type="number"
                   className="w-full"
                   id="price"
                   {...register('price', {
@@ -190,6 +208,7 @@ export default function AdminLockerEditScreen({ params }) {
                   <div className="text-red-500">{errors.price.message}</div>
                 )}
               </div>
+
               <div className="mb-4">
                 <label htmlFor="image">image</label>
                 <input

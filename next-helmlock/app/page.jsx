@@ -3,6 +3,7 @@ import Layout from './components/Layout';
 import Locker from '../models/Locker';
 import db from './lib/db';
 import StoreContext from './components/StoreContext';
+export const revalidate = 60;
 
 export default async function Home() {
   await db.connect();

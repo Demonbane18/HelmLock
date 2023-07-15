@@ -7,7 +7,7 @@ import CheckoutWizard from '../../components/CheckoutWizard';
 import Layout from '../../components/Layout';
 import { Store } from '../../../utils/Store';
 import { Metadata } from 'next';
-
+export const revalidate = 60;
 export function generateMetadata() {
   return {
     title: 'Payment',

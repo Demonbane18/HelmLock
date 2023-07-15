@@ -1,6 +1,7 @@
 import Provider from '../app/components/Provider';
 import { StoreProvider } from '../utils/Store';
 import PaypalProvider from './components/PaypalProvider';
+import ChakrasProvider from './components/ChakrasProvider';
 import './globals.css';
 import '../styles/Calendar.css';
 import { Inter } from 'next/font/google';
@@ -45,15 +46,17 @@ export default function RootLayout({ Component, children }) {
       <body className="flex h-full flex-col">
         <Provider>
           <StoreProvider>
-            <PaypalProvider>
-              {/* {Component.auth ? (
+            <ChakrasProvider>
+              <PaypalProvider>
+                {/* {Component.auth ? (
                 <Auth adminOnly={Component.auth.adminOnly}>
                   <main className="grow">{children}</main>
                 </Auth>
               ) : ( */}
-              <main className="grow">{children}</main>
-              {/* )} */}
-            </PaypalProvider>
+                <main className="grow">{children}</main>
+                {/* )} */}
+              </PaypalProvider>
+            </ChakrasProvider>
           </StoreProvider>
         </Provider>
       </body>

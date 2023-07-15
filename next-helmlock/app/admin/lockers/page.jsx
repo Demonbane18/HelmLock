@@ -8,6 +8,7 @@ import { getError } from '@/utils/error';
 import { useSession } from 'next-auth/react';
 import { redirect, useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+export const revalidate = 60;
 
 function reducer(state, action) {
   switch (action.type) {
@@ -114,6 +115,7 @@ export default function AdminLockersScreen() {
             <li>
               <Link href="/admin">Dashboard</Link>
             </li>
+            <Link href="/admin/opening">Opening Hours</Link>
             <li>
               <Link href="/admin/orders">Orders</Link>
             </li>
@@ -150,6 +152,7 @@ export default function AdminLockersScreen() {
                   <tr>
                     <th className="px-5 text-left">ID</th>
                     <th className="p-5 text-left">NAME</th>
+                    <th className="p-5 text-left">LOCKER NO.</th>
                     <th className="p-5 text-left">PRICE (/hr)</th>
                     <th className="p-5 text-left">STATUS</th>
                     <th className="p-5 text-left">ACTIONS</th>
@@ -160,6 +163,7 @@ export default function AdminLockersScreen() {
                     <tr key={locker._id} className="border-b">
                       <td className=" p-5 ">{locker._id.substring(20, 24)}</td>
                       <td className=" p-5 ">{locker.name}</td>
+                      <td className=" p-5 ">{locker.lockerNumber}</td>
                       <td className=" p-5 ">₱{locker.price}</td>
                       <td className=" p-5 ">{locker.status}</td>
                       <td className=" p-5 ">

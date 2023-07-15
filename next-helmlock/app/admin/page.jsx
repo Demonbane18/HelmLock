@@ -15,6 +15,7 @@ import {
 import React, { useEffect, useReducer } from 'react';
 import Layout from '@/app/components/Layout';
 import { getError } from '@/utils/error';
+export const revalidate = 60;
 
 ChartJS.register(
   CategoryScale,
@@ -86,6 +87,9 @@ function AdminDashboardScreen() {
               <Link href="/admin" className="font-bold">
                 Dashboard
               </Link>
+            </li>
+            <li>
+              <Link href="/admin/opening">Opening Hours</Link>
             </li>
             <li>
               <Link href="/admin/orders">Orders</Link>
