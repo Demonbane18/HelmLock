@@ -3,6 +3,8 @@ import Day from '@/models/Day';
 import ClosedDay from '@/models/ClosedDay';
 import db from '@/app/lib/db';
 import { NextResponse } from 'next/server';
+import { parseISO } from 'date-fns';
+import { format, utcToZonedTime } from 'date-fns-tz';
 
 export async function GET(req, res) {
   await db.connect();
@@ -11,25 +13,73 @@ export async function GET(req, res) {
   return NextResponse.json({ days }, { status: 200 });
 }
 
-// export async function PUT(req, { params }) {
-//   const data = await req.json();
-//   const { name, slug, price, image, lockerNumber } = data;
-//   await db.connect();
-//   const locker = await Locker.findById(params.id);
-//   if (locker) {
-//     locker.name = name;
-//     locker.slug = slug;
-//     locker.lockerNumber = lockerNumber;
-//     locker.price = price;
-//     locker.image = image;
-//     await locker.save();
-//     await db.disconnect();
-//     return NextResponse.json(
-//       { message: 'Locker updated successfully' },
-//       { status: 200 }
-//     );
-//   } else {
-//     await db.disconnect();
-//     return NextResponse.json({ message: 'Locker not found' }, { status: 404 });
-//   }
-// }
+export async function PUT(req) {
+  const data = await req.json();
+  const { days } = data;
+  // const { id, openTime, closeTime } = data;
+  await db.connect();
+  const newDay = await Day.find({});
+  if (newDay) {
+    await Day.findByIdAndUpdate(days[0].id, {
+      openTime: days[0].openTime,
+      closeTime: days[0].closeTime,
+    });
+    await Day.findByIdAndUpdate(days[1].id, {
+      openTime: days[1].openTime,
+      closeTime: days[1].closeTime,
+    });
+    await Day.findByIdAndUpdate(days[2].id, {
+      openTime: days[2].openTime,
+      closeTime: days[2].closeTime,
+    });
+    await Day.findByIdAndUpdate(days[3].id, {
+      openTime: days[3].openTime,
+      closeTime: days[3].closeTime,
+    });
+    await Day.findByIdAndUpdate(days[4].id, {
+      openTime: days[4].openTime,
+      closeTime: days[4].closeTime,
+    });
+    await Day.findByIdAndUpdate(days[5].id, {
+      openTime: days[5].openTime,
+      closeTime: days[5].closeTime,
+    });
+    await Day.findByIdAndUpdate(days[6].id, {
+      openTime: days[6].openTime,
+      closeTime: days[6].closeTime,
+    });
+    await db.disconnect();
+    return NextResponse.json(
+      { message: 'Opening hours saved' },
+      { status: 200 }
+    );
+  } else {
+    await db.disconnect();
+    return NextResponse.json({ message: 'Day not found' }, { status: 404 });
+  }
+}
+
+export async function POST(req, res) {
+  const data = await req.json();
+  const { date } = data;
+  console.log('server date');
+  console.log(date.date);
+  await db.connect();
+  const newClosedDay = new ClosedDay({ date: date.date });
+  await newClosedDay.save();
+  await db.disconnect();
+  return NextResponse.json({ message: 'Opening hours saved' }, { status: 200 });
+}
+
+export async function DELETE(req, res) {
+  const data = await req.json();
+  const { date } = data;
+  console.log('server date');
+  console.log(date.date);
+  await db.connect();
+  const closedDay = await ClosedDay.findOne({ date: date.date });
+  console.log(closedDay);
+  await closedDay.deleteOne();
+  await db.disconnect();
+  return NextResponse.json({ message: 'Opening hours saved' }, { status: 200 });
+}

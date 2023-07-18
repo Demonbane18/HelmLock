@@ -9,12 +9,12 @@ const handler = async (req, res) => {
   await db.connect();
   // await User.deleteMany();
   // await User.insertMany(data.users);
-  await Locker.deleteMany();
-  await Locker.insertMany(data.lockers);
+  // await Locker.deleteMany();
+  // await Locker.insertMany(data.lockers);
   await Day.deleteMany();
   await Day.insertMany(data.days);
-  await ClosedDay.deleteMany();
-  await ClosedDay.insertMany(data.closedDays);
+  // await ClosedDay.deleteMany();
+  // await ClosedDay.insertMany(data.closedDays);
   await db.disconnect();
   res.send({ message: 'seeded successfully' });
 };

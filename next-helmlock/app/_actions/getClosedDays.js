@@ -5,7 +5,6 @@ export async function getClosedDays() {
   try {
     await db.connect();
     const closedDays = await ClosedDay.find({});
-    db.convertDocToObj(closedDays);
     await db.disconnect();
     return closedDays;
   } catch (error) {
