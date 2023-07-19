@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import LockerItem from './Lockeritem';
 import getLockerById from '@/app/_actions/getLockerById';
 import Cookies from 'js-cookie';
+import TypewriterComponent from 'typewriter-effect';
 
 // async function getLockerById(id) {
 //   try {
@@ -28,7 +29,13 @@ import Cookies from 'js-cookie';
 //   }
 // }
 
-const StoreContext = ({ lockers }) => {
+const StoreContext = ({
+  lockers,
+  isOpen,
+  openTime,
+  closeTime,
+  isDayClosed,
+}) => {
   const orderPending = Cookies.get('orderPending');
   console.log(orderPending);
   const { state, dispatch } = useContext(Store);
@@ -43,6 +50,9 @@ const StoreContext = ({ lockers }) => {
     // );
     // const { data } = getLockerById(locker._id);
     const data = JSON.parse(JSON.stringify(await getLockerById(locker._id)));
+    if (!isOpen) {
+      return toast.error('Store is closed!');
+    }
     if (orderPending) {
       return toast.error('You already have a rented locker!');
     }
@@ -58,16 +68,58 @@ const StoreContext = ({ lockers }) => {
     toast.success('Locker added to the cart');
   };
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-3">
-      {lockers
-        ? lockers.map((locker) => (
-            <LockerItem
-              locker={locker}
-              key={locker.slug}
-              addToCartHandler={addToCartHandler}
-            ></LockerItem>
-          ))
-        : null}
+    <div>
+      <div className="text-transparent text-lg bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 font-bold flex justify-center">
+        {isDayClosed ? (
+          <TypewriterComponent
+            options={{
+              strings: [
+                'Store is closed for the day. Please come back tomorrow.',
+              ],
+              autoStart: true,
+              loop: true,
+            }}
+          />
+        ) : isOpen ? (
+          <TypewriterComponent
+            options={{
+              strings: [
+                'Store is Open!',
+                'Open until' + ' ' + closeTime,
+                "Don't forget to checkout before your time is up or you'll have to pay penalty!",
+                'Make sure to put your helmet first before you close the locker!',
+              ],
+              autoStart: true,
+              loop: true,
+            }}
+            methods={{ changeDeleteSpeed: 100 }}
+          />
+        ) : (
+          <TypewriterComponent
+            options={{
+              strings: [
+                'Store is Closed! Please come back later.',
+                "Today's schedule:",
+                'Open Time:' + ' ' + openTime,
+                'Closing Time:' + ' ' + closeTime,
+              ],
+              autoStart: true,
+              loop: true,
+            }}
+          />
+        )}
+      </div>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-3">
+        {lockers
+          ? lockers.map((locker) => (
+              <LockerItem
+                locker={locker}
+                key={locker.slug}
+                addToCartHandler={addToCartHandler}
+              ></LockerItem>
+            ))
+          : null}
+      </div>
     </div>
   );
 };

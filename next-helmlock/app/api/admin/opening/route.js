@@ -1,10 +1,7 @@
-import { getServerSession } from 'next-auth/react';
 import Day from '@/models/Day';
 import ClosedDay from '@/models/ClosedDay';
 import db from '@/app/lib/db';
 import { NextResponse } from 'next/server';
-import { parseISO } from 'date-fns';
-import { format, utcToZonedTime } from 'date-fns-tz';
 
 export async function GET(req, res) {
   await db.connect();

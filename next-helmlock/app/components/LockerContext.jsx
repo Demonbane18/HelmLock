@@ -9,7 +9,7 @@ import { Store } from '../../utils/Store';
 import getLockerById from '@/app/_actions/getLockerById';
 import Cookies from 'js-cookie';
 
-const LockerContext = ({ locker }) => {
+const LockerContext = ({ locker, isOpen }) => {
   const orderPending = Cookies.get('orderPending');
   console.log(orderPending);
   const { state, dispatch } = useContext(Store);
@@ -38,6 +38,9 @@ const LockerContext = ({ locker }) => {
     const quantity = existItem ? existItem.quantity : 1;
     // const { data } = getLockerById(locker._id);
     const data = JSON.parse(JSON.stringify(await getLockerById(locker._id)));
+    if (!isOpen) {
+      return toast.error('Store is closed!');
+    }
     if (orderPending) {
       return toast.error('You already have a rented locker!');
     }

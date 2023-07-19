@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET(req, res) {
   await db.connect();
-  const lockers = await Locker.find({});
+  const lockers = await Locker.find({}).sort({ lockerNumber: 1 });
   await db.disconnect();
   return NextResponse.json({ lockers }, { status: 200 });
 }

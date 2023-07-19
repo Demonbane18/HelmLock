@@ -15,6 +15,7 @@ import { now } from '@/constants/config';
 import { capitalize, classNames, weekdayIndexToName } from '@/utils/helper';
 import data from '@/utils/data';
 import Link from 'next/link';
+import Cookies from 'js-cookie';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -29,6 +30,7 @@ function reducer(state, action) {
   }
 }
 const OpeningHours = ({ days, closedDays }) => {
+  Cookies.remove('orderPending');
   const router = useRouter();
   const date = new Date();
   const [{ error, loadingUpdate }, dispatch] = useReducer(reducer, {
@@ -75,6 +77,15 @@ const OpeningHours = ({ days, closedDays }) => {
       closeTime: days[6].closeTime,
     },
   ]);
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect(`/signin?callbackUrl=admin/opening`);
+    },
+  });
+  if (!session || (session && !session.user.isAdmin)) {
+    redirect(`/signin?callbackUrl=admin/opening`);
+  }
   const saveOpeningHrs = async (days) => {
     try {
       dispatch({ type: 'UPDATE_REQUEST' });
