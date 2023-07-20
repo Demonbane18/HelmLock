@@ -122,6 +122,32 @@ const data = {
       date: '2023-07-17T00:00:00+08:00',
     },
   ],
+  servoLocks: [
+    {
+      status: 'open',
+      servo_number: 1,
+    },
+    {
+      status: 'open',
+      servo_number: 2,
+    },
+    {
+      status: 'open',
+      servo_number: 3,
+    },
+    {
+      status: 'open',
+      servo_number: 4,
+    },
+    {
+      status: 'open',
+      servo_number: 5,
+    },
+    {
+      status: 'open',
+      servo_number: 6,
+    },
+  ],
 };
 
 export default data;

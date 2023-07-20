@@ -1,2 +1,0 @@
-Keeps turning on?
-Change topic name in main.ino and index.tsx

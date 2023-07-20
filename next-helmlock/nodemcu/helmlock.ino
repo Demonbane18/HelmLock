@@ -40,19 +40,18 @@ char msg[MSG_BUFFER_SIZE];
 void handler(char* topic, byte* payload, unsigned int length) {
     switch ((char)payload[0]) {
   case '0':
-    Serial.println("close");
-     for(int angle = 180; angle >= angleMin; angle -=angleStep) {
+     Serial.println("Locker is now opened");
+      for(int angle = 180; angle >= angleMin; angle -=angleStep) {
+        servo1.write(angle);
+        delay(20);
+     }
+    break;
+  case '1':
+   Serial.println("Locker is now closed");
+     for(int angle = 0; angle <= angleMax; angle +=angleStep) {
         servo1.write(angle);
         delay(20);
       }
-    break;
-  case '1':
-   Serial.println("open");
-      for(int angle = 0; angle <= angleMax; angle +=angleStep) {
-        servo1.write(angle);
-        delay(20);
- 
-     }
     break;
   default:
      Serial.println("INVALID STATUS");

@@ -5,6 +5,7 @@ import React, { useEffect, useReducer } from 'react';
 import Layout from '@/app/components/Layout';
 import { getError } from '@/utils/error';
 import { useSession } from 'next-auth/react';
+import { redirect } from 'next/navigation';
 // import getOrders from '@/app/_actions/getOrders';
 export const revalidate = 60;
 

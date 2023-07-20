@@ -1,32 +1,64 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { toast } from 'react-toastify';
 import { useSession } from 'next-auth/react';
 import { changeStatus } from '../lib/mqtt';
-// import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { redirect } from 'next/navigation';
+import { getError } from '@/utils/error';
+import { toast } from 'react-toastify';
 
-const LockerControl = ({ locker, orderuser, orderid }) => {
+function reducer(state, action) {
+  switch (action.type) {
+    case 'UPDATE_REQUEST':
+      return { ...state, loadingUpdate: true, errorUpdate: '' };
+    case 'UPDATE_SUCCESS':
+      return { ...state, loadingUpdate: false, errorUpdate: '' };
+    case 'UPDATE_FAIL':
+      return { ...state, loadingUpdate: false, errorUpdate: action.payload };
+    default:
+      return state;
+  }
+}
+
+const LockerControl = ({ locker, orderuser, orderid, lockerStatus }) => {
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
       redirect(`/signin?callbackUrl=/locker/${orderid}`);
     },
   });
-  // const supabase = createClientComponentClient();
-  const [lockerButton, setLockerButton] = useState('close');
+
+  const [{ loading, error, loadingUpdate }, dispatch] = useReducer(reducer, {
+    loading: true,
+    error: '',
+  });
+
+  const [lockerButton, setLockerButton] = useState(lockerStatus);
+  console.log(lockerStatus);
   const userid = session?.user?._id;
   const lockerHandler = async () => {
-    if (lockerButton === 'close') {
-      setLockerButton('open');
-    } else {
-      setLockerButton('close');
+    try {
+      dispatch({ type: 'UPDATE_REQUEST' });
+      await axios.put(`/api/servo/${locker.lockerNumber}`);
+      dispatch({ type: 'UPDATE_SUCCESS' });
+      if (lockerButton === 'close') {
+        toast.success(
+          'Locker is checked out successfully. Please retrieve your helmet.'
+        );
+        setLockerButton('open');
+      } else {
+        toast.success('Locker is now closed!');
+        setLockerButton('close');
+      }
+      changeStatus(lockerButton, locker.lockerNumber);
+    } catch (err) {
+      dispatch({ type: 'UPDATE_FAIL', payload: getError(err) });
+      toast.error(getError(err));
     }
-    changeStatus(lockerButton, locker.lockerNumber);
-    console.log(locker.lockerNumber);
+
     return;
   };
 
@@ -51,11 +83,11 @@ const LockerControl = ({ locker, orderuser, orderid }) => {
               </div>
               <button
                 className={` w-full cursor-pointer' font-bold ${
-                  lockerButton === 'open' ? 'unlock-button' : 'lock-button'
+                  lockerButton === 'open' ? 'lock-button' : 'unlock-button'
                 }`}
                 onClick={lockerHandler}
               >
-                {lockerButton === 'open' ? 'Open' : 'Close'}
+                {lockerButton === 'open' ? 'Close' : 'Open'}
               </button>
             </div>
           </div>

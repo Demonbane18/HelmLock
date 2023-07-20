@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { getError } from '@/utils/error';
 import axios from 'axios';
 import Layout from '@/app/components/Layout';
+import { redirect } from 'next/navigation';
 export const revalidate = 60;
 export default function ProfileScreen() {
   const { data: session, update } = useSession({

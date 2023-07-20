@@ -4,8 +4,7 @@ import Order from '@/models/Order';
 import db from '@/app/lib/db';
 import LockerControl from '@/app/components/LockerControl';
 import React from 'react';
-import Cookies from 'js-cookie';
-// import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { getServoLock } from '@/app/lib/servoLocks';
 export const revalidate = 0;
 
 export async function generateMetadata({ params }) {
@@ -21,18 +20,18 @@ export async function generateMetadata({ params }) {
 }
 export default async function LockerScreen({ params }) {
   const orderid = params.id;
-  // const supabase = createServerComponentClient({ Cookies });
+  // const supabase = createServerComponentClient({ cookies });
   await db.connect();
   const order = await Order.findOne({ _id: orderid }).lean();
   const { orderItems, isEnded, user, isPaid } = order;
   const lockerid = orderItems[0]._id;
   const locker = await Locker.findOne({ _id: lockerid });
   const dlocker = locker ? JSON.parse(JSON.stringify(locker)) : null;
+  const status = await getServoLock(dlocker.lockerNumber);
   await db.disconnect();
-  // const { status } = await supabase
-  //   .from('servo_table')
-  //   .select('status')
-  //   .eq('servo_number', dlocker.lockerNumber);
+  // const { data } = await supabase.from('servo_table').select();
+  // .eq('servo_number', dlocker.lockerNumber);
+  // console.log(data);
   const simpleId = user.toString();
   const simpleOrderId = orderid.toString();
   return (
@@ -43,7 +42,7 @@ export default async function LockerScreen({ params }) {
             locker={dlocker}
             orderuser={simpleId}
             orderid={simpleOrderId}
-            // lockerStatus={status}
+            lockerStatus={status}
           />
         ) : (
           <div>
