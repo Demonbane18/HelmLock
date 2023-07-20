@@ -1,24 +1,10 @@
 // // /api/orders/:id
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../../auth/[...nextauth]/route';
 import Order from '../../../../models/Order';
 import Locker from '@/models/Locker';
 import db from '../../../lib/db';
 
-export async function handler(req, res) {
-  const session = await getServerSession(req, res, authOptions);
-
-  if (!session) {
-    NextResponse.json({ message: 'You must be logged in.' }, { status: 401 });
-    return;
-  }
-
-  return NextResponse.json({
-    message: 'Success',
-  });
-}
 export async function GET(req, { params }) {
   const orderid = params.id;
   await db.connect();
@@ -31,10 +17,14 @@ export async function GET(req, { params }) {
 
 export async function PUT(req, { params }) {
   const orderid = params.id;
+  console.log(orderid);
   await db.connect();
   const order = await Order.findById(orderid);
-  const { orderitems } = order;
-  const lockerid = orderitems[0]._id;
+  console.log(order);
+  const { orderItems } = order;
+  console.log(orderItems);
+  const lockerid = orderItems[0]._id;
+  console.log(lockerid);
   if (order) {
     if (order.isPaid) {
       return NextResponse.json(
@@ -55,6 +45,7 @@ export async function PUT(req, { params }) {
     locker.status = 'occupied';
     const updatedLocker = await locker.save();
     const paidOrder = await order.save();
+    console.log(paidOrder);
     await db.disconnect();
     return NextResponse.json(
       { message: 'order paid successfully', order: paidOrder },

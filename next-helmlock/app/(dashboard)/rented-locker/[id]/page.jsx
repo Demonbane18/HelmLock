@@ -4,10 +4,12 @@ import Order from '@/models/Order';
 import db from '@/app/lib/db';
 import LockerControl from '@/app/components/LockerControl';
 import React from 'react';
+import Cookies from 'js-cookie';
+// import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+export const revalidate = 0;
 
 export async function generateMetadata({ params }) {
   const orderid = params.id;
-  console.log(orderid);
   await db.connect();
   const order = await Order.findOne({ _id: orderid }).lean();
   const { orderItems } = order;
@@ -19,7 +21,7 @@ export async function generateMetadata({ params }) {
 }
 export default async function LockerScreen({ params }) {
   const orderid = params.id;
-
+  // const supabase = createServerComponentClient({ Cookies });
   await db.connect();
   const order = await Order.findOne({ _id: orderid }).lean();
   const { orderItems, isEnded, user, isPaid } = order;
@@ -27,19 +29,12 @@ export default async function LockerScreen({ params }) {
   const locker = await Locker.findOne({ _id: lockerid });
   const dlocker = locker ? JSON.parse(JSON.stringify(locker)) : null;
   await db.disconnect();
+  // const { status } = await supabase
+  //   .from('servo_table')
+  //   .select('status')
+  //   .eq('servo_number', dlocker.lockerNumber);
   const simpleId = user.toString();
   const simpleOrderId = orderid.toString();
-  // const lockerData = await locker.toArray();
-  // const simpleLockerArray = lockerData.map((data) => ({
-  //   _id: data._id.toString(), // convert ObjectId to string
-  //   name: data.name,
-  //   slug: data.slug,
-  //   duration: data.duration,
-  //   status: data.status,
-  //   image: data.image,
-  //   price: data.price,
-  // }));
-
   return (
     <Layout title={dlocker.name}>
       {!isEnded && isPaid ? (
@@ -48,6 +43,7 @@ export default async function LockerScreen({ params }) {
             locker={dlocker}
             orderuser={simpleId}
             orderid={simpleOrderId}
+            // lockerStatus={status}
           />
         ) : (
           <div>

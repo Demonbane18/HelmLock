@@ -13,10 +13,8 @@ import { toast } from 'react-toastify';
 import { Metadata } from 'next';
 import getLockerById from '@/app/_actions/getLockerById';
 
-const Cart = ({ duration }) => {
+const Cart = ({ lockerDuration }) => {
   const orderPending = Cookies.get('orderPending');
-  console.log(orderPending);
-  console.log(duration);
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
   const {
@@ -27,7 +25,6 @@ const Cart = ({ duration }) => {
   };
   const updateCartHandler = async (item, dur) => {
     const duration = Number(dur);
-    // const { data } = getLockerById(item._id);
     const data = JSON.parse(JSON.stringify(await getLockerById(item._id)));
     if (data?.status === 'occupied') {
       dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
@@ -90,13 +87,13 @@ const Cart = ({ duration }) => {
                     </td>
                     <td className="p-5 text-right">
                       <select
-                        defaultValue={(item.duration = 1)}
+                        defaultValue={item.duration}
                         value={item.duration}
                         onChange={(e) =>
                           updateCartHandler(item, e.target.value)
                         }
                       >
-                        {[...Array(duration).keys()].map((x) => (
+                        {[...Array(lockerDuration).keys()].map((x) => (
                           <option key={x + 1} value={x + 1}>
                             {x + 1}
                           </option>

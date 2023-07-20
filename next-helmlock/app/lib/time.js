@@ -83,7 +83,7 @@ export const isDayClosed = async () => {
         format(closedDay.date, 'yyyy-MM-dd') ===
         format(currentDate, 'yyyy-MM-dd')
     );
-  console.log(result);
+  // console.log(result);
   return result;
 };
 

@@ -15,15 +15,12 @@ import { formatISO, format } from 'date-fns';
 export const revalidate = 60;
 
 export default async function Home() {
-  //change date
-  const date = new Date(2023, 6, 20, 0, 0, 0);
   const lockers = await getLockers();
   const storeIsOpen = await isOpen();
   const openTime = await getCurrentOpenTime();
   const closeTime = await getCurrentClosingTime();
-  const isTodayClosed = await isDayClosed(date);
-  console.log(format(date, 'yyyy-MM-dd'));
-  console.log(isTodayClosed);
+  const isTodayClosed = await isDayClosed();
+  // console.log(isTodayClosed);
   const convertedOpenTime = convertTime(openTime);
   const convertedCloseTime = convertTime(closeTime);
   return (

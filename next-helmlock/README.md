@@ -30,9 +30,9 @@ add verify email and password
 
 ## IOT side
 
-connect pubsub to open/close buttons
-connect reed switch to FirebaseFCM
-connect FirebaseFCM to novo to send notification and email notification
+create fetch server component for servo
+create reducer for updating supabase
+create api route for put requests
 
 ## User acccounts
 

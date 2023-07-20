@@ -14,7 +14,7 @@ export default async function CartScreen() {
   const duration = await getDuration();
   return (
     <Layout title="Cart">
-      <Cart duration={duration} />
+      <Cart lockerDuration={duration} />
     </Layout>
   );
 }

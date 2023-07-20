@@ -3,13 +3,13 @@
 import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import Layout from '../../../components/Layout';
 import { getError } from '../../../../utils/error';
 import { toast } from 'react-toastify';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import { useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import useRedirectAfterSomeSeconds from '@/utils/redirect';
 export const revalidate = 60;
@@ -46,8 +46,6 @@ function OrderScreen({ params }) {
       redirect(`/signin?callbackUrl=/order/${orderId}`);
     },
   });
-
-  // console.log(orderId);
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
   const [{ loading, error, order, successPay, loadingPay }, dispatch] =
     useReducer(reducer, {
@@ -59,15 +57,10 @@ function OrderScreen({ params }) {
     const fetchOrder = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        // const data = JSON.parse(JSON.stringify(await getOrderById(orderId)));
-        // const data = getOrder(orderId);
-        // const data = params;
         const { data } = await axios.get(
           `http://localhost:3000/api/orders/${orderId}`
         );
         const { order } = data;
-        // const data = await JSON.parse(JSON.stringify(data1));
-        console.log(order);
         dispatch({ type: 'FETCH_SUCCESS', payload: order });
       } catch (err) {
         dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
@@ -81,7 +74,6 @@ function OrderScreen({ params }) {
     } else {
       const loadPaypalScript = async () => {
         const { data: clientId } = await axios.get('/api/keys/paypal');
-        // console.log(clientId.data);
         paypalDispatch({
           type: 'resetOptions',
           value: {
@@ -105,7 +97,6 @@ function OrderScreen({ params }) {
     endedAt,
     user,
   } = order;
-  // console.log(order);
 
   function createOrder(data, actions) {
     return actions.order
@@ -129,19 +120,16 @@ function OrderScreen({ params }) {
         dispatch({ type: 'PAY_SUCCESS', payload: data });
         toast.success('Order is paid successfully');
         Cookies.set('orderPending', order._id, { expires: 1 });
-        const { secondsRemaining } = useRedirectAfterSomeSeconds(
-          `/rented-locker/${order._id}`,
-          5
-        );
         const customId = 'custom-id-yes';
         toast.warning(
-          `You will be redirected to your locker in ${secondsRemaining} seconds. Please place your order`,
+          `You will be redirected to your locker in 5 seconds.`,
           {
             toastId: customId,
           },
           { delay: 2000 },
           { autoClose: 5000 }
         );
+        redirect(`/rented-locker/${order._id}`);
       } catch (err) {
         dispatch({ type: 'PAY_FAIL', payload: getError(err) });
         toast.error(getError(err));
@@ -152,7 +140,6 @@ function OrderScreen({ params }) {
     toast.error(getError(err));
   }
 
-  // console.log(isPending);
   return (
     <Layout title={`Order ${orderId}`}>
       <h1 className="mb-4 text-xl">{`Order ${orderId}`}</h1>
