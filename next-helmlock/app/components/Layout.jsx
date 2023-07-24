@@ -9,8 +9,8 @@ import { Menu } from '@headlessui/react';
 import 'react-toastify/dist/ReactToastify.css';
 import { Store } from '../../utils/Store';
 import DropdownLink from './DropdownLink';
-import { useRouter } from 'next/navigation';
-import SearchIcon from '@heroicons/react/24/outline/MagnifyingGlassIcon';
+// import { useRouter } from 'next/navigation';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 export default function Layout({ title, children }) {
   const { data: session, status } = useSession();
@@ -18,6 +18,8 @@ export default function Layout({ title, children }) {
   const { cart } = state;
   const [cartItemsCount, setCartItemsCount] = useState(0);
   const [rentedLocker, setRentedLocker] = useState(null);
+  // Create a Supabase client configured to use cookies
+  const supabase = createClientComponentClient();
 
   useEffect(() => {
     setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
@@ -28,7 +30,8 @@ export default function Layout({ title, children }) {
     setRentedLocker(orderPending);
   }, []);
 
-  const logoutClickHandler = () => {
+  const logoutClickHandler = async () => {
+    await supabase.auth.signOut();
     Cookies.remove('cart');
     dispatch({ type: 'CART_RESET' });
     signOut({ callbackUrl: '/signin' });

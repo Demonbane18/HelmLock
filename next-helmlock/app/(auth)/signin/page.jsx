@@ -7,10 +7,11 @@ import Layout from '../../components/Layout';
 import { getError } from '../../../utils/error';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 export default function LoginScreen({ params }) {
   const { data: session } = useSession();
-
+  const supabase = createClientComponentClient();
   const router = useRouter();
   const { redirect } = params;
 
@@ -27,6 +28,10 @@ export default function LoginScreen({ params }) {
   } = useForm();
   const submitHandler = async ({ email, password }) => {
     try {
+      await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
       const result = await signIn('credentials', {
         redirect: false,
         email,
@@ -41,6 +46,9 @@ export default function LoginScreen({ params }) {
   };
   return (
     <Layout title="Login">
+      <div className="py-2">
+        <Link href="/">Back</Link>
+      </div>
       <form
         className="mx-auto max-w-screen-md"
         onSubmit={handleSubmit(submitHandler)}

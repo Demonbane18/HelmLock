@@ -1,9 +1,9 @@
+/* eslint-disable no-unused-vars */
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useReducer } from 'react';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { changeStatus } from '../lib/mqtt';
 import { redirect } from 'next/navigation';

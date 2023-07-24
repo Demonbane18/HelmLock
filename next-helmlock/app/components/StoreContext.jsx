@@ -1,7 +1,6 @@
 'use client';
 import React, { useContext } from 'react';
 import { Store } from '../../utils/Store';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import LockerItem from './Lockeritem';
 import getLockerById from '@/app/_actions/getLockerById';

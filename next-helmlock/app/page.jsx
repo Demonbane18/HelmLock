@@ -1,7 +1,5 @@
 //server side
 import Layout from './components/Layout';
-import Locker from '../models/Locker';
-import db from './lib/db';
 import StoreContext from './components/StoreContext';
 import {
   isOpen,
@@ -11,8 +9,9 @@ import {
   isDayClosed,
 } from './lib/time';
 import { getLockers } from './lib/lockers';
-import { formatISO, format } from 'date-fns';
-export const revalidate = 60;
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+export const revalidate = 0;
 
 export default async function Home() {
   const lockers = await getLockers();
@@ -23,6 +22,13 @@ export default async function Home() {
   // console.log(isTodayClosed);
   const convertedOpenTime = convertTime(openTime);
   const convertedCloseTime = convertTime(closeTime);
+  const supabase = createServerComponentClient({ cookies });
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  console.log(user);
+  const { data: servolocks } = await supabase.from('servolocks').select();
+  console.log(servolocks);
   return (
     <Layout title="Home Page">
       <StoreContext
@@ -31,6 +37,7 @@ export default async function Home() {
         openTime={convertedOpenTime}
         closeTime={convertedCloseTime}
         isDayClosed={isTodayClosed}
+        countries={servolocks}
       />
     </Layout>
   );

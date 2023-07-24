@@ -3,7 +3,7 @@
 import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import Layout from '../../../components/Layout';
 import { getError } from '../../../../utils/error';
 import { toast } from 'react-toastify';
@@ -11,7 +11,6 @@ import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import { useSession } from 'next-auth/react';
 import { redirect, useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
-import useRedirectAfterSomeSeconds from '@/utils/redirect';
 export const revalidate = 60;
 
 export async function generateMetadata({ params }) {
@@ -40,6 +39,7 @@ function reducer(state, action) {
 
 function OrderScreen({ params }) {
   const orderId = params.orderid;
+  const router = useRouter();
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
@@ -119,7 +119,8 @@ function OrderScreen({ params }) {
         const { data } = await axios.put(`/api/orders/${order._id}`, details);
         dispatch({ type: 'PAY_SUCCESS', payload: data });
         toast.success('Order is paid successfully');
-        Cookies.set('orderPending', order._id, { expires: 1 });
+        //change to 1 day after everything
+        Cookies.set('orderPending', order._id);
         const customId = 'custom-id-yes';
         toast.warning(
           `You will be redirected to your locker in 5 seconds.`,
@@ -129,7 +130,7 @@ function OrderScreen({ params }) {
           { delay: 2000 },
           { autoClose: 5000 }
         );
-        redirect(`/rented-locker/${order._id}`);
+        router.push(`/rented-locker/${order._id}`);
       } catch (err) {
         dispatch({ type: 'PAY_FAIL', payload: getError(err) });
         toast.error(getError(err));
@@ -194,6 +195,7 @@ function OrderScreen({ params }) {
                         <Link
                           href={`/product/${item.slug}`}
                           className="flex items-center"
+                          passHref
                         >
                           <Image
                             src={item.image}
