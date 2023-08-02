@@ -70,10 +70,14 @@ export default function LoginScreen() {
         <Link href="/">Back</Link>
       </div>
       {view === 'check-email' ? (
-        <p className="text-center text-foreground">
-          Check <span className="font-bold">{email}</span> to continue signing
-          up
-        </p>
+        <div>
+          {' '}
+          <p className="text-center text-foreground">
+            Check <span className="font-bold">{email}</span> to verify your
+            email address. Click here to
+          </p>
+          <Link href="/signin">Sign In</Link>
+        </div>
       ) : (
         <form
           className="mx-auto max-w-screen-md"

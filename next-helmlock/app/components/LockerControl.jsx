@@ -2,13 +2,16 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState, useReducer } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { changeStatus } from '../lib/mqtt';
 import { redirect } from 'next/navigation';
 import { getError } from '@/utils/error';
 import { toast } from 'react-toastify';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/navigation';
+import { updateAlarmStatus, updateRenterEmail } from '../lib/supabaseAlarm';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -23,13 +26,21 @@ function reducer(state, action) {
   }
 }
 
-const LockerControl = ({ locker, orderuser, orderid, lockerStatus }) => {
+const LockerControl = ({
+  locker,
+  orderuser,
+  orderid,
+  lockerStatus,
+  alarmStatus,
+}) => {
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
       redirect(`/signin?callbackUrl=/locker/${orderid}`);
     },
   });
+  const email = session?.user?.email;
+  console.log(email);
 
   const [{ loading, error, loadingUpdate }, dispatch] = useReducer(reducer, {
     loading: true,
@@ -37,21 +48,54 @@ const LockerControl = ({ locker, orderuser, orderid, lockerStatus }) => {
   });
 
   const [lockerButton, setLockerButton] = useState(lockerStatus);
+  const [alarmStatuss, setAlarmStatuss] = useState(alarmStatus);
+  const supabase = createClientComponentClient();
+  const router = useRouter();
   console.log(lockerStatus);
   const userid = session?.user?._id;
+  useEffect(() => {
+    setAlarmStatuss(alarmStatuss);
+  }, [alarmStatuss]);
+  useEffect(() => {
+    const channel = supabase
+      .channel('IOTHelmlock')
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'alarms',
+        },
+        (payload) => {
+          console.log(payload);
+          const updatedData = payload.new;
+          const newAlarmStatus = updatedData.status;
+          setAlarmStatuss(newAlarmStatus);
+          router.refresh();
+        }
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase, router]);
+
   const lockerHandler = async () => {
     try {
       dispatch({ type: 'UPDATE_REQUEST' });
-      await axios.put(`/api/servo/${locker.lockerNumber}`);
+      // await axios.put(`/api/servo/${locker.lockerNumber}`);
       dispatch({ type: 'UPDATE_SUCCESS' });
       if (lockerButton === 'close') {
         toast.success(
           'Locker is checked out successfully. Please retrieve your helmet.'
         );
         setLockerButton('open');
+        updateAlarmStatus(locker.lockerNumber, 'open');
       } else {
         toast.success('Locker is now closed!');
         setLockerButton('close');
+        updateAlarmStatus(locker.lockerNumber, 'close');
+        updateRenterEmail(locker.lockerNumber, email);
       }
       changeStatus(lockerButton, locker.lockerNumber);
     } catch (err) {
@@ -80,6 +124,11 @@ const LockerControl = ({ locker, orderuser, orderid, lockerStatus }) => {
             <div className="card p-5">
               <div className="mb-2 flex justify-between">
                 <h1 className="text-lg font-bold">{locker.name}</h1>
+              </div>
+              <div className="mb-2 flex justify-between">
+                <h1 className="text-lg font-bold">
+                  Alarm Status: {alarmStatuss}
+                </h1>
               </div>
               <button
                 className={` w-full cursor-pointer' font-bold ${

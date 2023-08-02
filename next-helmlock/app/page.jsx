@@ -27,8 +27,7 @@ export default async function Home() {
     data: { user },
   } = await supabase.auth.getUser();
   console.log(user);
-  const { data: servolocks } = await supabase.from('servolocks').select();
-  console.log(servolocks);
+
   return (
     <Layout title="Home Page">
       <StoreContext
@@ -37,7 +36,6 @@ export default async function Home() {
         openTime={convertedOpenTime}
         closeTime={convertedCloseTime}
         isDayClosed={isTodayClosed}
-        countries={servolocks}
       />
     </Layout>
   );
