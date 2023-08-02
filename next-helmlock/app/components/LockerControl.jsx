@@ -91,6 +91,7 @@ const LockerControl = ({
         );
         setLockerButton('open');
         updateAlarmStatus(locker.lockerNumber, 'open');
+        updateRenterEmail(locker.lockerNumber, null);
       } else {
         toast.success('Locker is now closed!');
         setLockerButton('close');
