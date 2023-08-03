@@ -6,8 +6,6 @@ import './globals.css';
 import '@/styles/Calendar.css';
 import '@/styles/Spinner.css';
 import { Inter } from 'next/font/google';
-import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
@@ -20,7 +18,7 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ Component, children }) {
+export default function RootLayout({ children }) {
   return (
     <html
       lang="en"

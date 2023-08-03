@@ -11,12 +11,13 @@
 ✔finish order history screen for user
 ✔add locker number in locker model
 ✔change deliver order to manual open locker
-close Store and show toast store is closed if store is closed for the day and also consider opening and closetime using isBefore
+✔close Store and show toast store is closed if store is closed for the day and also consider opening and closetime using isBefore
 
+✔add Stripe
 create renting logic
 remove cookie orderPending when you ended the locker duration
 place order screen with alert message for penalty
-add server opening hours for duration
+✔add server opening hours for duration
 
 ## Admin Side
 

@@ -11,6 +11,7 @@ import {
 import { getLockers } from './lib/lockers';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
+
 export const revalidate = 0;
 
 export default async function Home() {
@@ -23,6 +24,7 @@ export default async function Home() {
   const convertedOpenTime = convertTime(openTime);
   const convertedCloseTime = convertTime(closeTime);
   const supabase = createServerComponentClient({ cookies });
+
   const {
     data: { user },
   } = await supabase.auth.getUser();

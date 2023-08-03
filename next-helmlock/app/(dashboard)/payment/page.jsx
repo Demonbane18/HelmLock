@@ -48,6 +48,7 @@ export default function PaymentScreen() {
       <CheckoutWizard activeStep={2} />
       <form className="mx-auto max-w-screen-md" onSubmit={submitHandler}>
         <h1 className="mb-4 text-xl">Payment Method</h1>
+        {/* add the payment method Stripe if avail */}
         {['PayPal', 'Stripe'].map((payment) => (
           <div key={payment} className="mb-4">
             <input
@@ -55,6 +56,7 @@ export default function PaymentScreen() {
               className="p-2 outline-none focus:ring-0"
               id={payment}
               type="radio"
+              disabled={payment === 'Stripe' ? true : false}
               checked={selectedPaymentMethod === payment}
               onChange={() => setSelectedPaymentMethod(payment)}
             />

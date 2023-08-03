@@ -1,14 +1,11 @@
 'use client';
-import CalendarComponent from '../../components/Calendar';
-import { Day } from '@prisma/client';
-import { formatISO } from 'date-fns';
 import Cookies from 'js-cookie';
 import { useForm } from 'react-hook-form';
 import CheckoutWizard from '../../components/CheckoutWizard';
 import Layout from '../../components/Layout';
 import { Store } from '../../../utils/Store';
 import { useRouter } from 'next/navigation';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 // import { prisma } from '../../../server/db/client';
 import { currentTime, updatedTime, rDuration } from '../../../utils/helper';
 

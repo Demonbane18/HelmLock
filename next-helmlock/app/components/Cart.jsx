@@ -1,20 +1,22 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import XCircleIcon from '@heroicons/react/24/outline/XCircleIcon';
-import Layout from './Layout';
 import { Store } from '@/utils/Store';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Cookies from 'js-cookie';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Metadata } from 'next';
 import getLockerById from '@/app/_actions/getLockerById';
+import { useSession } from 'next-auth/react';
 
 const Cart = ({ lockerDuration }) => {
-  const orderPending = Cookies.get('orderPending');
+  const { data: session } = useSession();
+  const userId = session?.user?._id;
+  Cookies.remove('orderPending');
+  const orderPending = Cookies.get('orderPending' + userId);
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
   const {
@@ -71,6 +73,7 @@ const Cart = ({ lockerDuration }) => {
                       <Link
                         href={`/locker/${item.slug}`}
                         className="flex items-center"
+                        passHref
                       >
                         <Image
                           src={item.image}

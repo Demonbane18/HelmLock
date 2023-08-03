@@ -113,7 +113,11 @@ const LockerControl = ({
         <div className="grid md:grid-cols-4 md:gap-3">
           <div className="md:col-span-2">
             <Image
-              src={locker.image}
+              src={
+                lockerButton === 'open'
+                  ? '/images/unlocked.jpg'
+                  : '/images/locked.jpg'
+              }
               alt={locker.name}
               width={640}
               height={640}
