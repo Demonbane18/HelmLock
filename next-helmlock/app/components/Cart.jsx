@@ -15,8 +15,8 @@ import { useSession } from 'next-auth/react';
 const Cart = ({ lockerDuration }) => {
   const { data: session } = useSession();
   const userId = session?.user?._id;
-  Cookies.remove('orderPending');
-  const orderPending = Cookies.get('orderPending' + userId);
+  // Cookies.remove('orderPending');
+  const orderPending = session ? Cookies.get('orderPending' + userId) : null;
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
   const {
@@ -132,11 +132,12 @@ const Cart = ({ lockerDuration }) => {
                 <button
                   onClick={(e) => {
                     e.preventDefault;
-                    router.push('/locker_duration');
-                    // if (session?.user) {
                     // router.push('/locker_duration');
-                    // }
-                    // router.push('/signin');
+                    if (session) {
+                      router.push('/locker_duration');
+                    } else {
+                      router.push('/signin');
+                    }
                   }}
                   className="primary-button w-full"
                 >

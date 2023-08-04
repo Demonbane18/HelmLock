@@ -18,6 +18,7 @@ create renting logic
 remove cookie orderPending when you ended the locker duration
 place order screen with alert message for penalty
 ✔add server opening hours for duration
+✔edit locker
 
 ## Admin Side
 

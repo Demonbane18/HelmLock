@@ -28,7 +28,7 @@ export default function Layout({ title, children }) {
 
   useEffect(() => {
     // Cookies.set('orderPending' + userId, '64ba415335a1fc3e6c9324e1');
-    const orderPending = Cookies.get('orderPending' + userId);
+    const orderPending = session ? Cookies.get('orderPending' + userId) : null;
     console.log(orderPending);
     setRentedLocker(orderPending);
   }, [userId]);

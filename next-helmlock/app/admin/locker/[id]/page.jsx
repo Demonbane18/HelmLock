@@ -63,7 +63,8 @@ export default function AdminLockerEditScreen({ params }) {
         dispatch({ type: 'FETCH_SUCCESS' });
         setValue('name', locker.name);
         setValue('slug', locker.slug);
-        setValue('lockernumber', locker.lockernumber);
+        setValue('price', locker.price);
+        setValue('lockerNumber', locker.lockerNumber);
         setValue('image', locker.image);
       } catch (err) {
         dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
@@ -98,15 +99,15 @@ export default function AdminLockerEditScreen({ params }) {
       toast.error(getError(err));
     }
   };
-  const submitHandler = async ({ name, slug, lockernumber, image }) => {
+  const submitHandler = async ({ name, slug, lockerNumber, image, price }) => {
     try {
       dispatch({ type: 'UPDATE_REQUEST' });
       await axios.put(`/api/admin/lockers/${lockerId}`, {
         name,
         slug,
-        lockernumber,
         image,
         lockerNumber,
+        price,
       });
       dispatch({ type: 'UPDATE_SUCCESS' });
       toast.success('Locker updated successfully');
