@@ -25,6 +25,8 @@ export default function PlaceOrderScreen() {
   ); // 123.4567 => 123.46
 
   const totalPrice = round2(itemsPrice);
+  console.log('test')
+ 
 
   const router = useRouter();
   useEffect(() => {

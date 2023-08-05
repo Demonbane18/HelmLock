@@ -12,6 +12,9 @@
 ✔add locker number in locker model
 ✔change deliver order to manual open locker
 ✔close Store and show toast store is closed if store is closed for the day and also consider opening and closetime using isBefore
+sort order to recent
+set 1 hour locker duration persistent when logging in by using useState
+do not let user to checkout if duration is not chosen
 
 ✔add Stripe
 create renting logic

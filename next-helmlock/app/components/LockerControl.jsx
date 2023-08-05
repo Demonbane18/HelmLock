@@ -70,6 +70,7 @@ const LockerControl = ({
   const userid = session?.user?._id;
   useEffect(() => {
     setIsPenalty(checkPenalty(endTime));
+    console.log(isPenalty)
     setAlarmStatuss(alarmStatuss);
     if (!order._id || successPay || (order._id && order._id !== orderid)) {
       if (successPay) {
@@ -206,7 +207,7 @@ const LockerControl = ({
                   lockerButton === 'open' ? 'lock-button' : 'unlock-button'
                 }`}
                 onClick={lockerHandler}
-                disabled={isPenalty}
+                disabled={isPenalty===true ? true:false}
               >
                 {lockerButton === 'open' ? 'Close' : 'Open'}
               </button>

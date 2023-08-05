@@ -13,8 +13,8 @@ export default function DurationScreen() {
   const { state, dispatch } = useContext(Store);
   const { cart } = state;
   const { lockerDuration, cartItems } = cart;
-  const [duration, setDuration] = useState(null);
-
+  const [duration, setDuration] = useState(1);
+  console.log(duration)
   const router = useRouter();
   let StartTime = currentTime();
   let EndTime = updatedTime(duration ? duration : 1);
@@ -29,9 +29,7 @@ export default function DurationScreen() {
   });
 
   useEffect(() => {
-    if (cartItems) {
       setDuration(cartItems[0].duration);
-    }
     setValue('duration', lockerDuration.duration);
     setValue('startTime', lockerDuration.startTime);
     setValue('endTime', lockerDuration.endTime);
