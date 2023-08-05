@@ -10,15 +10,8 @@ import CheckoutWizard from '../../components/CheckoutWizard';
 import Layout from '../../components/Layout';
 import { getError } from '../../../utils/error';
 import { Store } from '../../../utils/Store';
-import { currentTime, updatedTime } from '../../../utils/helper';
 import useRedirectAfterSomeSeconds from '../../../utils/redirect';
-import { Metadata } from 'next';
 
-export function generateMetadata() {
-  return {
-    title: 'Place Order',
-  };
-}
 export default function PlaceOrderScreen() {
   const { state, dispatch } = useContext(Store);
   const { cart } = state;
@@ -53,9 +46,9 @@ export default function PlaceOrderScreen() {
     if (cartItems.length !== 0) {
       setCartIsEmpty('not empty');
     }
-  }, []);
+  }, [cartItems]);
 
-  const { secondsRemaining } = useRedirectAfterSomeSeconds('/', 60);
+  useRedirectAfterSomeSeconds('/', 60);
 
   const placeOrderHandler = async () => {
     try {
@@ -142,6 +135,7 @@ export default function PlaceOrderScreen() {
                           href={`/locker/${item.slug}`}
                           id="link"
                           className="flex items-center"
+                          passHref
                         >
                           <Image
                             src={item.image}

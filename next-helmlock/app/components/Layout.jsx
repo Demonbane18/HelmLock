@@ -31,7 +31,7 @@ export default function Layout({ title, children }) {
     const orderPending = session ? Cookies.get('orderPending' + userId) : null;
     console.log(orderPending);
     setRentedLocker(orderPending);
-  }, [userId]);
+  }, [userId, session]);
 
   const logoutClickHandler = async () => {
     await supabase.auth.signOut();

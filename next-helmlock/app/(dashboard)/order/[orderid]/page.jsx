@@ -13,9 +13,6 @@ import { redirect, useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 export const revalidate = 60;
 
-export async function generateMetadata({ params }) {
-  return { title: params.orderid };
-}
 function reducer(state, action) {
   switch (action.type) {
     case 'FETCH_REQUEST':

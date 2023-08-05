@@ -1,7 +1,6 @@
-import { getServerSession } from 'next-auth/react';
 import Locker from '@/models/Locker';
 import db from '@/app/lib/db';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 export async function GET(req, { params }) {
   await db.connect();
