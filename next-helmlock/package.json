@@ -29,7 +29,7 @@
     "cross-env": "^7.0.3",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.0",
-    "eslint": "8.43.0",
+    "eslint": "7.23.0",
     "eslint-config-next": "^12.0.4",
     "express-jwt": "^8.4.1",
     "framer-motion": "^10.12.21",
