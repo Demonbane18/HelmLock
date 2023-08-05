@@ -13,6 +13,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import { updateAlarmStatus, updateRenterEmail } from '../lib/supabaseAlarm';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
+import { checkPenalty } from '../lib/time';
 function reducer(state, action) {
   switch (action.type) {
     case 'UPDATE_REQUEST':
@@ -40,6 +41,7 @@ const LockerControl = ({
   orderid,
   lockerStatus,
   alarmStatus,
+  endTime,
 }) => {
   const { data: session } = useSession({
     required: true,
@@ -67,6 +69,7 @@ const LockerControl = ({
   console.log(lockerStatus);
   const userid = session?.user?._id;
   useEffect(() => {
+    setIsPenalty(checkPenalty(endTime));
     setAlarmStatuss(alarmStatuss);
     if (!order._id || successPay || (order._id && order._id !== orderid)) {
       if (successPay) {
@@ -86,7 +89,7 @@ const LockerControl = ({
       };
       loadPaypalScript();
     }
-  }, [alarmStatuss, order, orderid, paypalDispatch, successPay]);
+  }, [alarmStatuss, order, orderid, paypalDispatch, successPay, endTime]);
   useEffect(() => {
     const channel = supabase
       .channel('IOTHelmlock')
@@ -203,6 +206,7 @@ const LockerControl = ({
                   lockerButton === 'open' ? 'lock-button' : 'unlock-button'
                 }`}
                 onClick={lockerHandler}
+                disabled={isPenalty}
               >
                 {lockerButton === 'open' ? 'Close' : 'Open'}
               </button>

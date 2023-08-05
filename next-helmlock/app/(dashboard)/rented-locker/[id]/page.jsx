@@ -26,7 +26,8 @@ export default async function LockerScreen({ params }) {
   const supabase = createServerComponentClient({ cookies });
   await db.connect();
   const order = await Order.findOne({ _id: orderid }).lean();
-  const { orderItems, isEnded, user, isPaid } = order;
+  const { orderItems, isEnded, user, isPaid, lockerDuration } = order;
+  const endTime = lockerDuration[0].endTime;
   const lockerid = orderItems[0]._id;
   const locker = await Locker.findOne({ _id: lockerid });
   const dlocker = locker ? JSON.parse(JSON.stringify(locker)) : null;
@@ -50,6 +51,7 @@ export default async function LockerScreen({ params }) {
             orderid={simpleOrderId}
             lockerStatus={status}
             alarmStatus={alarmStatus}
+            endTime={endTime}
           />
         ) : (
           <div>

@@ -133,3 +133,23 @@ export const convertTime = (time) => {
   const newTime = newHours + ':' + minutes + ' ' + AmOrPm;
   return newTime;
 };
+
+export const checkPenalty = async (endTime) => {
+  const currDate = new Date();
+  const year = currDate.getFullYear();
+  const month = currDate.getMonth();
+  const day = currDate.getDate();
+  const hours = currDate.getHours();
+  const minutes = currDate.getMinutes();
+  // eslint-disable-next-line no-unused-vars
+  const [endHours, endMinutes, endSeconds] = endTime.split(':');
+  const isTimeAfterEndTime = isAfter(
+    new Date(year, month, day, hours, minutes),
+    new Date(year, month, day, endHours, endMinutes)
+  );
+  if (isTimeAfterEndTime) {
+    return true;
+  } else {
+    return false;
+  }
+};
