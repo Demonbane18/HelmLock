@@ -5,7 +5,7 @@ import CheckoutWizard from '../../components/CheckoutWizard';
 import Layout from '../../components/Layout';
 import { Store } from '../../../utils/Store';
 import { useRouter } from 'next/navigation';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 // import { prisma } from '../../../server/db/client';
 import { currentTime, updatedTime, rDuration } from '../../../utils/helper';
 
@@ -13,7 +13,8 @@ export default function DurationScreen() {
   const { state, dispatch } = useContext(Store);
   const { cart } = state;
   const { lockerDuration, cartItems } = cart;
-  const duration = cartItems[0].duration;
+  const [duration, setDuration] = useState(null);
+
   const router = useRouter();
   let StartTime = currentTime();
   let EndTime = updatedTime(duration ? duration : 1);
@@ -28,10 +29,13 @@ export default function DurationScreen() {
   });
 
   useEffect(() => {
+    if (cartItems) {
+      setDuration(cartItems[0].duration);
+    }
     setValue('duration', lockerDuration.duration);
     setValue('startTime', lockerDuration.startTime);
     setValue('endTime', lockerDuration.endTime);
-  }, [setValue, lockerDuration]);
+  }, [setValue, lockerDuration, cartItems]);
 
   // console.log(duration);
 
