@@ -50,7 +50,7 @@ const LockerControl = ({
     },
   });
   const email = session?.user?.email;
-  console.log(email);
+  // console.log(email);
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
   const [
     { loading, error, loadingUpdate, order, successPay, loadingPay },
@@ -66,7 +66,7 @@ const LockerControl = ({
   const [alarmStatuss, setAlarmStatuss] = useState(alarmStatus);
   const supabase = createClientComponentClient();
   const router = useRouter();
-  console.log(lockerStatus);
+  // console.log(lockerStatus);
   const userid = session?.user?._id;
   useEffect(() => {
     setIsPenalty(checkPenalty(endTime));
@@ -102,7 +102,7 @@ const LockerControl = ({
           table: 'alarms',
         },
         (payload) => {
-          console.log(payload);
+          // console.log(payload);
           const updatedData = payload.new;
           const newAlarmStatus = updatedData.status;
           setAlarmStatuss(newAlarmStatus);

@@ -1,4 +1,5 @@
 import Order from '@/models/Order';
+import User from '@/models/User'
 import db from '@/app/lib/db';
 import { NextResponse } from 'next/server';
 
