@@ -58,21 +58,5 @@
     "encoding": "^0.1.13",
     "prisma": "^4.16.1",
     "typescript": "5.1.6"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "eslint:recommended",
-      "next/core-web-vitals"
-    ],
-    "parserOptions": {
-      "parser": "babel-eslint"
-    },
-    "rules": {
-      "no-unused-vars": "off"
-    }
   }
 }

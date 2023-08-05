@@ -53,7 +53,7 @@ function OrderHistoryScreen() {
       }
     };
     fetchOrders();
-  }, []);
+  }, [session]);
   return (
     <Layout title="Order History">
       <h1 className="mb-4 text-xl">Order History</h1>

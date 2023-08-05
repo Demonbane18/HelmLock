@@ -58,7 +58,8 @@ const LockerControl = ({
     order: {},
     error: '',
   });
-
+  const [isPenalty, setIsPenalty] = useState(false);
+  const penaltyPrice = 20;
   const [lockerButton, setLockerButton] = useState(lockerStatus);
   const [alarmStatuss, setAlarmStatuss] = useState(alarmStatus);
   const supabase = createClientComponentClient();
@@ -110,6 +111,38 @@ const LockerControl = ({
     };
   }, [supabase, router]);
 
+  function createOrder(data, actions) {
+    return actions.order
+      .create({
+        purchase_units: [
+          {
+            amount: { currency_code: 'PHP', value: penaltyPrice },
+          },
+        ],
+      })
+      .then((orderID) => {
+        return orderID;
+      });
+  }
+
+  function onApprove(data, actions) {
+    return actions.order.capture().then(async function (details) {
+      try {
+        dispatch({ type: 'PAY_REQUEST' });
+        const { data } = await axios.put(`/api/penalty/${order._id}`, details);
+        dispatch({ type: 'PAY_SUCCESS', payload: data });
+        toast.success('Penalty is paid successfully');
+        setLockerButton('close');
+        router.refresh();
+      } catch (err) {
+        dispatch({ type: 'PAY_FAIL', payload: getError(err) });
+        toast.error(getError(err));
+      }
+    });
+  }
+  function onError(err) {
+    toast.error(getError(err));
+  }
   const lockerHandler = async () => {
     try {
       dispatch({ type: 'UPDATE_REQUEST' });
@@ -173,6 +206,22 @@ const LockerControl = ({
               >
                 {lockerButton === 'open' ? 'Close' : 'Open'}
               </button>
+              {!isPenalty && (
+                <div>
+                  {isPending ? (
+                    <div>Loading...</div>
+                  ) : (
+                    <div className="w-full">
+                      <PayPalButtons
+                        createOrder={createOrder}
+                        onApprove={onApprove}
+                        onError={onError}
+                      ></PayPalButtons>
+                    </div>
+                  )}
+                  {loadingPay && <div>Loading...</div>}
+                </div>
+              )}
             </div>
           </div>
         </div>
