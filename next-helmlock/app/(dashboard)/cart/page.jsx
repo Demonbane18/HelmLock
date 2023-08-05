@@ -1,5 +1,4 @@
 import React from 'react';
-import { Metadata } from 'next';
 import Cart from '@/app/components/Cart';
 import { getDuration } from '@/app/lib/time';
 import Layout from '@/app/components/Layout';

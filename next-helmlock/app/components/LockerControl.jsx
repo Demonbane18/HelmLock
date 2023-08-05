@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import { updateAlarmStatus, updateRenterEmail } from '../lib/supabaseAlarm';
-
+import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 function reducer(state, action) {
   switch (action.type) {
     case 'UPDATE_REQUEST':
@@ -21,6 +21,14 @@ function reducer(state, action) {
       return { ...state, loadingUpdate: false, errorUpdate: '' };
     case 'UPDATE_FAIL':
       return { ...state, loadingUpdate: false, errorUpdate: action.payload };
+    case 'PAY_REQUEST':
+      return { ...state, loadingPay: true };
+    case 'PAY_SUCCESS':
+      return { ...state, loadingPay: false, successPay: true };
+    case 'PAY_FAIL':
+      return { ...state, loadingPay: false, errorPay: action.payload };
+    case 'PAY_RESET':
+      return { ...state, loadingPay: false, successPay: false, errorPay: '' };
     default:
       return state;
   }
@@ -41,9 +49,13 @@ const LockerControl = ({
   });
   const email = session?.user?.email;
   console.log(email);
-
-  const [{ loading, error, loadingUpdate }, dispatch] = useReducer(reducer, {
+  const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
+  const [
+    { loading, error, loadingUpdate, order, successPay, loadingPay },
+    dispatch,
+  ] = useReducer(reducer, {
     loading: true,
+    order: {},
     error: '',
   });
 
@@ -55,7 +67,25 @@ const LockerControl = ({
   const userid = session?.user?._id;
   useEffect(() => {
     setAlarmStatuss(alarmStatuss);
-  }, [alarmStatuss]);
+    if (!order._id || successPay || (order._id && order._id !== orderid)) {
+      if (successPay) {
+        dispatch({ type: 'PAY_RESET' });
+      }
+    } else {
+      const loadPaypalScript = async () => {
+        const { data: clientId } = await axios.get('/api/keys/paypal');
+        paypalDispatch({
+          type: 'resetOptions',
+          value: {
+            'client-id': clientId.data,
+            currency: 'PHP',
+          },
+        });
+        paypalDispatch({ type: 'setLoadingStatus', value: 'pending' });
+      };
+      loadPaypalScript();
+    }
+  }, [alarmStatuss, order, orderid, paypalDispatch, successPay]);
   useEffect(() => {
     const channel = supabase
       .channel('IOTHelmlock')
