@@ -4,8 +4,8 @@ import { Button } from '@chakra-ui/react';
 import TimeSelector from '@/app/components/TimeSelector';
 import { Switch } from '@headlessui/react';
 import { useSession } from 'next-auth/react';
-import { formatISO, isEqual } from 'date-fns';
-import { useState, useEffect, useReducer } from 'react';
+import { formatISO } from 'date-fns';
+import { useState, useReducer } from 'react';
 import { Calendar } from 'react-calendar';
 import toast, { Toaster } from 'react-hot-toast';
 import { redirect, useRouter } from 'next/navigation';
@@ -13,7 +13,7 @@ import { getError } from '@/utils/error';
 import axios from 'axios';
 import { now } from '@/constants/config';
 import { capitalize, classNames, weekdayIndexToName } from '@/utils/helper';
-import data from '@/utils/data';
+
 import Link from 'next/link';
 import Cookies from 'js-cookie';
 
@@ -33,7 +33,7 @@ const OpeningHours = ({ days, closedDays }) => {
   Cookies.remove('orderPending');
   const router = useRouter();
   const date = new Date();
-  const [{ error, loadingUpdate }, dispatch] = useReducer(reducer, {
+  const [{ error }, dispatch] = useReducer(reducer, {
     loading: true,
     error: '',
   });

@@ -11,6 +11,7 @@ export default function lockerItem({ locker, addToCartHandler }) {
         id="link"
         href={`/locker/${locker.slug}`}
         className="cursor-pointer"
+        passHref
       >
         <img
           src={locker.image}
@@ -23,6 +24,7 @@ export default function lockerItem({ locker, addToCartHandler }) {
           id="link"
           href={`/locker/${locker.slug}`}
           className="cursor-pointer"
+          passHref
         >
           <h2 className="text-lg font-bold">{locker.name}</h2>
         </Link>

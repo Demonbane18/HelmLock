@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
-import { Metadata } from 'next';
+
 import getLockerById from '@/app/_actions/getLockerById';
 import { useSession } from 'next-auth/react';
 
@@ -152,4 +152,5 @@ const Cart = ({ lockerDuration }) => {
   );
 };
 
+// eslint-disable-next-line no-undef
 export default dynamic(() => Promise.resolve(Cart), { ssr: false });

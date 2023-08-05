@@ -3,10 +3,10 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]/route';
 import Order from '../../../models/Order';
 import db from '../../lib/db';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import mongoose from 'mongoose';
 
-export async function GET(req, res) {
+export async function GET() {
   // const data = await req.body;
   // const { userid } = data;
   // const userid = id;

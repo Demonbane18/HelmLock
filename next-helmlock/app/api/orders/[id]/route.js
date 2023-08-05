@@ -1,6 +1,6 @@
 // // /api/orders/:id
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import Order from '../../../../models/Order';
 import Locker from '@/models/Locker';
 import db from '../../../lib/db';
@@ -43,7 +43,7 @@ export async function PUT(req, { params }) {
     };
     const locker = await Locker.findById(lockerid);
     locker.status = 'occupied';
-    const updatedLocker = await locker.save();
+    await locker.save();
     const paidOrder = await order.save();
     console.log(paidOrder);
     await db.disconnect();

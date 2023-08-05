@@ -1,12 +1,10 @@
 import React from 'react';
-import db from '@/app/lib/db';
-import Day from '@/models/Day';
-import ClosedDay from '@/models/ClosedDay';
 import Layout from '@/app/components/Layout';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import OpeningHours from '@/app/components/OpeningHours';
 import { getDays, getClosedDays } from '@/app/lib/time';
+import { redirect } from 'next/navigation';
 
 export const revalidate = 60;
 

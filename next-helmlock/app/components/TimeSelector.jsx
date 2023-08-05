@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-condition */
 'use client';
 import { Listbox, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
@@ -43,8 +44,10 @@ const TimeSelector = ({ selected, changeTime, type }) => {
             <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
               <div className="flex items-center">
                 <span
+                  // eslint-disable-next-line no-constant-condition
                   aria-label={true ? 'Online' : 'Offline'}
                   className={classNames(
+                    // eslint-disable-next-line no-constant-condition
                     true ? 'bg-green-400' : 'bg-gray-200',
                     'inline-block h-2 w-2 flex-shrink-0 rounded-full'
                   )}
@@ -98,6 +101,7 @@ const TimeSelector = ({ selected, changeTime, type }) => {
                               )}
                             >
                               {time}
+
                               <span className="sr-only">
                                 {' '}
                                 is {true ? 'online' : 'offline'}

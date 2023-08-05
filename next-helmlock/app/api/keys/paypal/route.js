@@ -1,6 +1,6 @@
 import { getServerSession } from 'next-auth/react';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 export async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions);
@@ -15,7 +15,7 @@ export async function handler(req, res) {
   });
 }
 
-export async function GET(req, res) {
+export async function GET() {
   const data = process.env.PAYPAL_CLIENT_ID || 'sb';
   return NextResponse.json({ data }, { status: 200 });
 }

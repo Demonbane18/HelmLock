@@ -3,7 +3,7 @@ import ClosedDay from '@/models/ClosedDay';
 import db from '@/app/lib/db';
 import { NextResponse } from 'next/server';
 
-export async function GET(req, res) {
+export async function GET() {
   await db.connect();
   const days = await Day.find({});
   await db.disconnect();
@@ -56,7 +56,7 @@ export async function PUT(req) {
   }
 }
 
-export async function POST(req, res) {
+export async function POST(req) {
   const data = await req.json();
   const { date } = data;
   console.log('server date');
@@ -68,7 +68,7 @@ export async function POST(req, res) {
   return NextResponse.json({ message: 'Opening hours saved' }, { status: 200 });
 }
 
-export async function DELETE(req, res) {
+export async function DELETE(req) {
   const data = await req.json();
   const { date } = data;
   console.log('server date');

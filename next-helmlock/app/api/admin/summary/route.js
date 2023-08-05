@@ -1,11 +1,10 @@
-import { getServerSession } from 'next-auth/react';
 import Order from '@/models/Order';
 import Locker from '@/models/Locker';
 import User from '@/models/User';
 import db from '@/app/lib/db';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export async function GET(req, res) {
+export async function GET() {
   await db.connect();
   const ordersCount = await Order.countDocuments();
   const lockersCount = await Locker.countDocuments();

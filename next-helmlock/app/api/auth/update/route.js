@@ -1,21 +1,9 @@
-import { getServerSession } from 'next-auth/react';
-import { authOptions } from '../[...nextauth]/route';
 import bcryptjs from 'bcryptjs';
 import User from '@/models/User';
 import db from '@/app/lib/db';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export async function PUT(req, res) {
-  //   const session = await getServerSession(req, res, authOptions);
-
-  //   if (!session) {
-  //     return NextResponse.json(
-  //       { message: 'You must be logged in.' },
-  //       { status: 401 }
-  //     );
-  //   }
-
-  //   const userid = session.user._id;
+export async function PUT(req) {
   const data = await req.json();
   const { name, email, password, userid } = data;
 

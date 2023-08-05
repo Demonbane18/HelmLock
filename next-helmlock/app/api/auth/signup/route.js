@@ -1,9 +1,9 @@
 import bcryptjs from 'bcryptjs';
 import User from '@/models/User';
 import db from '@/app/lib/db';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export async function POST(req, res) {
+export async function POST(req) {
   if (req.method !== 'POST') {
     return;
   }

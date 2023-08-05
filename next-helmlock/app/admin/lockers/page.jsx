@@ -65,7 +65,7 @@ export default function AdminLockersScreen() {
     }
     try {
       dispatch({ type: 'CREATE_REQUEST' });
-      const { data } = await axios.post(`/api/admin/lockers`);
+      await axios.post(`/api/admin/lockers`);
       dispatch({ type: 'CREATE_SUCCESS' });
       toast.success('Locker created successfully');
       router.push(`/admin/lockers`);

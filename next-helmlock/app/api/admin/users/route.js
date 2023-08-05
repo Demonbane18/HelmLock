@@ -2,7 +2,7 @@ import User from '@/models/User';
 import db from '@/app/lib/db';
 import { NextResponse } from 'next/server';
 
-export async function GET(req, res) {
+export async function GET() {
   await db.connect();
   const users = await User.find({});
   await db.disconnect();

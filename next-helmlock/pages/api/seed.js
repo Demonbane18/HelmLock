@@ -1,9 +1,6 @@
-import Locker from '../../models/Locker';
-import User from '../../models/User';
 import data from '../../utils/data';
 import db from '../../app/lib/db';
-import Day from '@/models/Day';
-import ClosedDay from '@/models/ClosedDay';
+
 import ServoLock from '@/models/ServoLock';
 
 const handler = async (req, res) => {

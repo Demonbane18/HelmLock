@@ -5,12 +5,9 @@ import {
   isEqual,
   isBefore,
   isAfter,
-  formatISO,
   format,
 } from 'date-fns';
 import ClosedDay from '@/models/ClosedDay';
-import { getOpeningTimes } from '@/utils/helper';
-import { getJSDocReturnTag } from 'typescript';
 
 export const getDuration = async () => {
   'use server';

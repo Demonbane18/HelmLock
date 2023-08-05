@@ -1,16 +1,15 @@
-import { getServerSession } from 'next-auth/react';
 import Locker from '@/models/Locker';
 import db from '@/app/lib/db';
 import { NextResponse } from 'next/server';
 
-export async function GET(req, res) {
+export async function GET() {
   await db.connect();
   const lockers = await Locker.find({}).sort({ lockerNumber: 1 });
   await db.disconnect();
   return NextResponse.json({ lockers }, { status: 200 });
 }
 
-export async function POST(req, res) {
+export async function POST() {
   await db.connect();
   const newLocker = new Locker({
     name: 'sample name',
@@ -21,7 +20,7 @@ export async function POST(req, res) {
     image: '/images/unlocked.jpg',
     price: 10,
   });
-  const locker = await newLocker.save();
+  await newLocker.save();
   await db.disconnect();
   return NextResponse.json(
     { message: 'Locker created successfully' },

@@ -1,10 +1,8 @@
-import { getServerSession } from 'next-auth/react';
-import { authOptions } from '../../auth/[...nextauth]/route';
 import Order from '@/models/Order';
 import db from '@/app/lib/db';
 import { NextResponse } from 'next/server';
 
-export async function GET(req, res) {
+export async function GET() {
   //   const data = await req.json();
   //   const { session } = data;
   //   console.log(data);

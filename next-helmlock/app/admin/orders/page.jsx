@@ -55,7 +55,7 @@ export default function AdminOrderScreen() {
       }
     };
     fetchData();
-  }, []);
+  }, [session]);
 
   return (
     <Layout title="Admin Dashboard">
