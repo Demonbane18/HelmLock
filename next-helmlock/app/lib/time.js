@@ -1,3 +1,4 @@
+'use server';
 import db from '@/app/lib/db';
 import Day from '@/models/Day';
 import {
@@ -134,7 +135,7 @@ export const convertTime = (time) => {
   return newTime;
 };
 
-export const checkPenalty = async (endTime) => {
+export const checkPenalty = (endTime) => {
   const currDate = new Date();
   const year = currDate.getFullYear();
   const month = currDate.getMonth();
