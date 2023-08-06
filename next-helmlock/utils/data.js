@@ -23,7 +23,7 @@ const data = {
       duration: 5,
       status: 'occupied',
       price: 10,
-      image: '/images/locked.jpg',
+      image: '/images/locker.jpg',
     },
     {
       name: 'Locker 2',
@@ -32,7 +32,7 @@ const data = {
       duration: '',
       status: 'vacant',
       price: 10,
-      image: '/images/unlocked.jpg',
+      image: '/images/locker.jpg',
     },
     {
       name: 'Locker 3',
@@ -41,7 +41,7 @@ const data = {
       duration: '',
       status: 'vacant',
       price: 10,
-      image: '/images/unlocked.jpg',
+      image: '/images/locker.jpg',
     },
     {
       name: 'Locker 4',
@@ -50,7 +50,7 @@ const data = {
       duration: '',
       status: 'vacant',
       price: 10,
-      image: '/images/unlocked.jpg',
+      image: '/images/locker.jpg',
     },
     {
       name: 'Locker 5',
@@ -59,7 +59,7 @@ const data = {
       duration: '',
       status: 'vacant',
       price: 10,
-      image: '/images/unlocked.jpg',
+      image: '/images/locker.jpg',
     },
     {
       name: 'Locker 6',
@@ -68,7 +68,7 @@ const data = {
       duration: '',
       status: 'vacant',
       price: 10,
-      image: '/images/unlocked.jpg',
+      image: '/images/locker.jpg',
     },
   ],
   days: [

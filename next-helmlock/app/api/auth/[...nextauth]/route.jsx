@@ -10,14 +10,15 @@ export const authOptions = {
   },
   secret: process.env.SECRET,
   callbacks: {
-    async jwt({ token, user }) {
-      if (user?._id) token._id = user._id;
-      if (user?.isAdmin) token.isAdmin = user.isAdmin;
+    jwt: async ({ token, user, trigger, session }) => {
+      user && (token.user = user);
+      if (trigger === 'update') {
+        return { ...token, ...session.user };
+      }
       return token;
     },
-    async session({ session, token }) {
-      if (token?._id) session.user._id = token._id;
-      if (token?.isAdmin) session.user.isAdmin = token.isAdmin;
+    session: async ({ session, token }) => {
+      session.user = token.user;
       return session;
     },
   },
@@ -36,6 +37,7 @@ export const authOptions = {
             email: user.email,
             image: 'f',
             isAdmin: user.isAdmin,
+            rentedLocker: user.rentedLocker,
           };
         }
         throw new Error('Invalid email or password');

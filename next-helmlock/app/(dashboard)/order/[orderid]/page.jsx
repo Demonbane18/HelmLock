@@ -36,13 +36,20 @@ function reducer(state, action) {
 function OrderScreen({ params }) {
   const orderId = params.orderid;
   const router = useRouter();
-  const { data: session } = useSession({
+  const { data: session, update } = useSession({
     required: true,
     onUnauthenticated() {
       redirect(`/signin?callbackUrl=/order/${orderId}`);
     },
   });
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
+
+  async function updateSession(orderid) {
+    await update({
+      ...session,
+      user: { ...session?.user, rentedLocker: orderid },
+    });
+  }
   const [{ loading, error, order, successPay, loadingPay }, dispatch] =
     useReducer(reducer, {
       loading: true,
@@ -113,8 +120,7 @@ function OrderScreen({ params }) {
         const { data } = await axios.put(`/api/orders/${order._id}`, details);
         dispatch({ type: 'PAY_SUCCESS', payload: data });
         toast.success('Order is paid successfully');
-        //change to 1 day after everything
-
+        updateSession(order._id);
         const customId = 'custom-id-yes';
         toast.warning(
           `You will be redirected to your locker in 5 seconds.`,
@@ -124,7 +130,7 @@ function OrderScreen({ params }) {
           { delay: 2000 },
           { autoClose: 5000 }
         );
-        router.push(`/rented-locker/${order._id}`);
+        router.redirect(`/rented-locker/${order._id}`);
       } catch (err) {
         dispatch({ type: 'PAY_FAIL', payload: getError(err) });
         toast.error(getError(err));

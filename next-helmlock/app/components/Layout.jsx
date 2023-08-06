@@ -19,7 +19,6 @@ export default function Layout({ title, children }) {
   const [cartItemsCount, setCartItemsCount] = useState(0);
   const [rentedLocker, setRentedLocker] = useState(null);
   // Create a Supabase client configured to use cookies
-  const rentingLocker = session?.user?.rentedLocker;
   const supabase = createClientComponentClient();
 
   useEffect(() => {
@@ -27,10 +26,11 @@ export default function Layout({ title, children }) {
   }, [cart.cartItems]);
 
   useEffect(() => {
+    const rentingLocker = session?.user?.rentedLocker;
     const orderPending = rentingLocker ? rentingLocker : null;
     console.log(orderPending);
     setRentedLocker(orderPending);
-  }, [rentedLocker, rentingLocker]);
+  }, [rentedLocker]);
 
   const logoutClickHandler = async () => {
     await supabase.auth.signOut();

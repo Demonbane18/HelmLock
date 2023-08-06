@@ -13,9 +13,16 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import { updateAlarmStatus, updateRenterEmail } from '../lib/supabaseAlarm';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
-import { checkPenalty } from '../lib/time';
+import { isAfter, differenceInHours } from 'date-fns';
+// import { checkPenalty } from '../lib/time';
 function reducer(state, action) {
   switch (action.type) {
+    case 'FETCH_REQUEST':
+      return { ...state, loading: true, error: '' };
+    case 'FETCH_SUCCESS':
+      return { ...state, loading: false, order: action.payload, error: '' };
+    case 'FETCH_FAIL':
+      return { ...state, loading: false, error: action.payload };
     case 'UPDATE_REQUEST':
       return { ...state, loadingUpdate: true, errorUpdate: '' };
     case 'UPDATE_SUCCESS':
@@ -42,15 +49,18 @@ const LockerControl = ({
   lockerStatus,
   alarmStatus,
   endTime,
+  isEnded,
+  isPenaltyPaid,
+  lockerPrice,
 }) => {
-  const { data: session } = useSession({
+  const { data: session, update } = useSession({
     required: true,
     onUnauthenticated() {
       redirect(`/signin?callbackUrl=/locker/${orderid}`);
     },
   });
   const email = session?.user?.email;
-  // console.log(email);
+  const lockerid = locker.status;
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
   const [
     { loading, error, loadingUpdate, order, successPay, loadingPay },
@@ -61,19 +71,91 @@ const LockerControl = ({
     error: '',
   });
   const [isPenalty, setIsPenalty] = useState(false);
-  const penaltyPrice = 20;
+  const [penaltyPrice, setPenaltyPrice] = useState(lockerPrice);
   const [lockerButton, setLockerButton] = useState(lockerStatus);
   const [alarmStatuss, setAlarmStatuss] = useState(alarmStatus);
+  const [isLockerEnded, setisLockerEnded] = useState(isEnded);
   const supabase = createClientComponentClient();
   const router = useRouter();
   // console.log(lockerStatus);
   const userid = session?.user?._id;
+  const checkPenalty = (endTime) => {
+    const currDate = new Date();
+    const year = currDate.getFullYear();
+    const month = currDate.getMonth();
+    const day = currDate.getDate();
+    const hours = currDate.getHours();
+    const minutes = currDate.getMinutes();
+    // eslint-disable-next-line no-unused-vars
+    const [endHours, endMinutes, endSeconds] = endTime.split(':');
+    const isTimeAfterEndTime = isAfter(
+      new Date(year, month, day, hours, minutes),
+      new Date(year, month, day, endHours, endMinutes)
+    );
+    console.log(isTimeAfterEndTime);
+    if (isTimeAfterEndTime === true) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const getPenaltyDuration = (endTime) => {
+    //change the current date
+    const currDate = new Date();
+    const hours = currDate.getHours();
+    const minutes = currDate.getMinutes();
+    const seconds = currDate.getSeconds();
+    const year = currDate.getFullYear();
+    const month = currDate.getMonth();
+    const day = currDate.getDate();
+    const [time, modifier] = endTime.split(' ');
+    let [endHours, endMinutes, endSeconds] = time.split(':');
+    if (endHours === '12') {
+      endHours = '00';
+    }
+    if (modifier === 'PM') {
+      endHours = parseInt(endHours, 10) + 12;
+    }
+    const duration = Math.abs(
+      differenceInHours(
+        new Date(year, month, day, hours, minutes, seconds),
+        new Date(year, month, day, endHours, endMinutes, endSeconds)
+      )
+    );
+    return duration;
+  };
+
+  async function updateSession() {
+    await update({
+      ...session,
+      user: { ...session?.user, rentedLocker: null },
+    });
+  }
+
   useEffect(() => {
-    setIsPenalty(checkPenalty(endTime));
-    console.log(isPenalty);
+    const penalty = checkPenalty(endTime);
+    setIsPenalty(penalty);
+    if (penalty) {
+      const penaltyDuration = getPenaltyDuration(endTime);
+      const totalPenaltyPrice = Math.round(lockerPrice * penaltyDuration);
+      setPenaltyPrice(totalPenaltyPrice);
+    }
     setAlarmStatuss(alarmStatuss);
+    const fetchOrder = async () => {
+      try {
+        dispatch({ type: 'FETCH_REQUEST' });
+        const { data } = await axios.get(`/api/orders/${orderid}`);
+        const { order } = data;
+        dispatch({ type: 'FETCH_SUCCESS', payload: order });
+      } catch (err) {
+        dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
+      }
+    };
     if (!order._id || successPay || (order._id && order._id !== orderid)) {
+      fetchOrder();
       if (successPay) {
+        console.log('Success');
         dispatch({ type: 'PAY_RESET' });
       }
     } else {
@@ -133,10 +215,12 @@ const LockerControl = ({
     return actions.order.capture().then(async function (details) {
       try {
         dispatch({ type: 'PAY_REQUEST' });
-        const { data } = await axios.put(`/api/penalty/${order._id}`, details);
+        const { data } = await axios.put(`/api/penalty/${order._id}`, {
+          details,
+          penaltyPrice,
+        });
         dispatch({ type: 'PAY_SUCCESS', payload: data });
         toast.success('Penalty is paid successfully');
-        setLockerButton('close');
         router.refresh();
       } catch (err) {
         dispatch({ type: 'PAY_FAIL', payload: getError(err) });
@@ -163,15 +247,21 @@ const LockerControl = ({
         }
       }
       dispatch({ type: 'UPDATE_REQUEST' });
-      // await axios.put(`/api/servo/${locker.lockerNumber}`);
+      await axios.put(`/api/servo/${locker.lockerNumber}`, {
+        userid,
+        orderid,
+        lockerid,
+      });
       dispatch({ type: 'UPDATE_SUCCESS' });
       if (lockerButton === 'close') {
         toast.success(
           'Locker is checked out successfully. Please retrieve your helmet.'
         );
         setLockerButton('open');
+        setisLockerEnded(true);
         updateAlarmStatus(locker.lockerNumber, 'open');
         updateRenterEmail(locker.lockerNumber, null);
+        updateSession();
       } else {
         toast.success('Locker is now closed!');
         setLockerButton('close');
@@ -189,7 +279,11 @@ const LockerControl = ({
 
   return (
     <div>
-      {userid === orderuser ? (
+      {loading ? (
+        <div>Loading...</div>
+      ) : error ? (
+        <div className="alert-error">{error}</div>
+      ) : userid === orderuser ? (
         <div className="grid md:grid-cols-4 md:gap-3">
           <div className="md:col-span-2">
             <Image
@@ -208,30 +302,52 @@ const LockerControl = ({
           <div>
             <div className="card p-5">
               <div className="mb-2 flex justify-between">
-                <h1 className="text-lg font-bold">{locker.name}</h1>
+                <h1 className="text-xl font-bold ">{locker.name}</h1>
               </div>
               <div className="mb-2 flex justify-between">
-                <h1 className="text-lg font-bold">Alarm Status:</h1>
-                <h1
-                  className={
-                    alarmStatuss === 'close'
-                      ? 'font-semibold text-green-500'
-                      : 'font-semibold text-orange-600'
+                <div className="text-lg font-bold">
+                  End Time:{' '}
+                  <p className="inline-block font-semibold text-purple-500">
+                    {endTime}
+                  </p>
+                </div>
+              </div>
+              <div className="mb-2 flex justify-between">
+                <div className="text-lg font-bold">
+                  Alarm Status:{' '}
+                  <p
+                    className={
+                      alarmStatuss === 'close'
+                        ? 'inline-block font-semibold text-green-500'
+                        : 'inline-block font-semibold text-orange-600'
+                    }
+                  >
+                    {alarmStatuss}
+                  </p>
+                </div>
+              </div>
+              {isLockerEnded && (
+                <div>
+                  This locker's duration already ended. Please{' '}
+                  <Link href="/">Rent a new Locker</Link>{' '}
+                </div>
+              )}
+              {((!isLockerEnded && !isPenalty) ||
+                (isPenaltyPaid && !isLockerEnded)) && (
+                <button
+                  className={` w-full cursor-pointer' font-bold ${
+                    lockerButton === 'open' ? 'lock-button' : 'unlock-button'
+                  }`}
+                  onClick={lockerHandler}
+                  disabled={
+                    (isPenalty && !isPenaltyPaid) === true ? true : false
                   }
                 >
-                  {alarmStatuss}
-                </h1>
-              </div>
-              <button
-                className={` w-full cursor-pointer' font-bold ${
-                  lockerButton === 'open' ? 'lock-button' : 'unlock-button'
-                }`}
-                onClick={lockerHandler}
-                disabled={isPenalty === true ? true : false}
-              >
-                {lockerButton === 'open' ? 'Close' : 'Checkout'}
-              </button>
-              {!isPenalty && (
+                  {lockerButton === 'open' ? 'Close' : 'Checkout'}
+                </button>
+              )}
+
+              {isPenalty && !isPenaltyPaid && (
                 <div>
                   {isPending ? (
                     <div>Loading...</div>
@@ -242,6 +358,10 @@ const LockerControl = ({
                         onApprove={onApprove}
                         onError={onError}
                       ></PayPalButtons>
+                      <div className=" m-2 text-small text-bold text-red-500">
+                        You've exceeded the locker's duration time! Please pay
+                        the penalty price of ₱{penaltyPrice} to check out
+                      </div>
                     </div>
                   )}
                   {loadingPay && <div>Loading...</div>}

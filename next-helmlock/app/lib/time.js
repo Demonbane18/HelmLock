@@ -37,7 +37,7 @@ export const getDuration = async () => {
 
 export const getDays = async () => {
   await db.connect();
-  const data = await Day.find({});
+  const data = await Day.find({}).sort({ dayOfWeek: 1 });
   const days = data.map(db.convertDocToObj);
   await db.disconnect();
   return days;
@@ -148,7 +148,8 @@ export const checkPenalty = (endTime) => {
     new Date(year, month, day, hours, minutes),
     new Date(year, month, day, endHours, endMinutes)
   );
-  if (isTimeAfterEndTime) {
+  console.log(isTimeAfterEndTime);
+  if (isTimeAfterEndTime === true) {
     return true;
   } else {
     return false;
