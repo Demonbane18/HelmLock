@@ -10,7 +10,6 @@ import { toast } from 'react-toastify';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import { useSession } from 'next-auth/react';
 import { redirect, useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
 export const revalidate = 60;
 
 function reducer(state, action) {
@@ -54,9 +53,7 @@ function OrderScreen({ params }) {
     const fetchOrder = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(
-          `http://localhost:3000/api/orders/${orderId}`
-        );
+        const { data } = await axios.get(`/api/orders/${orderId}`);
         const { order } = data;
         dispatch({ type: 'FETCH_SUCCESS', payload: order });
       } catch (err) {
@@ -117,7 +114,7 @@ function OrderScreen({ params }) {
         dispatch({ type: 'PAY_SUCCESS', payload: data });
         toast.success('Order is paid successfully');
         //change to 1 day after everything
-        // Cookies.set('orderPending' + user, order._id);
+
         const customId = 'custom-id-yes';
         toast.warning(
           `You will be redirected to your locker in 5 seconds.`,

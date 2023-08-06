@@ -24,7 +24,7 @@ const Cart = ({ lockerDuration }) => {
     dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
   };
   const updateCartHandler = async (item, dur) => {
-    const duration = Number(dur);
+    const duration = Number(dur ? dur : 1);
     const data = JSON.parse(JSON.stringify(await getLockerById(item._id)));
     if (data?.status === 'occupied') {
       dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
