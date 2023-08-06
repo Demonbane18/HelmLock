@@ -3,16 +3,14 @@ import bcrypt from 'bcryptjs';
 const data = {
   users: [
     {
-      name: 'John',
-      email: 'admin@example.com',
+      name: 'John Paul',
+      email: 'butterncreamz@gmail.com',
       password: bcrypt.hashSync('123456'),
-      coins: 200,
       isAdmin: true,
     },
     {
-      name: 'Jane',
-      email: 'user@example.com',
-      coins: 100,
+      name: 'Raven',
+      email: 'raven@gmail.com',
       password: bcrypt.hashSync('123456'),
       isAdmin: false,
     },

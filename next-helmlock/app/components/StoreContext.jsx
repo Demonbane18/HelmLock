@@ -1,33 +1,11 @@
 'use client';
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Store } from '../../utils/Store';
 import { toast } from 'react-toastify';
 import LockerItem from './Lockeritem';
 import getLockerById from '@/app/_actions/getLockerById';
-import Cookies from 'js-cookie';
 import TypewriterComponent from 'typewriter-effect';
-
-// async function getLockerById(id) {
-//   try {
-//     // const res = await axios.get(`http://localhost:3000/api/lockers/${id}`);
-//     const res = await fetch(`http://localhost:3000/api/lockers/${id}`, {
-//       cache: 'no-store',
-//       // method: 'GET',
-//       // headers: {
-//       //   'Content-type': 'application/json',
-//       // },
-//     });
-
-//     if (!res.ok) {
-//       throw new Error('Failed to fetch locker');
-//     }
-
-//     return res.json();
-//   } catch (error) {
-//     console.log('Error loading locker: ', error);
-//   }
-// }
-
+import { useSession } from 'next-auth/react';
 const StoreContext = ({
   lockers,
   isOpen,
@@ -35,8 +13,18 @@ const StoreContext = ({
   closeTime,
   isDayClosed,
 }) => {
-  const orderPending = Cookies.get('orderPending');
+  const { data: session } = useSession();
+  const orderPending = session?.user?.rentedLocker;
   console.log(orderPending);
+  const [showLockers, setShowLockers] = useState(lockers);
+  useEffect(() => {
+    const fetchData = () => {
+      // const updatedLockers = await getLockers();
+      setShowLockers(lockers);
+    };
+    fetchData();
+  }, []);
+
   const { state, dispatch } = useContext(Store);
   const { cart } = state;
   const addToCartHandler = async (locker) => {
@@ -109,8 +97,8 @@ const StoreContext = ({
         )}
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-3">
-        {lockers
-          ? lockers.map((locker) => (
+        {showLockers
+          ? showLockers.map((locker) => (
               <LockerItem
                 locker={locker}
                 key={locker.slug}

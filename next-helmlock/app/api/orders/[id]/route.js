@@ -3,6 +3,7 @@
 import { NextResponse } from 'next/server';
 import Order from '../../../../models/Order';
 import Locker from '@/models/Locker';
+import User from '@/models/User';
 import db from '../../../lib/db';
 
 export async function GET(req, { params }) {
@@ -20,6 +21,7 @@ export async function PUT(req, { params }) {
   console.log(orderid);
   await db.connect();
   const order = await Order.findById(orderid);
+  const user = await User.findById(order.user);
   console.log(order);
   const { orderItems } = order;
   console.log(orderItems);
@@ -45,6 +47,8 @@ export async function PUT(req, { params }) {
     locker.status = 'occupied';
     await locker.save();
     const paidOrder = await order.save();
+    user.rentedLocker = orderid;
+    await user.save();
     console.log(paidOrder);
     await db.disconnect();
     return NextResponse.json(

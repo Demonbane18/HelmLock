@@ -6,7 +6,6 @@ import XCircleIcon from '@heroicons/react/24/outline/XCircleIcon';
 import { Store } from '@/utils/Store';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 
 import getLockerById from '@/app/_actions/getLockerById';
@@ -14,9 +13,8 @@ import { useSession } from 'next-auth/react';
 
 const Cart = ({ lockerDuration }) => {
   const { data: session } = useSession();
-  const userId = session?.user?._id;
-  // Cookies.remove('orderPending');
-  const orderPending = session ? Cookies.get('orderPending' + userId) : null;
+  const rentedLocker = session?.user?.rentedLocker;
+  const orderPending = rentedLocker ? rentedLocker : null;
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
   const {

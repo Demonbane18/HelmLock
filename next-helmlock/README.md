@@ -15,9 +15,10 @@
 sort order to recent
 set 1 hour locker duration persistent when logging in by using useState
 do not let user to checkout if duration is not chosen
+notify on locker when locker is forcefully opened
 
 ✔add Stripe
-create renting logic
+✔create renting logic
 remove cookie orderPending when you ended the locker duration
 place order screen with alert message for penalty
 ✔add server opening hours for duration

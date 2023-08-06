@@ -117,7 +117,7 @@ function OrderScreen({ params }) {
         dispatch({ type: 'PAY_SUCCESS', payload: data });
         toast.success('Order is paid successfully');
         //change to 1 day after everything
-        Cookies.set('orderPending' + user, order._id);
+        // Cookies.set('orderPending' + user, order._id);
         const customId = 'custom-id-yes';
         toast.warning(
           `You will be redirected to your locker in 5 seconds.`,

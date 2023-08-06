@@ -70,7 +70,7 @@ const LockerControl = ({
   const userid = session?.user?._id;
   useEffect(() => {
     setIsPenalty(checkPenalty(endTime));
-    console.log(isPenalty)
+    console.log(isPenalty);
     setAlarmStatuss(alarmStatuss);
     if (!order._id || successPay || (order._id && order._id !== orderid)) {
       if (successPay) {
@@ -198,8 +198,15 @@ const LockerControl = ({
                 <h1 className="text-lg font-bold">{locker.name}</h1>
               </div>
               <div className="mb-2 flex justify-between">
-                <h1 className="text-lg font-bold">
-                  Alarm Status: {alarmStatuss}
+                <h1 className="text-lg font-bold">Alarm Status:</h1>
+                <h1
+                  className={
+                    alarmStatuss === 'close'
+                      ? 'font-semibold text-green-500'
+                      : 'font-semibold text-orange-600'
+                  }
+                >
+                  {alarmStatuss}
                 </h1>
               </div>
               <button
@@ -207,7 +214,7 @@ const LockerControl = ({
                   lockerButton === 'open' ? 'lock-button' : 'unlock-button'
                 }`}
                 onClick={lockerHandler}
-                disabled={isPenalty===true ? true:false}
+                disabled={isPenalty === true ? true : false}
               >
                 {lockerButton === 'open' ? 'Close' : 'Open'}
               </button>

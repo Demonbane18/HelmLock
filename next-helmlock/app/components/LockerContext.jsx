@@ -6,10 +6,11 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { Store } from '../../utils/Store';
 import getLockerById from '@/app/_actions/getLockerById';
-import Cookies from 'js-cookie';
+import { useSession } from 'next-auth/react';
 
 const LockerContext = ({ locker, isOpen }) => {
-  const orderPending = Cookies.get('orderPending');
+  const { data: session } = useSession();
+  const orderPending = session?.user?.rentedLocker;
   console.log(orderPending);
   const { state, dispatch } = useContext(Store);
   const router = useRouter();
@@ -17,25 +18,10 @@ const LockerContext = ({ locker, isOpen }) => {
     return <div title="Locker Not Found">Locker Not Found</div>;
   }
 
-  // async function getLockerById(id) {
-  //   try {
-  //     const res = await fetch(`http://localhost:3000/api/lockers/${id}`, {
-  //       cache: 'no-store',
-  //     });
-
-  //     if (!res.ok) {
-  //       throw new Error('Failed to fetch locker');
-  //     }
-
-  //     return res.json();
-  //   } catch (error) {
-  //     console.log('Error loading locker: ', error);
-  //   }
-  // }
   const addToCartHandler = async () => {
     const existItem = state.cart.cartItems.find((x) => x.slug === locker.slug);
     const quantity = existItem ? existItem.quantity : 1;
-    // const { data } = getLockerById(locker._id);
+
     const data = JSON.parse(JSON.stringify(await getLockerById(locker._id)));
     if (!isOpen) {
       return toast.error('Store is closed!');
