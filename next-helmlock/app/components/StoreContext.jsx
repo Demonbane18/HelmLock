@@ -32,10 +32,6 @@ const StoreContext = ({
     console.log(locker._id);
     const existItem = cart.cartItems.find((x) => x.slug === locker.slug);
     const quantity = existItem ? existItem.quantity : 1;
-    // const { data } = await axios.get(
-    //   `http://localhost:3000/api/lockers/${locker._id}`
-    // );
-    // const { data } = getLockerById(locker._id);
     const data = JSON.parse(JSON.stringify(await getLockerById(locker._id)));
     if (!isOpen) {
       return toast.error('Store is closed!');
