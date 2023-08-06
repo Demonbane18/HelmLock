@@ -149,6 +149,19 @@ const LockerControl = ({
   }
   const lockerHandler = async () => {
     try {
+      if (lockerButton === 'open') {
+        if (!window.confirm('Are you sure you want to close the locker?')) {
+          return;
+        }
+      } else {
+        if (
+          !window.confirm(
+            'Are you sure you want to open and check out your locker?'
+          )
+        ) {
+          return;
+        }
+      }
       dispatch({ type: 'UPDATE_REQUEST' });
       // await axios.put(`/api/servo/${locker.lockerNumber}`);
       dispatch({ type: 'UPDATE_SUCCESS' });
@@ -216,7 +229,7 @@ const LockerControl = ({
                 onClick={lockerHandler}
                 disabled={isPenalty === true ? true : false}
               >
-                {lockerButton === 'open' ? 'Close' : 'Open'}
+                {lockerButton === 'open' ? 'Close' : 'Checkout'}
               </button>
               {!isPenalty && (
                 <div>
