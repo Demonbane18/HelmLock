@@ -12,6 +12,7 @@ const StoreContext = ({
   openTime,
   closeTime,
   isDayClosed,
+  currDate,
 }) => {
   const { data: session } = useSession();
   const orderPending = session?.user?.rentedLocker;
@@ -82,6 +83,7 @@ const StoreContext = ({
             options={{
               strings: [
                 'Store is Closed! Please come back later.',
+                'Date is' + ' ' + currDate,
                 "Today's schedule:",
                 'Open Time:' + ' ' + openTime,
                 'Closing Time:' + ' ' + closeTime,

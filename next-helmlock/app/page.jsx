@@ -17,6 +17,7 @@ export const revalidate = 0;
 export default async function Home() {
   const lockers = await getLockers();
   const storeIsOpen = await isOpen();
+  const currDate = new Date();
   const openTime = await getCurrentOpenTime();
   const closeTime = await getCurrentClosingTime();
   const isTodayClosed = await isDayClosed();
@@ -38,6 +39,7 @@ export default async function Home() {
         openTime={convertedOpenTime}
         closeTime={convertedCloseTime}
         isDayClosed={isTodayClosed}
+        currDate={currDate}
       />
     </Layout>
   );
