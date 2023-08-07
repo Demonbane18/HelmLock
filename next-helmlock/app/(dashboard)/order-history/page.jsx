@@ -70,6 +70,7 @@ function OrderHistoryScreen() {
                 <th className="p-5 text-left">DATE</th>
                 <th className="p-5 text-left">TOTAL</th>
                 <th className="p-5 text-left">PAID</th>
+                <th className="p-5 text-left">PENALTY</th>
                 <th className="p-5 text-left">ENDED</th>
                 <th className="p-5 text-left">ACTION</th>
               </tr>
@@ -85,11 +86,12 @@ function OrderHistoryScreen() {
                       ? `${order.paidAt.substring(0, 10)}`
                       : 'not paid'}
                   </td>
-                  <td className=" p-5 ">
-                    {order.isEnded
-                      ? `${order.endedAt.substring(0, 10)}`
-                      : 'not ended yet'}
+                  <td className="p-5">
+                    {order.isPenalty
+                      ? `${penaltyPaidAt.substring(0, 10)}`
+                      : 'NO'}
                   </td>
+                  <td className="p-5">{order.isEnded ? 'YES' : 'not ended'}</td>
                   <td className=" p-5 ">
                     <Link href={`/order/${order._id}`} passHref>
                       Details

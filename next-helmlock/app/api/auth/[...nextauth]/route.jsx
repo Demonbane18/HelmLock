@@ -10,16 +10,33 @@ export const authOptions = {
   },
   secret: process.env.SECRET,
   callbacks: {
-    jwt: async ({ token, user, trigger, session }) => {
-      user && (token.user = user);
-      if (trigger === 'update') {
-        return { ...token, ...session.user };
+    async jwt({ token, user, session, trigger }) {
+      // console.log('jwt callback', { token, user, session });
+      if (user) {
+        return {
+          ...token,
+          _id: user._id,
+          isAdmin: user.isAdmin,
+          rentedLocker: user.rentedLocker,
+        };
+      }
+      //update rented locker
+      if (trigger === 'update' && session?.rentedLocker) {
+        token.rentedLocker = session.rentedLocker;
       }
       return token;
     },
-    session: async ({ session, token }) => {
-      session.user = token.user;
-      return session;
+    async session({ session, token, user }) {
+      console.log('session callback', { token, user, session });
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          _id: token._id,
+          isAdmin: token.isAdmin,
+          rentedLocker: token.rentedLocker,
+        },
+      };
     },
   },
   providers: [

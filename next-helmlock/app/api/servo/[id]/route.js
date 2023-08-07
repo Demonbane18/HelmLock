@@ -21,6 +21,7 @@ export async function PUT(req, { params }) {
     } else {
       servoLock.status = 'open';
       order.isEnded = true;
+      order.endedAt = Date.now();
       order.save();
       locker.status = 'vacant';
       locker.save();

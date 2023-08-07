@@ -49,6 +49,7 @@ function OrderScreen({ params }) {
       ...session,
       user: { ...session?.user, rentedLocker: orderid },
     });
+    console.log(session);
   }
   const [{ loading, error, order, successPay, loadingPay }, dispatch] =
     useReducer(reducer, {
@@ -56,6 +57,19 @@ function OrderScreen({ params }) {
       order: {},
       error: '',
     });
+  useEffect(() => {
+    if (!isEnded && isPaid) {
+      toast.warning('You will be redirected to the locker in 5 seconds', {
+        autoClose: 5000,
+      });
+
+      const timer = setTimeout(() => {
+        router.push(`/rented-locker/${orderId}`);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  });
+
   useEffect(() => {
     const fetchOrder = async () => {
       try {
@@ -95,6 +109,8 @@ function OrderScreen({ params }) {
     isPaid,
     isEnded,
     paidAt,
+    isPenaltyPaid,
+    penaltyPaidAt,
     endedAt,
     user,
   } = order;
@@ -120,17 +136,7 @@ function OrderScreen({ params }) {
         const { data } = await axios.put(`/api/orders/${order._id}`, details);
         dispatch({ type: 'PAY_SUCCESS', payload: data });
         toast.success('Order is paid successfully');
-        updateSession(order._id);
-        const customId = 'custom-id-yes';
-        toast.warning(
-          `You will be redirected to your locker in 5 seconds.`,
-          {
-            toastId: customId,
-          },
-          { delay: 2000 },
-          { autoClose: 5000 }
-        );
-        router.redirect(`/rented-locker/${order._id}`);
+        updateSession(orderId);
       } catch (err) {
         dispatch({ type: 'PAY_FAIL', payload: getError(err) });
         toast.error(getError(err));
@@ -156,7 +162,10 @@ function OrderScreen({ params }) {
             <div className="card  p-5">
               <h2 className="mb-2 text-lg">Locker Duration</h2>
               <div>
-                <p>Duration: {lockerDuration.duration} hours</p>
+                <p>
+                  Duration: {lockerDuration.duration} hour
+                  {lockerDuration.duration !== 1 ? 's' : ''}
+                </p>
                 <p>Start Time: {lockerDuration.startTime}</p>
                 <p>End Time {lockerDuration.endTime}</p>
               </div>
@@ -174,6 +183,13 @@ function OrderScreen({ params }) {
                 <div className="alert-success">Paid at {paidAt}</div>
               ) : (
                 <div className="alert-error">Not paid</div>
+              )}
+              {isPenaltyPaid ? (
+                <div className="alert-success">
+                  Penalty Paid at {penaltyPaidAt}
+                </div>
+              ) : (
+                <div></div>
               )}
             </div>
 
@@ -228,7 +244,6 @@ function OrderScreen({ params }) {
                     <div>₱{totalPrice}</div>
                   </div>
                 </li>
-
                 {!isPaid && (
                   <li>
                     {isPending ? (

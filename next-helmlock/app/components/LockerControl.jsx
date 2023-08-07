@@ -60,7 +60,7 @@ const LockerControl = ({
     },
   });
   const email = session?.user?.email;
-  const lockerid = locker.status;
+  const lockerid = locker._id;
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
   const [
     { loading, error, loadingUpdate, order, successPay, loadingPay },
@@ -86,18 +86,24 @@ const LockerControl = ({
     const day = currDate.getDate();
     const hours = currDate.getHours();
     const minutes = currDate.getMinutes();
+    const seconds = currDate.getSeconds();
     // eslint-disable-next-line no-unused-vars
-    const [endHours, endMinutes, endSeconds] = endTime.split(':');
-    const isTimeAfterEndTime = isAfter(
-      new Date(year, month, day, hours, minutes),
-      new Date(year, month, day, endHours, endMinutes)
-    );
-    console.log(isTimeAfterEndTime);
-    if (isTimeAfterEndTime === true) {
-      return true;
-    } else {
-      return false;
+    const [time, modifier] = endTime.split(' ');
+    let [endHours, endMinutes, endSeconds] = time.split(':');
+    if (endHours === '12') {
+      endHours = '00';
     }
+    if (modifier === 'PM') {
+      endHours = parseInt(endHours, 10) + 12;
+    }
+    const isTimeAfterEndTime = isAfter(
+      new Date(year, month, day, hours, minutes, seconds),
+      new Date(year, month, day, endHours, endMinutes, endSeconds)
+    );
+    console.log(`${hours} : ${minutes} `);
+    console.log(`${endHours} : ${endMinutes} `);
+    console.log(isTimeAfterEndTime);
+    return isTimeAfterEndTime;
   };
 
   const getPenaltyDuration = (endTime) => {
@@ -135,6 +141,7 @@ const LockerControl = ({
 
   useEffect(() => {
     const penalty = checkPenalty(endTime);
+    console.log(penalty);
     setIsPenalty(penalty);
     if (penalty) {
       const penaltyDuration = getPenaltyDuration(endTime);
@@ -249,7 +256,7 @@ const LockerControl = ({
       dispatch({ type: 'UPDATE_REQUEST' });
       await axios.put(`/api/servo/${locker.lockerNumber}`, {
         userid,
-        orderid,
+        orderid: order._id,
         lockerid,
       });
       dispatch({ type: 'UPDATE_SUCCESS' });
@@ -304,6 +311,7 @@ const LockerControl = ({
               <div className="mb-2 flex justify-between">
                 <h1 className="text-xl font-bold ">{locker.name}</h1>
               </div>
+
               <div className="mb-2 flex justify-between">
                 <div className="text-lg font-bold">
                   End Time:{' '}
@@ -330,6 +338,12 @@ const LockerControl = ({
                 <div>
                   This locker's duration already ended. Please{' '}
                   <Link href="/">Rent a new Locker</Link>{' '}
+                  <div>
+                    {' '}
+                    <button type="button" onClick={updateSession}>
+                      updateSession
+                    </button>
+                  </div>
                 </div>
               )}
               {((!isLockerEnded && !isPenalty) ||
