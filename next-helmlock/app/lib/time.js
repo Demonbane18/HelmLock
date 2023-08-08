@@ -8,6 +8,7 @@ import {
   isAfter,
   format,
 } from 'date-fns';
+import { utcToZonedTime } from 'date-fns-tz';
 import ClosedDay from '@/models/ClosedDay';
 
 export const getDuration = async () => {
@@ -93,13 +94,13 @@ export const isOpen = async () => {
   const openHours = openTime.split(':')[0];
   const openMinutes = openTime.split(':')[1];
   //change the current date
-  const currDate = new Date();
+  const currDate = utcToZonedTime(new Date(), 'Asia/Manila');
   const isCurrentDayClosed = await isDayClosed();
   const year = currDate.getFullYear();
   const month = currDate.getMonth();
   const day = currDate.getDate();
-  const hours = currDate.getUTCHours();
-  const minutes = currDate.getUTCMinutes();
+  const hours = currDate.getHours();
+  const minutes = currDate.getMinutes();
 
   console.log(`${hours}:${minutes}`);
   const isTimeBeforeClosingTime = isBefore(
