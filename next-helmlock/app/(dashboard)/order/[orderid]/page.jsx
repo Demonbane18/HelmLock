@@ -58,13 +58,13 @@ function OrderScreen({ params }) {
   useEffect(() => {
     if (!isEnded && isPaid) {
       toast.warning('You will be redirected to the locker in 5 seconds', {
-        autoClose: 5000,
+        autoClose: 8000,
         position: 'top-center',
       });
 
       const timer = setTimeout(() => {
         router.replace(`/rented-locker/${orderId}`);
-      }, 5000);
+      }, 8000);
       return () => clearTimeout(timer);
     }
   });
@@ -134,7 +134,9 @@ function OrderScreen({ params }) {
         dispatch({ type: 'PAY_REQUEST' });
         const { data } = await axios.put(`/api/orders/${order._id}`, details);
         dispatch({ type: 'PAY_SUCCESS', payload: data });
-        toast.success('Order is paid successfully');
+        toast.success('Order is paid successfully', {
+          autoClose: 3000,
+        });
         updateSession(orderId);
       } catch (err) {
         dispatch({ type: 'PAY_FAIL', payload: getError(err) });
