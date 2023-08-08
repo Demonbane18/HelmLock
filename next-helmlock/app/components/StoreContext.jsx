@@ -85,7 +85,7 @@ const StoreContext = ({
           <TypewriterComponent
             options={{
               strings: [
-                'Store is Closed! Please come back later.' + isOpen,
+                'Store is Closed! Please come back later.',
                 'Date is' + ' ' + currDate,
                 "Today's schedule:",
                 'Open Time:' + ' ' + openTime,

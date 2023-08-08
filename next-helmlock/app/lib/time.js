@@ -98,8 +98,10 @@ export const isOpen = async () => {
   const year = currDate.getFullYear();
   const month = currDate.getMonth();
   const day = currDate.getDate();
-  const hours = currDate.getHours();
-  const minutes = currDate.getMinutes();
+  let hours = inputTime.getUTCHours();
+  let minutes = inputTime.getUTCMinutes();
+
+  minutes = minutes < 10 ? '0' + minutes : minutes;
   const isTimeBeforeClosingTime = isBefore(
     new Date(year, month, day, hours, minutes),
     new Date(year, month, day, closeHours, closeMinutes)
