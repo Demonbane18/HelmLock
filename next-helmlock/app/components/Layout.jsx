@@ -11,14 +11,22 @@ import { Store } from '../../utils/Store';
 import DropdownLink from './DropdownLink';
 // import { useRouter } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { getRentedLocker } from '../lib/lockers';
 
-export default function Layout({ title, children }) {
+export default function Layout({ title, children, renterid }) {
   const { data: session, status } = useSession();
   const { state, dispatch } = useContext(Store);
   const { cart } = state;
   const [cartItemsCount, setCartItemsCount] = useState(0);
-  const rentingLocker = session?.user?.rentedLocker;
   const userid = session?.user?._id;
+  const orderPending = Cookies.get('orderPending' + userid);
+  const orderid = renterid;
+  if (orderid && !orderPending && session?.user) {
+    Cookies.set('orderPending' + userid, orderid);
+  }
+  const rentingLocker = session?.user
+    ? Cookies.get('orderPending' + userid)
+    : null;
   const [rentedLocker, setRentedLocker] = useState(rentingLocker);
   // Create a Supabase client configured to use cookies
   const supabase = createClientComponentClient();
@@ -28,9 +36,10 @@ export default function Layout({ title, children }) {
   }, [cart.cartItems]);
 
   useEffect(() => {
-    const orderPending = rentingLocker ? rentingLocker : null;
+    const rentLocker = Cookies.get('orderPending' + userid);
+    const orderPending = rentLocker ? rentLocker : null;
     setRentedLocker(orderPending);
-  }, [rentingLocker, userid]);
+  }, [userid]);
 
   const logoutClickHandler = async () => {
     await supabase.auth.signOut();

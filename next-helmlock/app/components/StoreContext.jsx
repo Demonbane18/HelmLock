@@ -6,6 +6,8 @@ import LockerItem from './Lockeritem';
 import getLockerById from '@/app/_actions/getLockerById';
 import TypewriterComponent from 'typewriter-effect';
 import { useSession } from 'next-auth/react';
+import Cookies from 'js-cookie';
+
 const StoreContext = ({
   lockers,
   isOpen,
@@ -15,7 +17,8 @@ const StoreContext = ({
   currDate,
 }) => {
   const { data: session } = useSession();
-  const orderPending = session?.user?.rentedLocker;
+  const userid = session?.user?._id;
+  const orderPending = Cookies.get('orderPending' + userid);
   console.log(orderPending);
   const [showLockers, setShowLockers] = useState(lockers);
   useEffect(() => {

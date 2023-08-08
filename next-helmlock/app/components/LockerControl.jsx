@@ -14,6 +14,8 @@ import { useRouter } from 'next/navigation';
 import { updateAlarmStatus, updateRenterEmail } from '../lib/supabaseAlarm';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import { isAfter, differenceInHours } from 'date-fns';
+import Cookies from 'js-cookie';
+
 // import { checkPenalty } from '../lib/time';
 function reducer(state, action) {
   switch (action.type) {
@@ -131,12 +133,9 @@ const LockerControl = ({
     );
     return duration;
   };
-
+  //clear order
   async function updateSession() {
-    await update({
-      ...session,
-      user: { ...session?.user, rentedLocker: null },
-    });
+    Cookies.remove('orderPending' + userid);
   }
 
   useEffect(() => {
@@ -255,7 +254,6 @@ const LockerControl = ({
       }
       dispatch({ type: 'UPDATE_REQUEST' });
       await axios.put(`/api/servo/${locker.lockerNumber}`, {
-        userid,
         orderid: order._id,
         lockerid,
       });
@@ -337,13 +335,7 @@ const LockerControl = ({
               {isLockerEnded && (
                 <div>
                   This locker's duration already ended. Please{' '}
-                  <Link href="/">Rent a new Locker</Link>{' '}
-                  <div>
-                    {' '}
-                    <button type="button" onClick={updateSession}>
-                      updateSession
-                    </button>
-                  </div>
+                  <Link href="/">Rent a new Locker</Link> <div> </div>
                 </div>
               )}
               {((!isLockerEnded && !isPenalty) ||

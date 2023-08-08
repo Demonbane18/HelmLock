@@ -17,12 +17,11 @@ export const authOptions = {
           ...token,
           _id: user._id,
           isAdmin: user.isAdmin,
-          rentedLocker: user.rentedLocker,
         };
       }
       //update rented locker
-      if (trigger === 'update' && session?.rentedLocker) {
-        token.rentedLocker = session.rentedLocker;
+      if (trigger === 'update' && session?.name) {
+        token.name = session.name;
       }
       return token;
     },
@@ -34,7 +33,6 @@ export const authOptions = {
           ...session.user,
           _id: token._id,
           isAdmin: token.isAdmin,
-          rentedLocker: token.rentedLocker,
         },
       };
     },
@@ -54,7 +52,6 @@ export const authOptions = {
             email: user.email,
             image: 'f',
             isAdmin: user.isAdmin,
-            rentedLocker: user.rentedLocker,
           };
         }
         throw new Error('Invalid email or password');

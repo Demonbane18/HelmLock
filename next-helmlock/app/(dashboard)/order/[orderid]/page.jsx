@@ -10,6 +10,8 @@ import { toast } from 'react-toastify';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import { useSession } from 'next-auth/react';
 import { redirect, useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
+
 export const revalidate = 60;
 
 function reducer(state, action) {
@@ -36,20 +38,16 @@ function reducer(state, action) {
 function OrderScreen({ params }) {
   const orderId = params.orderid;
   const router = useRouter();
-  const { data: session, update } = useSession({
+  const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
       redirect(`/signin?callbackUrl=/order/${orderId}`);
     },
   });
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
-
+  const userid = session?.user?._id;
   async function updateSession(orderid) {
-    await update({
-      ...session,
-      user: { ...session?.user, rentedLocker: orderid },
-    });
-    console.log(session);
+    Cookies.set('orderPending' + userid, orderid);
   }
   const [{ loading, error, order, successPay, loadingPay }, dispatch] =
     useReducer(reducer, {
@@ -61,10 +59,11 @@ function OrderScreen({ params }) {
     if (!isEnded && isPaid) {
       toast.warning('You will be redirected to the locker in 5 seconds', {
         autoClose: 5000,
+        position: 'top-center',
       });
 
       const timer = setTimeout(() => {
-        router.push(`/rented-locker/${orderId}`);
+        router.replace(`/rented-locker/${orderId}`);
       }, 5000);
       return () => clearTimeout(timer);
     }

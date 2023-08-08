@@ -1,6 +1,5 @@
 import db from '@/app/lib/db';
 import ServoLock from '@/models/ServoLock';
-import User from '@/models/User';
 import Order from '@/models/Order';
 import Locker from '@/models/Locker';
 import { NextResponse } from 'next/server';
@@ -10,8 +9,7 @@ export async function PUT(req, { params }) {
   await db.connect();
   const servoLock = await ServoLock.findOne({ servo_number });
   const data = await req.json();
-  const { userid, orderid, lockerid } = data;
-  const user = await User.findOne({ _id: userid });
+  const { orderid, lockerid } = data;
   const order = await Order.findOne({ _id: orderid });
   const locker = await Locker.findOne({ _id: lockerid });
 
@@ -25,8 +23,6 @@ export async function PUT(req, { params }) {
       order.save();
       locker.status = 'vacant';
       locker.save();
-      user.rentedLocker = null;
-      user.save();
     }
     servoLock.save();
     await db.disconnect();

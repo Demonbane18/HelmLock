@@ -8,14 +8,22 @@ import {
   convertTime,
   isDayClosed,
 } from './lib/time';
-import { getLockers } from './lib/lockers';
+import { getLockers, getRentedLocker } from './lib/lockers';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
+import { getServerSession } from 'next-auth';
+import { authOptions } from './api/auth/[...nextauth]/route';
+import Cookies from 'js-cookie';
 
 export const revalidate = 0;
 
 export default async function Home() {
+  const session = await getServerSession(authOptions);
+  console.log(session);
+  const userid = session?.user?._id;
   const lockers = await getLockers();
+  const orderid = await getRentedLocker(userid);
+  console.log(orderid);
   const storeIsOpen = await isOpen();
   const currDate = new Date();
   const openTime = await getCurrentOpenTime();
@@ -32,7 +40,7 @@ export default async function Home() {
   console.log(user);
 
   return (
-    <Layout title="Home Page">
+    <Layout title="Home Page" renterid={orderid}>
       <StoreContext
         lockers={lockers}
         isOpen={storeIsOpen}
