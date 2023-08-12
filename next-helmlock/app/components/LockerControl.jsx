@@ -13,7 +13,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import { updateAlarmStatus, updateRenterEmail } from '../lib/supabaseAlarm';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
-import { isAfter, differenceInHours } from 'date-fns';
+import { isAfter, differenceInMinutes } from 'date-fns';
 import Cookies from 'js-cookie';
 
 // import { checkPenalty } from '../lib/time';
@@ -126,7 +126,7 @@ const LockerControl = ({
       endHours = parseInt(endHours, 10) + 12;
     }
     const duration = Math.abs(
-      differenceInHours(
+      differenceInMinutes(
         new Date(year, month, day, hours, minutes, seconds),
         new Date(year, month, day, endHours, endMinutes, endSeconds)
       )
@@ -144,7 +144,7 @@ const LockerControl = ({
     setIsPenalty(penalty);
     if (penalty) {
       const penaltyDuration = getPenaltyDuration(endTime);
-      const totalPenaltyPrice = Math.round(lockerPrice * penaltyDuration);
+      const totalPenaltyPrice = Math.round(lockerPrice * (penaltyDuration/60));
       setPenaltyPrice(totalPenaltyPrice);
     }
     setAlarmStatuss(alarmStatuss);
