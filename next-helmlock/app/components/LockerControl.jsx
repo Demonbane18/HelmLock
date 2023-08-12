@@ -86,7 +86,7 @@ const LockerControl = ({
     const year = currDate.getFullYear();
     const month = currDate.getMonth();
     const day = currDate.getDate();
-    const hours = currDate.getHours()+3;
+    const hours = currDate.getHours();
     const minutes = currDate.getMinutes();
     const seconds = currDate.getSeconds();
     // eslint-disable-next-line no-unused-vars
@@ -111,7 +111,7 @@ const LockerControl = ({
   const getPenaltyDuration = (endTime) => {
     //change the current date
     const currDate = new Date();
-    const hours = currDate.getHours()+3;
+    const hours = currDate.getHours();
     const minutes = currDate.getMinutes();
     const seconds = currDate.getSeconds();
     const year = currDate.getFullYear();
