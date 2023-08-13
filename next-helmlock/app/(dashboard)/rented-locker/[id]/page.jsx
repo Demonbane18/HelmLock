@@ -15,8 +15,8 @@ export async function generateMetadata({ params }) {
   await db.connect();
   const order = await Order.findOne({ _id: orderid }).lean();
   const { orderItems } = order;
-  const lockerid = orderItems[0]._id;
-  const locker = await Locker.findOne({ _id: lockerid });
+  const lockername = orderItems[0].name;
+  const locker = await Locker.findOne({ name: lockername });
   const dlocker = locker ? db.convertDocToObj(locker) : null;
   await db.disconnect();
   return { title: dlocker.name };
@@ -29,9 +29,9 @@ export default async function LockerScreen({ params }) {
   const { orderItems, isEnded, user, isPaid, lockerDuration, isPenaltyPaid } =
     order;
   const endTime = lockerDuration.endTime;
-  const lockerid = orderItems[0]._id;
   const lockerPrice = orderItems[0].price;
-  const locker = await Locker.findOne({ _id: lockerid });
+  const lockername = orderItems[0].name;
+  const locker = await Locker.findOne({ name: lockername });
   const dlocker = locker ? JSON.parse(JSON.stringify(locker)) : null;
   const status = await getServoLock(dlocker.lockerNumber);
   await db.disconnect();

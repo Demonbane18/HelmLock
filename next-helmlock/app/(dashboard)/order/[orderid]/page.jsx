@@ -11,6 +11,7 @@ import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import { useSession } from 'next-auth/react';
 import { redirect, useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
+import { updateLockerStatus } from '@/app/lib/lockers';
 
 export const revalidate = 60;
 
@@ -133,6 +134,7 @@ function OrderScreen({ params }) {
       try {
         dispatch({ type: 'PAY_REQUEST' });
         const { data } = await axios.put(`/api/orders/${order._id}`, details);
+        await updateLockerStatus(orderItems[0].name, 'occupied');
         dispatch({ type: 'PAY_SUCCESS', payload: data });
         toast.success('Order is paid successfully', {
           autoClose: 3000,

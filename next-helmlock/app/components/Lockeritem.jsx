@@ -3,8 +3,6 @@ import Link from 'next/link';
 import React from 'react';
 
 export default function lockerItem({ locker, addToCartHandler }) {
-  // console.log('lockerItem');
-  // console.log(locker);
   return (
     <div className="card">
       <Link

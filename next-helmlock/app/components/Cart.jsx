@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 
 import getLockerById from '@/app/_actions/getLockerById';
 import { useSession } from 'next-auth/react';
+import { getSupaLockerById } from '../lib/lockers';
 
 const Cart = ({ lockerDuration }) => {
   const { data: session } = useSession();
@@ -25,7 +26,7 @@ const Cart = ({ lockerDuration }) => {
   };
   const updateCartHandler = async (item, dur) => {
     const duration = Number(dur);
-    const data = JSON.parse(JSON.stringify(await getLockerById(item._id)));
+    const data = JSON.parse(JSON.stringify(await getSupaLockerById(item.id)));
     if (data?.status === 'occupied') {
       dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
       return toast.error('Sorry. Locker is already occupied');

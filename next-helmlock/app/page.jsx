@@ -8,7 +8,7 @@ import {
   convertTime,
   isDayClosed,
 } from './lib/time';
-import { getLockers, getRentedLocker } from './lib/lockers';
+import { getLockers, getSupaLockers, getRentedLocker } from './lib/lockers';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { getServerSession } from 'next-auth';
@@ -21,7 +21,7 @@ export default async function Home() {
   const session = await getServerSession(authOptions);
   console.log(session);
   const userid = session?.user?._id;
-  const lockers = await getLockers();
+  const lockers = await getSupaLockers();
   const orderid = await getRentedLocker(userid);
   console.log(orderid);
   const storeIsOpen = await isOpen();

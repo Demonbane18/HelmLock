@@ -15,6 +15,7 @@ import { updateAlarmStatus, updateRenterEmail } from '../lib/supabaseAlarm';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import { isAfter, differenceInMinutes } from 'date-fns';
 import Cookies from 'js-cookie';
+import { updateLockerStatus } from '../lib/lockers';
 
 // import { checkPenalty } from '../lib/time';
 function reducer(state, action) {
@@ -133,10 +134,6 @@ const LockerControl = ({
     );
     return duration;
   };
-  //clear order
-  async function updateSession() {
-    Cookies.remove('orderPending' + userid);
-  }
 
   useEffect(() => {
     const penalty = checkPenalty(endTime);
@@ -144,7 +141,9 @@ const LockerControl = ({
     setIsPenalty(penalty);
     if (penalty) {
       const penaltyDuration = getPenaltyDuration(endTime);
-      const totalPenaltyPrice = Math.round(lockerPrice * (penaltyDuration/60));
+      const totalPenaltyPrice = Math.round(
+        lockerPrice * (penaltyDuration / 60)
+      );
       setPenaltyPrice(totalPenaltyPrice);
     }
     setAlarmStatuss(alarmStatuss);
@@ -258,6 +257,7 @@ const LockerControl = ({
         lockerid,
       });
       dispatch({ type: 'UPDATE_SUCCESS' });
+      // await updateLockerStatus(locker.name, 'vacant');
       if (lockerButton === 'close') {
         toast.success(
           'Locker is checked out successfully. Please retrieve your helmet.'
@@ -266,7 +266,7 @@ const LockerControl = ({
         setisLockerEnded(true);
         updateAlarmStatus(locker.lockerNumber, 'open');
         updateRenterEmail(locker.lockerNumber, null);
-        updateSession();
+        Cookies.remove('orderPending' + userid);
       } else {
         toast.success('Locker is now closed!');
         setLockerButton('close');

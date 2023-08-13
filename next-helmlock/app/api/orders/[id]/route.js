@@ -25,8 +25,8 @@ export async function PUT(req, { params }) {
   console.log(order);
   const { orderItems } = order;
   console.log(orderItems);
-  const lockerid = orderItems[0]._id;
-  console.log(lockerid);
+  const lockername = orderItems[0].name;
+  console.log(lockername);
   if (order) {
     if (order.isPaid) {
       return NextResponse.json(
@@ -43,7 +43,8 @@ export async function PUT(req, { params }) {
       status: status,
       email_address: email_address,
     };
-    const locker = await Locker.findById(lockerid);
+    const locker = await Locker.findOne({ name: lockername });
+    console.log(locker);
     locker.status = 'occupied';
     await locker.save();
     const paidOrder = await order.save();
