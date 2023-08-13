@@ -23,9 +23,6 @@ remove cookie orderPending when you ended the locker duration
 place order screen with alert message for penalty
 ✔add server opening hours for duration
 ✔edit locker
-✔realtime locker dashboard using supabase
-create and delete locker supa
-sticky navbar
 
 ## Admin Side
 

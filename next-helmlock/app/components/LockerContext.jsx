@@ -1,19 +1,15 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { Store } from '../../utils/Store';
 import getLockerById from '@/app/_actions/getLockerById';
 import { useSession } from 'next-auth/react';
 import Cookies from 'js-cookie';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { getSupaLockerById } from '../lib/lockers';
 
 const LockerContext = ({ locker, isOpen }) => {
-  const supabase = createClientComponentClient();
-  const [showLocker, setShowLocker] = useState(locker);
   const { data: session } = useSession();
   const userid = session?.user?._id;
   const orderPending = Cookies.get('orderPending' + userid);
@@ -24,37 +20,11 @@ const LockerContext = ({ locker, isOpen }) => {
     return <div title="Locker Not Found">Locker Not Found</div>;
   }
 
-  useEffect(() => {
-    const channel = supabase
-      .channel('IOTHelmlock')
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'lockers',
-        },
-        (payload) => {
-          // console.log(payload);
-          const updatedData = payload.new;
-          const updatedLocker = updatedData.filter(
-            (newlocker) => locker.id === newlocker.id
-          );
-          setShowLocker(updatedLocker);
-          router.refresh();
-        }
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [supabase, router]);
-
   const addToCartHandler = async () => {
     const existItem = state.cart.cartItems.find((x) => x.slug === locker.slug);
     const quantity = existItem ? existItem.quantity : 1;
 
-    const data = JSON.parse(JSON.stringify(await getSupaLockerById(locker.id)));
+    const data = JSON.parse(JSON.stringify(await getLockerById(locker._id)));
     if (!isOpen) {
       return toast.error('Store is closed!');
     }
@@ -81,8 +51,8 @@ const LockerContext = ({ locker, isOpen }) => {
       <div className="grid md:grid-cols-4 md:gap-3">
         <div className="md:col-span-2">
           <Image
-            src={showLocker.image}
-            alt={showLocker.name}
+            src={locker.image}
+            alt={locker.name}
             width={640}
             height={640}
             priority
@@ -92,16 +62,16 @@ const LockerContext = ({ locker, isOpen }) => {
         <div>
           <div className="card p-5">
             <div className="mb-2 flex justify-between">
-              <h1 className="text-lg font-bold">{showLocker.name}</h1>
+              <h1 className="text-lg font-bold">{locker.name}</h1>
             </div>
 
             <div className="mb-2 flex justify-between">
               <div>Price</div>
-              <div>₱{showLocker.price}</div>
+              <div>₱{locker.price}</div>
             </div>
             <div className="mb-2 flex justify-between">
               <div>Status</div>
-              <div>{showLocker.status}</div>
+              <div>{locker.status}</div>
             </div>
             <button
               className="primary-button w-full cursor-pointer"

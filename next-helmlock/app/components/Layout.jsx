@@ -20,7 +20,6 @@ export default function Layout({ title, children, renterid }) {
   const [cartItemsCount, setCartItemsCount] = useState(0);
   const userid = session?.user?._id;
   const orderPending = Cookies.get('orderPending' + userid);
-  console.log(orderPending);
   const orderid = renterid;
   if (orderid && !orderPending && session?.user) {
     Cookies.set('orderPending' + userid, orderid);
@@ -57,9 +56,9 @@ export default function Layout({ title, children, renterid }) {
       </Head>
       <ToastContainer position="bottom-center" limit={1} />
 
-      <div className="flex min-h-screen flex-col justify-between sticky top-0 ">
+      <div className="flex min-h-screen flex-col justify-between ">
         <header>
-          <nav className="sticky top-0 flex h-12 items-center px-4 justify-between shadow-md">
+          <nav className="flex h-12 items-center px-4 justify-between shadow-md">
             <Link
               id="link"
               href="/"

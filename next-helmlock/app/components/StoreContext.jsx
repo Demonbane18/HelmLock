@@ -7,9 +7,6 @@ import getLockerById from '@/app/_actions/getLockerById';
 import TypewriterComponent from 'typewriter-effect';
 import { useSession } from 'next-auth/react';
 import Cookies from 'js-cookie';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { useRouter } from 'next/navigation';
-import { getSupaLockerById } from '../lib/lockers';
 
 const StoreContext = ({
   lockers,
@@ -20,45 +17,26 @@ const StoreContext = ({
   currDate,
 }) => {
   const { data: session } = useSession();
-  const supabase = createClientComponentClient();
-  const router = useRouter();
   const userid = session?.user?._id;
   const orderPending = Cookies.get('orderPending' + userid);
   console.log(orderPending);
   const [showLockers, setShowLockers] = useState(lockers);
-
   useEffect(() => {
-    const channel = supabase
-      .channel('IOTHelmlock')
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'lockers',
-        },
-        (payload) => {
-          // console.log(payload);
-          const updatedData = payload.new;
-          setShowLockers(updatedData);
-          router.refresh();
-        }
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
+    const fetchData = () => {
+      // const updatedLockers = await getLockers();
+      setShowLockers(lockers);
     };
-  }, [supabase, router]);
+    fetchData();
+  }, []);
 
   const { state, dispatch } = useContext(Store);
   const { cart } = state;
   const addToCartHandler = async (locker) => {
     console.log('lockerid');
-    console.log(locker.id);
+    console.log(locker._id);
     const existItem = cart.cartItems.find((x) => x.slug === locker.slug);
     const quantity = existItem ? existItem.quantity : 1;
-    // const data = JSON.parse(JSON.stringify(await getLockerById(locker._id)));
-    const data = JSON.parse(JSON.stringify(await getSupaLockerById(locker.id)));
+    const data = JSON.parse(JSON.stringify(await getLockerById(locker._id)));
     if (!isOpen) {
       return toast.error('Store is closed!');
     }
