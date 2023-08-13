@@ -20,7 +20,7 @@ const data = {
       name: 'Locker 1',
       slug: 'locker-1',
       lockerNumber: 1,
-      duration: 5,
+      duration: '',
       status: 'occupied',
       price: 10,
       image: '/images/locker.jpg',

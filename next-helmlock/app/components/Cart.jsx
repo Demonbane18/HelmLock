@@ -24,6 +24,9 @@ const Cart = ({ lockerDuration }) => {
     dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
   };
   const updateCartHandler = async (item, dur) => {
+    if (!dur) {
+      return toast.error('Please pick locker duration');
+    }
     const duration = Number(dur);
     const data = JSON.parse(JSON.stringify(await getLockerById(item._id)));
     if (data?.status === 'occupied') {
