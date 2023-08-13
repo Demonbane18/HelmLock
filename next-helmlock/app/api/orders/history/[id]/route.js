@@ -24,7 +24,9 @@ export async function GET(req, { params }) {
   console.log(userid);
   await db.connect();
   // const order = await Order.findById(orderid);
-  const orders = await Order.find({ user: userid, isPaid: true });
+  const orders = await Order.find({ user: userid, isPaid: true }).sort({
+    _id: -1,
+  });
   await db.disconnect();
   // return new Response(`Welcome to my Next application, order: ${order}`);
   return NextResponse.json({ orders }, { status: 200 });
