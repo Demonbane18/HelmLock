@@ -21,7 +21,7 @@ const data = {
       slug: 'locker-1',
       lockerNumber: 1,
       duration: '',
-      status: 'occupied',
+      status: 'vacant',
       price: 10,
       image: '/images/locker.jpg',
     },
