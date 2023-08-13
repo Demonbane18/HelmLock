@@ -31,10 +31,28 @@ export const changeStatus = (status, lockerNumber) => {
       payload = '3';
       break;
     case 'locker3open':
-      payload = '1';
+      payload = '4';
       break;
     case 'locker3close':
-      payload = '0';
+      payload = '5';
+      break;
+    case 'locker4open':
+      payload = '6';
+      break;
+    case 'locker4close':
+      payload = '7';
+      break;
+    case 'locker5open':
+      payload = '8';
+      break;
+    case 'locker5close':
+      payload = '9';
+      break;
+    case 'locker6open':
+      payload = 'a';
+      break;
+    case 'locker6close':
+      payload = 'b';
       break;
     default:
     // code block
