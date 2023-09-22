@@ -1,0 +1,6 @@
+{
+  "name": "Helmlock",
+  "short_name": "Helmlock",
+  "description": "A cashless rental locker for motorcycle helmets. It is a modern approach to existing coin lockers",
+  "start_url": "https://helmlock.vercel.app"
+}

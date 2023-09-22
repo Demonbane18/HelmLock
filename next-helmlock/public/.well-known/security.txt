@@ -1,0 +1,4 @@
+Contact: mailto:helmlock2023@gmail.com
+Expires: 2024-01-22T10:14:00.000Z
+Preferred-Languages: en, ph
+Canonical: https://helmlock.vercel.app/.well-known/security.txt
