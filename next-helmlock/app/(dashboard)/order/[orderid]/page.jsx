@@ -250,7 +250,7 @@ function OrderScreen({ params }) {
                     {isPending ? (
                       <div>Loading...</div>
                     ) : (
-                      <div className="w-full">
+                      <div className="w-full object-fill">
                         <PayPalButtons
                           createOrder={createOrder}
                           onApprove={onApprove}

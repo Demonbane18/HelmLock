@@ -17,13 +17,14 @@
 ✔create renting logic
 ✔add server opening hours for duration
 ✔edit locker
-check if the alarm is closed before allowing user to close the locker
+✔check if the alarm is closed before allowing user to close the locker
 
 ## Admin Side
 
-add opening and closing options
-add locker item
-edit locker item and price/hour
+add admin open/close control with auto tally penalty with paid button updater
+✔add opening and closing hours
+✔add locker item
+✔edit locker item and price/hour
 
 ## Authentication
 

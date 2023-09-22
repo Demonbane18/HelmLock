@@ -245,6 +245,7 @@ const LockerControl = ({
           toast.warning(
             'Locker door is open! Please make sure the locker door is closed before locking it.'
           );
+          return;
         } else {
           if (!window.confirm('Are you sure you want to close the locker?')) {
             return;
@@ -338,6 +339,8 @@ const LockerControl = ({
                     {lockerButton}
                   </p>
                 </div>
+              </div>
+              <div className="mb-2 flex justify-between">
                 <div className="text-lg font-bold">
                   Alarm Status:{' '}
                   <p
@@ -377,7 +380,7 @@ const LockerControl = ({
                   {isPending ? (
                     <div>Loading...</div>
                   ) : (
-                    <div className="w-full">
+                    <div className="w-full md:w-auto">
                       <PayPalButtons
                         createOrder={createOrder}
                         onApprove={onApprove}
