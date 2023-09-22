@@ -386,7 +386,7 @@ const LockerControl = ({
                       <PayPalButtons
                         style={style}
                         forceReRender={[style]}
-                        fundingSource={'paypal'}
+                        fundingSource="paypal"
                         createOrder={createOrder}
                         onApprove={onApprove}
                         onError={onError}
