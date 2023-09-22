@@ -5,7 +5,7 @@ export async function middleware(req) {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
   const cspHeader = `
     default-src 'self';
-    script-src 'report-sample' 'self' 'nonce-${nonce}' 'strict-dynamic https://www.paypal.com/sdk/js wasm-eval;
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' https: http: 'nonce-${nonce}' 'strict-dynamic' https://www.paypal.com/sdk/js wasm-eval;
     style-src 'report-sample' 'self' 'nonce-${nonce}';
     object-src 'none';
     base-uri 'self';
@@ -19,7 +19,7 @@ export async function middleware(req) {
     worker-src 'none';
     object-src 'none';
     base-uri 'self';
-    form-action 'self';
+    form-action 'self' https://www.paypal.com;
     frame-ancestors 'none';
     block-all-mixed-content;
     upgrade-insecure-requests;
