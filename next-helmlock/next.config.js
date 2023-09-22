@@ -26,6 +26,7 @@ const securityHeaders = [
   },
 ];
 const nextConfig = {
+  poweredByHeader: false,
   headers() {
     return [{ source: '/(.*)', headers: securityHeaders }];
   },
