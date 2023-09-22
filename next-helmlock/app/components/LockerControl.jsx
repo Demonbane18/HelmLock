@@ -382,7 +382,7 @@ const LockerControl = ({
                   {isPending ? (
                     <div>Loading...</div>
                   ) : (
-                    <div className="w-auto aspect-auto md:w-auto md:aspect-square">
+                    <div className="w-full container mx-auto aspect-auto md:w-auto md:aspect-square md:container md:mx-auto">
                       <PayPalButtons
                         style={style}
                         forceReRender={[style]}
