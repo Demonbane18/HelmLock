@@ -11,7 +11,7 @@ export async function middleware(req) {
     font-src 'self';
     object-src 'none';
     base-uri 'self';
-    form-action 'self';
+    form-action 'self' https://www.paypal.com;
     frame-ancestors 'none';
     block-all-mixed-content;
     upgrade-insecure-requests;
