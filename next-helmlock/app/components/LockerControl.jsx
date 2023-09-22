@@ -16,6 +16,8 @@ import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import { isAfter, differenceInHours } from 'date-fns';
 import Cookies from 'js-cookie';
 
+const style = { layout: 'vertical', height: 40 };
+
 // import { checkPenalty } from '../lib/time';
 function reducer(state, action) {
   switch (action.type) {
@@ -382,6 +384,9 @@ const LockerControl = ({
                   ) : (
                     <div className="w-full md:w-auto">
                       <PayPalButtons
+                        style={style}
+                        forceReRender={[style]}
+                        fundingSource="paypal"
                         createOrder={createOrder}
                         onApprove={onApprove}
                         onError={onError}

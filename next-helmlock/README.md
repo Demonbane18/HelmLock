@@ -13,11 +13,12 @@
 ✔change deliver order to manual open locker
 ✔close Store and show toast store is closed if store is closed for the day and also consider opening and closetime using isBefore
 ✔sort order to recent
-✔add Stripe
+add Stripe
 ✔create renting logic
 ✔add server opening hours for duration
 ✔edit locker
 ✔check if the alarm is closed before allowing user to close the locker
+add loading state to cart while updating duration
 
 ## Admin Side
 
