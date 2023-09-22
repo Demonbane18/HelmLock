@@ -240,8 +240,15 @@ const LockerControl = ({
   const lockerHandler = async () => {
     try {
       if (lockerButton === 'open') {
-        if (!window.confirm('Are you sure you want to close the locker?')) {
-          return;
+        //check if locker is really closed
+        if (alarmStatuss === 'open') {
+          toast.warning(
+            'Locker door is open! Please make sure the locker door is closed before locking it.'
+          );
+        } else {
+          if (!window.confirm('Are you sure you want to close the locker?')) {
+            return;
+          }
         }
       } else {
         if (
@@ -319,6 +326,18 @@ const LockerControl = ({
                 </div>
               </div>
               <div className="mb-2 flex justify-between">
+                <div className="text-lg font-bold">
+                  Locker Status:{' '}
+                  <p
+                    className={
+                      lockerButton === 'close'
+                        ? 'inline-block font-semibold text-green-500'
+                        : 'inline-block font-semibold text-orange-600'
+                    }
+                  >
+                    {lockerButton}
+                  </p>
+                </div>
                 <div className="text-lg font-bold">
                   Alarm Status:{' '}
                   <p

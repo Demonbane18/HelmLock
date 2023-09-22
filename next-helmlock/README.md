@@ -12,18 +12,12 @@
 ✔add locker number in locker model
 ✔change deliver order to manual open locker
 ✔close Store and show toast store is closed if store is closed for the day and also consider opening and closetime using isBefore
-check if the alarm is closed before allowing user to close the locker
-sort order to recent
-set 1 hour locker duration persistent when logging in by using useState
-do not let user to checkout if duration is not chosen
-notify on locker when locker is forcefully opened
-
+✔sort order to recent
 ✔add Stripe
 ✔create renting logic
-remove cookie orderPending when you ended the locker duration
-place order screen with alert message for penalty
 ✔add server opening hours for duration
 ✔edit locker
+check if the alarm is closed before allowing user to close the locker
 
 ## Admin Side
 
